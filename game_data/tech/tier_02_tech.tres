@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="LevelableUpgrade" load_steps=4 format=3 uid="uid://c425c6y6hji3d"]
+
+[ext_resource type="AudioStream" uid="uid://bvg1r2c8yx3po" path="res://assetes/sound/mixkit-bonus-earned-in-video-game-2058.ogg" id="1_3kshq"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="1_6ickn"]
+[ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="1_tegcw"]
+
+[resource]
+script = ExtResource("1_6ickn")
+id = "tier_02_tech"
+icon = ExtResource("1_tegcw")
+upgrade_type = 1
+display_name = "Tier 02 Tech"
+audio_on_use = ExtResource("1_3kshq")
+audio_on_purchase = ExtResource("1_3kshq")
+base_cost = 100.0
+cost_growth = 0.0
+power_per_level = 0.0
+max_level = 1
+required_upgrade_id = "tier_01_click_upgrade"
+required_level = 5
+metadata/_custom_type_script = "uid://ibattlbh7e1t"

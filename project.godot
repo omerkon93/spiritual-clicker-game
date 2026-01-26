@@ -1,0 +1,41 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Spiritual_Clicker_Game"
+run/main_scene="uid://clvys7pbyarur"
+config/features=PackedStringArray("4.5", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Bank="*res://core/systems/bank_system.gd"
+GameStats="*res://core/systems/game_stats.gd"
+UpgradeManager="*res://core/systems/upgrade_manager.gd"
+SaveSystem="*res://core/systems/save_system.gd"
+EffectsManager="*res://core/systems/effects_manager.gd"
+SignalBus="*res://core/globals/signal_bus.gd"
+SoundManager="*res://core/systems/sound_manager.tscn"
+DialogueManager="*res://scenes/ui/menus/dialogue_system.tscn"
+
+[file_customization]
+
+folder_colors={
+"res://assetes/": "green",
+"res://core/": "red",
+"res://game_data/": "orange",
+"res://scenes/": "yellow"
+}
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

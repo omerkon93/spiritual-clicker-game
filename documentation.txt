@@ -1,0 +1,84 @@
+Project Documentation: Modular Clicker Template
+
+1. Architecture Overview
+	This project uses a Composition over Inheritance architecture.
+		* Data: Defined in Godot Resource files (.tres). We do not hardcode values in scripts.
+		* Logic: Broken into small, reusable Node components.
+		* Communication: Systems communicate via Signal Bus or global Manager classes (Autoloads).
+		* Type Safety: Enums are used strictly for Currencies and Stats to prevent string-typing errors.
+
+2. Global Systems (Autoloads)
+	These scripts must be enabled in Project Settings -> Autoload.
+	Name,			Script Path,								Description
+	Bank,			res://core/systems/BankSystem.gd,			Holds the current amount of every currency. Handles transactions (add/spend).
+	GameStats,		res://core/systems/GameStats.gd,			Calculates the current value of a stat (e.g., Click Power) based on Upgrade Levels.
+	UpgradeManager,	res://core/systems/UpgradeManager.gd,		Manages the purchase logic and tracks the current Level (int) of every stat.
+	GameEnums,		res://core/globals/GameEnums.gd,			Central file containing all Enum definitions (CurrencyType, StatType).
+	
+3. Data Structures (Enums)
+	Located in res://core/globals/GameEnums.gd.
+
+	CurrencyType:
+		* GOLD
+		* MANA
+		* DIAMOND
+
+	StatType:
+		* CLICK_POWER (How much currency obtained per click)
+		* AUTO_MINER_SPEED (How fast auto-generators work)
+		* CRIT_CHANCE (Probability of double yield)
+
+4. Resource Types (The "Assets")
+	CurrencyDefinition
+		Purpose: Defines a valid currency.
+		Script: res://core/resources/CurrencyDefinition.gd
+		
+	Variables:
+		* type (Enum): Which currency logic to use.
+		* initial_amount: Starting wallet balance.
+		* max_amount: Cap limit.
+
+	StatDefinition
+		Purpose: Defines a base attribute of the game.
+		Script: res://core/resources/StatDefinition.gd
+		Variables:
+			* stat_type (Enum): Identity of the stat.
+			* base_value: The starting value (Level 0 value).
+
+	LevelableUpgrade
+		Purpose: Defines the math for buying levels and increasing stats.
+		Script: res://core/resources/LevelableUpgrade.gd
+		Variables:
+			* target_stat (Enum): Which stat this upgrades.
+			* cost_currency (Enum): What you pay with.
+			* base_cost & cost_growth: Cost formula ($Base \times Growth^{Level}$).
+			* power_per_level & mult_per_level: Effect formula.
+
+5. Components (The "Logic Bricks")
+	ClickProducer
+		Script: res://core/components/ClickProducer.gd
+		Usage: Add as a child to a Button or Area2D.
+		Function: Generates currency when the parent is clicked.
+		Fields:
+			currency_type: What to give.
+			stat_def: Base stat reference.
+			upgrade_def: Reference to the upgrade logic (for scaling math).
+
+	AutoGenerator
+		Script: res://core/components/AutoGenerator.gd
+		Usage: Add to a scene to generate passive income.
+		Function: Ticks every X seconds to generate currency.
+		Fields: Similar to ClickProducer, but includes cycle_time.
+
+6. Workflow: Adding Content
+	How to add a new "Ruby" Currency:
+		Add RUBY to GameEnums.gd.
+		Create resource Ruby.tres (CurrencyDefinition).
+		Assign RUBY in the resource inspector.
+		
+	How to create a "Diamond Pickaxe" Upgrade:
+		Ensure CLICK_POWER exists in GameEnums.gd.
+		Create resource Upgrade_DiamondPick.tres (LevelableUpgrade).
+		Set target_stat to CLICK_POWER.
+		Set base_cost to 1000 and cost_growth to 1.5.
+		Assign this resource to your "Buy Button" UI script.

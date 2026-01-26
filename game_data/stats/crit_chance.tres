@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StatDefinition" load_steps=2 format=3 uid="uid://djxgyn783ahih"]
+
+[ext_resource type="Script" uid="uid://d10ci54nkut38" path="res://core/resources/stat_definition.gd" id="1_cy3mk"]
+
+[resource]
+script = ExtResource("1_cy3mk")
+stat_type = 3
+display_name = "Crit Chance"
+metadata/_custom_type_script = "uid://d10ci54nkut38"

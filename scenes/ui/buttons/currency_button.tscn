@@ -1,0 +1,24 @@
+[gd_scene load_steps=7 format=3 uid="uid://cqjm2iv5ibos"]
+
+[ext_resource type="Script" uid="uid://bkni70xx8o6tm" path="res://core/components/auto_generator.gd" id="1_3q610"]
+[ext_resource type="Script" uid="uid://c1q1quwe3ssn6" path="res://core/components/click_producer.gd" id="3_1bdt2"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="4_ei5tu"]
+[ext_resource type="Resource" uid="uid://biqulvubb8al8" path="res://game_data/stats/click_power.tres" id="4_y0w6a"]
+[ext_resource type="Resource" uid="uid://cwft1llqhhvm3" path="res://game_data/upgrades/upgrade_click_power_tier_1.tres" id="5_peuum"]
+[ext_resource type="Resource" uid="uid://bt361nl08dgng" path="res://game_data/upgrades/upgrade_click_power_tier_2.tres" id="6_sqpfg"]
+
+[node name="TemplateButton" type="Button"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AutoGenerator" type="Node" parent="."]
+script = ExtResource("1_3q610")
+cycle_time = 2.0
+
+[node name="ClickProducer" type="Node" parent="."]
+script = ExtResource("3_1bdt2")
+stat_def = ExtResource("4_y0w6a")
+contributing_upgrades = Array[ExtResource("4_ei5tu")]([ExtResource("5_peuum"), ExtResource("6_sqpfg")])

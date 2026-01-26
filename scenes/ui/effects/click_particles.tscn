@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyp2bnic6eeaj"]
+
+[ext_resource type="Script" uid="uid://i34icfsk8wwd" path="res://scenes/ui/effects/click_particles.gd" id="1_1k5li"]
+
+[sub_resource type="Curve" id="Curve_65k3y"]
+_limits = [0.0, 5.0, 0.0, 5.0]
+_data = [Vector2(0.14705878, 5), nan, 0.3450531, 0, 0, Vector2(1.9485292, 3.0898879), -0.6548959, -0.6548959, 0, 0, Vector2(2.6838233, 0), -0.43658185, nan, 0, 0]
+point_count = 3
+
+[node name="ClickParticles" type="Node2D"]
+script = ExtResource("1_1k5li")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 10
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+scale_amount_curve = SubResource("Curve_65k3y")

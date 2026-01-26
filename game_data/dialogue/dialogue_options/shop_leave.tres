@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueOption" load_steps=2 format=3 uid="uid://5wgglpxe5iee"]
+
+[ext_resource type="Script" uid="uid://bgohnbn5hfes0" path="res://core/resources/dialogue_option.gd" id="1_23k7t"]
+
+[resource]
+script = ExtResource("1_23k7t")
+text = "Goodbye"
+action_id = "close_shop"
+metadata/_custom_type_script = "uid://bgohnbn5hfes0"

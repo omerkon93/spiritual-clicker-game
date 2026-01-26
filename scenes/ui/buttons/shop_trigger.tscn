@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://7kksc1qvtwyv"]
+
+[ext_resource type="Script" uid="uid://c8dpo150pvqh0" path="res://scenes/ui/buttons/shop_trigger.gd" id="1_l8ys1"]
+[ext_resource type="Resource" uid="uid://bocn2tn3efrgw" path="res://game_data/dialogue/conversation/shop_intro.tres" id="2_6huq3"]
+
+[node name="ShopTrigger" type="Button"]
+text = "Shop trigger"
+script = ExtResource("1_l8ys1")
+conversation_to_start = ExtResource("2_6huq3")

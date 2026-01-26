@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StatDefinition" load_steps=2 format=3 uid="uid://oa1mncsqxmrv"]
+
+[ext_resource type="Script" uid="uid://d10ci54nkut38" path="res://core/resources/stat_definition.gd" id="1_fldq7"]
+
+[resource]
+script = ExtResource("1_fldq7")
+stat_type = 1
+display_name = "Auto Production"
+metadata/_custom_type_script = "uid://d10ci54nkut38"

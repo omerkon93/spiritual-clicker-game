@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="Conversation" load_steps=10 format=3 uid="uid://bocn2tn3efrgw"]
+
+[ext_resource type="Script" uid="uid://bcsexecu62rxe" path="res://core/resources/dialogue_item.gd" id="1_rum4s"]
+[ext_resource type="Script" uid="uid://dnv2amsfje5td" path="res://core/resources/conversation.gd" id="2_1dm3a"]
+[ext_resource type="Script" uid="uid://bgohnbn5hfes0" path="res://core/resources/dialogue_option.gd" id="2_53y1m"]
+[ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="3_2utnb"]
+[ext_resource type="Resource" uid="uid://c50pkw0br5h58" path="res://game_data/dialogue/dialogue_options/shop_enter.tres" id="4_v6afa"]
+[ext_resource type="Resource" uid="uid://wgx5m6tk431i" path="res://game_data/dialogue/dialogue_options/shop_gossip.tres" id="5_u0y32"]
+[ext_resource type="Resource" uid="uid://5wgglpxe5iee" path="res://game_data/dialogue/dialogue_options/shop_leave.tres" id="6_e4200"]
+
+[sub_resource type="Resource" id="Resource_u0jmp"]
+script = ExtResource("1_rum4s")
+portrait = ExtResource("3_2utnb")
+metadata/_custom_type_script = "uid://bcsexecu62rxe"
+
+[sub_resource type="Resource" id="Resource_ccega"]
+script = ExtResource("1_rum4s")
+text = "What can I do for you?"
+portrait = ExtResource("3_2utnb")
+options = Array[ExtResource("2_53y1m")]([ExtResource("4_v6afa"), ExtResource("5_u0y32"), ExtResource("6_e4200")])
+metadata/_custom_type_script = "uid://bcsexecu62rxe"
+
+[resource]
+script = ExtResource("2_1dm3a")
+lines = Array[ExtResource("1_rum4s")]([SubResource("Resource_u0jmp"), SubResource("Resource_ccega")])
+metadata/_custom_type_script = "uid://dnv2amsfje5td"

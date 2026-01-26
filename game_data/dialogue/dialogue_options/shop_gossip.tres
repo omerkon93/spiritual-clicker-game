@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogueOption" load_steps=3 format=3 uid="uid://wgx5m6tk431i"]
+
+[ext_resource type="Resource" uid="uid://cipyoxvrl4fp2" path="res://game_data/dialogue/conversation/shop_gossip.tres" id="1_qdpys"]
+[ext_resource type="Script" uid="uid://bgohnbn5hfes0" path="res://core/resources/dialogue_option.gd" id="2_6lor3"]
+
+[resource]
+script = ExtResource("2_6lor3")
+text = "Heard any rumors?"
+next_conversation = ExtResource("1_qdpys")
+close_dialogue = false
+metadata/_custom_type_script = "uid://bgohnbn5hfes0"
