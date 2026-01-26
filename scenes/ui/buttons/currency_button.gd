@@ -1,10 +1,10 @@
 extends Button
-
-class_name WorkButton
+class_name CurrencyButton
 
 # --- Configuration ---
 @export var currency_type: GameEnums.CurrencyType = GameEnums.CurrencyType.MONEY
 @export var base_cooldown: float = 2.0
+@export var sanity_cost: float = 5.0 # Costs 5 sanity to work
 
 # --- Dependencies ---
 @onready var timer: Timer = $CooldownTimer
@@ -53,7 +53,14 @@ func _on_clicked():
 	if timer and not timer.is_stopped():
 		return 
 
-	# 2. Logic
+	# 2. Vital Check (NEW)
+	# We ask the VitalManager if we have enough Sanity
+	if not VitalManager.consume(GameEnums.VitalType.SANITY, sanity_cost):
+		SignalBus.message_logged.emit("I'm too burnt out...", Color.RED)
+		_play_bounce_animation() # Visual feedback for failure
+		return
+		
+	# 3. Payday (Existing)
 	Bank.add_currency(currency_type, current_power)
 	
 	if timer:

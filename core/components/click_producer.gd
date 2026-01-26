@@ -98,9 +98,9 @@ func _recalculate_stats():
 			var total_effect = upgrade.power_per_level * level 
 			
 			match upgrade.effect_type:
-				LevelableUpgrade.EffectType.CLICK_POWER:
+				GameEnums.StatType.CLICK_POWER:
 					added_power += total_effect
-				LevelableUpgrade.EffectType.COOLDOWN_REDUCTION:
+				GameEnums.StatType.CLICK_COOLDOWN:
 					removed_time += total_effect
 	
 	# FIX 1: Use snapped() to fix 5.99999 becoming 5

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="VitalDefinition" load_steps=4 format=3 uid="uid://c0n16drryeoss"]
+
+[ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="1_xoqmm"]
+
+[sub_resource type="Gradient" id="Gradient_xoqmm"]
+colors = PackedColorArray(1, 1, 0.6784314, 1, 1, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_oislf"]
+gradient = SubResource("Gradient_xoqmm")
+
+[resource]
+script = ExtResource("1_xoqmm")
+type = 3
+display_name = "Hunger"
+gradient = SubResource("GradientTexture1D_oislf")
+metadata/_custom_type_script = "uid://derwj2ijevwkr"

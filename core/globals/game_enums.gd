@@ -1,9 +1,18 @@
 class_name GameEnums
 
+# Things you accumulate and spend
 enum CurrencyType {
 	NONE,
 	MONEY,
-	SPIRIT   # Reserve this for later (Phase 2)
+	SPIRIT
+}
+
+# Things that keep you alive (0 to 100%)
+enum VitalType {
+	NONE,
+	SANITY,
+	ENERGY,   # For short term stamina
+	HUNGER    # For survival mechanics
 }
 
 enum StatType {

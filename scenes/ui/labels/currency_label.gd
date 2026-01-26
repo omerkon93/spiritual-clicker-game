@@ -1,10 +1,11 @@
 extends Control
+class_name CurrenciesLabel
 
 # Drag "Gold.tres" here in the Inspector
 @export var monitored_currency: CurrencyDefinition
 
 @onready var currency_icon: TextureRect = $HBoxContainer/CurrencyIcon
-@onready var label: Label = $HBoxContainer/Label
+@onready var currency_label: Label = $HBoxContainer/CurrencyLabel
 
 func _ready():
 	if not monitored_currency:
@@ -34,7 +35,7 @@ func _on_currency_changed(type: GameEnums.CurrencyType, new_amount: float):
 
 func _update_text(amount: float):
 	var formatted_amount = NumberFormatter.format_value(amount)
-	label.text = "%s: %s" % [monitored_currency.display_name, formatted_amount]
+	currency_label.text = "%s: %s" % [monitored_currency.display_name, formatted_amount]
 
 func _check_visibility():
 	# If it's MONEY, always show it.
