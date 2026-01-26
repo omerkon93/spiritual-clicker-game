@@ -4,10 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://dg4h5aptq65se" path="res://scenes/ui/labels/currency_label.tscn" id="2_k3yvu"]
 [ext_resource type="Resource" uid="uid://derm2k5fukhlw" path="res://game_data/dialogue/conversation/intro_converstaion.tres" id="2_mbqn5"]
 [ext_resource type="PackedScene" uid="uid://cqjm2iv5ibos" path="res://scenes/ui/buttons/currency_button.tscn" id="2_mpk58"]
-[ext_resource type="Script" uid="uid://bkni70xx8o6tm" path="res://core/components/auto_generator.gd" id="5_70kyo"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="4_fddy8"]
 [ext_resource type="PackedScene" uid="uid://7kksc1qvtwyv" path="res://scenes/ui/buttons/shop_trigger.tscn" id="5_fddy8"]
-[ext_resource type="Resource" uid="uid://oa1mncsqxmrv" path="res://game_data/stats/auto_production.tres" id="6_ydknf"]
 [ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/menus/shop_panel.tscn" id="7_fddy8"]
+[ext_resource type="Resource" uid="uid://dqm22xe6kirin" path="res://game_data/currencies/spirit.tres" id="7_mbqn5"]
 [ext_resource type="PackedScene" uid="uid://chhrvwnrgoavo" path="res://scenes/ui/labels/chat_log.tscn" id="7_r010t"]
 
 [node name="TestWorld" type="Control"]
@@ -43,12 +43,15 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="CurrencyLabel" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("2_k3yvu")]
+[node name="MoneyButton" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("2_mpk58")]
 layout_mode = 2
+text = "Money button"
 
-[node name="ClickButton" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("2_mpk58")]
+[node name="SpiritButton" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("2_mpk58")]
 layout_mode = 2
-text = "Currency button"
+text = "Spirit button"
+currency_type = 2
+contributing_upgrades = Array[ExtResource("4_fddy8")]([])
 
 [node name="ShopTrigger" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_fddy8")]
 layout_mode = 2
@@ -88,15 +91,17 @@ filter_by_type = 1
 show_locked = true
 show_purchased = true
 
-[node name="ColorRect" type="ColorRect" parent="HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_horizontal = 3
-color = Color(0.48570347, 0.48570353, 0.48570347, 1)
+theme_override_constants/separation = 6
 
-[node name="AutoGenerator" type="Node" parent="HBoxContainer/ColorRect"]
-script = ExtResource("5_70kyo")
-auto_start = false
-stat_def = ExtResource("6_ydknf")
+[node name="MoneyLabel" parent="HBoxContainer/VBoxContainer2" instance=ExtResource("2_k3yvu")]
+layout_mode = 2
+
+[node name="SpiritLabel" parent="HBoxContainer/VBoxContainer2" instance=ExtResource("2_k3yvu")]
+layout_mode = 2
+monitored_currency = ExtResource("7_mbqn5")
 
 [node name="ChatLog" parent="HBoxContainer" instance=ExtResource("7_r010t")]
 layout_mode = 2

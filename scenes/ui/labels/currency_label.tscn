@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dg4h5aptq65se"]
 
 [ext_resource type="Script" uid="uid://cmoy1lxq2bug7" path="res://scenes/ui/labels/currency_label.gd" id="1_5gk7m"]
-[ext_resource type="Resource" uid="uid://dqm22xe6kirin" path="res://game_data/currencies/gold.tres" id="2_xeswr"]
+[ext_resource type="Resource" uid="uid://y3ehljvnfi6r" path="res://game_data/currencies/money.tres" id="2_nrtni"]
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="3_nrtni"]
 
 [node name="CurrencyLabel" type="Control"]
@@ -15,7 +15,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_5gk7m")
-monitored_currency = ExtResource("2_xeswr")
+monitored_currency = ExtResource("2_nrtni")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1

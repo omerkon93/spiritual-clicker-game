@@ -1,17 +1,15 @@
 class_name GameEnums
 
 enum CurrencyType {
-	GOLD,
-	MANA,
-	DIAMOND,
-	RUBI,
-	NONE # Useful for initialization or error checking
+	NONE,
+	MONEY,
+	SPIRIT   # Reserve this for later (Phase 2)
 }
 
 enum StatType {
-	CLICK_POWER,
-	AUTO_PRODUCTION,
-	AUTO_CLICK_SPEED,
-	CRIT_CHANCE,
-	NONE
+	NONE,
+	CLICK_POWER,       # The strength of the click
+	CLICK_COOLDOWN,    # The delay (Replaces COOLDOWN_REDUCTION)
+	AUTO_PRODUCTION,   # Passive income (for later)
+	CRIT_CHANCE        # (for later)
 }

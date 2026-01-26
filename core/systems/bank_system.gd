@@ -29,5 +29,5 @@ func spend_currency(type: GameEnums.CurrencyType, amount: float):
 		_wallet[type] -= amount
 		currency_changed.emit(type, _wallet[type])
 
-func get_currency(type: GameEnums.CurrencyType) -> float:
+func get_currency_amount(type: GameEnums.CurrencyType) -> float:
 	return _wallet.get(type, 0.0)

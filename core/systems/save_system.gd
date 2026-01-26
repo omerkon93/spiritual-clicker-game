@@ -4,7 +4,7 @@ const SAVE_PATH = "user://savegame.json"
 
 func save_game():
 	var save_data = {
-		"gold": Bank.get_currency(GameEnums.CurrencyType.GOLD),
+		"money": Bank.get_currency_amount(GameEnums.CurrencyType.MONEY),
 		"upgrades": UpgradeManager.upgrade_levels # This now saves the Dictionary of {"iron_pick": 5}
 	}
 	
@@ -33,10 +33,10 @@ func load_game():
 	var data = json.get_data()
 	
 	# 1. Restore Bank
-	if "gold" in data:
+	if "money" in data:
 		# We silently set the wallet without triggering 'added' visual effects
-		Bank._wallet[GameEnums.CurrencyType.GOLD] = data["gold"]
-		Bank.currency_changed.emit(GameEnums.CurrencyType.GOLD, data["gold"])
+		Bank._wallet[GameEnums.CurrencyType.MONEY] = data["money"]
+		Bank.currency_changed.emit(GameEnums.CurrencyType.MONEY, data["money"])
 		
 	# 2. Restore Upgrades (THE FIX)
 	if "upgrades" in data:

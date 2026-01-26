@@ -6,4 +6,5 @@
 script = ExtResource("1_t1lb4")
 stat_type = 0
 display_name = "Click Power"
+base_value = 5.0
 metadata/_custom_type_script = "uid://d10ci54nkut38"

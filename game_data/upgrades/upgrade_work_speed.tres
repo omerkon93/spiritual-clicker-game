@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="LevelableUpgrade" load_steps=4 format=3 uid="uid://bt361nl08dgng"]
+
+[ext_resource type="AudioStream" uid="uid://bvg1r2c8yx3po" path="res://assetes/sound/mixkit-bonus-earned-in-video-game-2058.ogg" id="2_gb8dm"]
+[ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="3_woivd"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="4_04gut"]
+
+[resource]
+script = ExtResource("4_04gut")
+id = "tier_01_speed_upgrade"
+display_name = "Ergonomic Mouse"
+icon = ExtResource("3_woivd")
+target_stat = 2
+power_per_level = 0.1
+cost_multiplier = 1.2
+audio_on_purchase = ExtResource("2_gb8dm")
+max_level = 10
+metadata/_custom_type_script = "uid://ibattlbh7e1t"

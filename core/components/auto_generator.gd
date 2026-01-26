@@ -1,7 +1,7 @@
 class_name AutoGenerator extends Node
 
 @export_group("Settings")
-@export var currency_type: GameEnums.CurrencyType = GameEnums.CurrencyType.GOLD
+@export var currency_type: GameEnums.CurrencyType = GameEnums.CurrencyType.MONEY
 @export var cycle_time: float = 1.0
 @export var auto_start: bool = true
 

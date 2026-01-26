@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_qirpe")
-type = 3
-display_name = "Rubi Gems"
+type = 1
+display_name = "Money"
 metadata/_custom_type_script = "uid://cmjd7pxovwsxn"
