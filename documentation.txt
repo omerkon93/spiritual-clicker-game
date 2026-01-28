@@ -1,84 +1,104 @@
-Project Documentation: Modular Clicker Template
+# Project Documentation: Spiritual Clicker Game
 
-1. Architecture Overview
-	This project uses a Composition over Inheritance architecture.
-		* Data: Defined in Godot Resource files (.tres). We do not hardcode values in scripts.
-		* Logic: Broken into small, reusable Node components.
-		* Communication: Systems communicate via Signal Bus or global Manager classes (Autoloads).
-		* Type Safety: Enums are used strictly for Currencies and Stats to prevent string-typing errors.
+## 1. Architecture Overview
+This project uses a strict **Composition over Inheritance** architecture.
 
-2. Global Systems (Autoloads)
-	These scripts must be enabled in Project Settings -> Autoload.
-	Name,			Script Path,								Description
-	Bank,			res://core/systems/BankSystem.gd,			Holds the current amount of every currency. Handles transactions (add/spend).
-	GameStats,		res://core/systems/GameStats.gd,			Calculates the current value of a stat (e.g., Click Power) based on Upgrade Levels.
-	UpgradeManager,	res://core/systems/UpgradeManager.gd,		Manages the purchase logic and tracks the current Level (int) of every stat.
-	GameEnums,		res://core/globals/GameEnums.gd,			Central file containing all Enum definitions (CurrencyType, StatType).
-	
-3. Data Structures (Enums)
-	Located in res://core/globals/GameEnums.gd.
+* **Data (Source of Truth):** Defined in Godot Resource files (`.tres`). We do not hardcode values in scripts.
+* **Logic (Components):** Behaviors (Costs, Rewards, Streaks) are broken into small, isolated Node components.
+* **Control (Orchestrators):** Buttons (`ActionButton`) act as "dumb" controllers that simply wire components together.
+* **Communication:** Systems communicate via `SignalBus` (Global Events) or specific Managers (`Bank`, `VitalManager`).
+* **Type Safety:** Static typing is used everywhere. Enums are used for IDs to prevent string-typing errors.
 
-	CurrencyType:
-		* GOLD
-		* MANA
-		* DIAMOND
+---
 
-	StatType:
-		* CLICK_POWER (How much currency obtained per click)
-		* AUTO_MINER_SPEED (How fast auto-generators work)
-		* CRIT_CHANCE (Probability of double yield)
+## 2. Global Systems (Autoloads & Statics)
+These scripts must be enabled in **Project Settings -> Autoload** (except Static classes).
 
-4. Resource Types (The "Assets")
-	CurrencyDefinition
-		Purpose: Defines a valid currency.
-		Script: res://core/resources/CurrencyDefinition.gd
-		
-	Variables:
-		* type (Enum): Which currency logic to use.
-		* initial_amount: Starting wallet balance.
-		* max_amount: Cap limit.
+| Name | Script Path | Description |
+| :--- | :--- | :--- |
+| **Bank** | `res://core/systems/BankSystem.gd` | Holds currency amounts. Handles transactions (add/spend). |
+| **VitalManager** | `res://core/systems/VitalManager.gd` | Manages 0-100% stats (Energy, Sanity). Handles regeneration/decay. |
+| **UpgradeManager** | `res://core/systems/UpgradeManager.gd` | Tracks upgrade levels and calculates current power. |
+| **SignalBus** | `res://core/globals/SignalBus.gd` | Central event hub (e.g., `action_triggered`, `message_logged`). |
+| **ResourceConfig** | `res://core/globals/resource_config.gd` | **(Static)** Central registry for Names, Colors, and Icons. |
+| **GameEnums** | `res://core/globals/GameEnums.gd` | Central Enum definitions with strict ID ranges. |
 
-	StatDefinition
-		Purpose: Defines a base attribute of the game.
-		Script: res://core/resources/StatDefinition.gd
-		Variables:
-			* stat_type (Enum): Identity of the stat.
-			* base_value: The starting value (Level 0 value).
+---
 
-	LevelableUpgrade
-		Purpose: Defines the math for buying levels and increasing stats.
-		Script: res://core/resources/LevelableUpgrade.gd
-		Variables:
-			* target_stat (Enum): Which stat this upgrades.
-			* cost_currency (Enum): What you pay with.
-			* base_cost & cost_growth: Cost formula ($Base \times Growth^{Level}$).
-			* power_per_level & mult_per_level: Effect formula.
+## 3. Data Structures (Enums)
+Located in `res://core/globals/GameEnums.gd`. Used to prevent ID collisions.
 
-5. Components (The "Logic Bricks")
-	ClickProducer
-		Script: res://core/components/ClickProducer.gd
-		Usage: Add as a child to a Button or Area2D.
-		Function: Generates currency when the parent is clicked.
-		Fields:
-			currency_type: What to give.
-			stat_def: Base stat reference.
-			upgrade_def: Reference to the upgrade logic (for scaling math).
+* **CurrencyType (IDs 0-99):** `MONEY`, `SPIRIT`.
+* **VitalType (IDs 100-199):** `ENERGY` (Work Fuel), `FOCUS` (Streak Fuel), `SANITY`.
+* **StatType (IDs 200+):** `CLICK_POWER`, `CLICK_COOLDOWN`.
 
-	AutoGenerator
-		Script: res://core/components/AutoGenerator.gd
-		Usage: Add to a scene to generate passive income.
-		Function: Ticks every X seconds to generate currency.
-		Fields: Similar to ClickProducer, but includes cycle_time.
+---
 
-6. Workflow: Adding Content
-	How to add a new "Ruby" Currency:
-		Add RUBY to GameEnums.gd.
-		Create resource Ruby.tres (CurrencyDefinition).
-		Assign RUBY in the resource inspector.
-		
-	How to create a "Diamond Pickaxe" Upgrade:
-		Ensure CLICK_POWER exists in GameEnums.gd.
-		Create resource Upgrade_DiamondPick.tres (LevelableUpgrade).
-		Set target_stat to CLICK_POWER.
-		Set base_cost to 1000 and cost_growth to 1.5.
-		Assign this resource to your "Buy Button" UI script.
+## 4. Resource Types (The "Configuration")
+
+### **ActionData**
+* **Script:** `res://core/resources/action_data.gd`
+* **Purpose:** The "Source of Truth" for any button in the game. Defines costs, rewards, and messages.
+* **Fields:**
+	* `vital_costs` / `currency_costs`: What you pay.
+	* `vital_gains` / `currency_gains`: What you get.
+	* `failure_messages`: Custom text when affordability checks fail.
+
+### **LevelableUpgrade**
+* **Script:** `res://core/resources/levelable_upgrade.gd`
+* **Purpose:** Defines the math for buying levels and increasing stats.
+* **Fields:** `target_stat`, `base_cost`, `power_per_level` (Linear), `cost_multiplier` (Exponential).
+
+### **VitalDefinition**
+* **Script:** `res://core/resources/vital_definition.gd`
+* **Purpose:** Configures a vital bar's look and feel.
+* **Fields:** `default_max_value`, `regen_rate`, `gradient` (Color over 0-100%).
+
+---
+
+## 5. Components (The "Logic Bricks")
+
+### **Gameplay Components**
+| Component | Description |
+| :--- | :--- |
+| **CostComponent** | Checks affordability (`check_affordability`) and processes payments (`pay_all`). Handles Base Costs + Dynamic Penalties. |
+| **RewardComponent** | Calculates final rewards (`deliver_rewards`). Handles Base Rewards + Upgrades + Streak Multipliers. |
+| **StreakComponent** | Listens to `SignalBus`. Triggers "Combo" logic. Increases Rewards (Bonus Multiplier) and Costs (Risk Penalty) as the streak grows. Signal-based (Action aware). |
+| **MessageComponent** | Listens for failure signals and translates Error Codes into User-Friendly Text (colored via `ResourceConfig`). |
+
+### **UI Components**
+| Component | Description |
+| :--- | :--- |
+| **CurrencyMonitor** | Listens to `Bank`. Auto-formats text and handles Visibility (Hide until discovered). |
+| **VitalMonitor** | Listens to `VitalManager`. Auto-updates Progress Bars and samples color gradients. |
+
+---
+
+## 6. The "ActionButton" Orchestrator
+* **Script:** `res://objects/buttons/action_button.gd`
+* **Usage:** The main interaction object.
+* **Flow:**
+    1.  **Click:** Triggers `SignalBus.action_triggered`.
+    2.  **Streak Update:** `StreakComponent` hears signal -> Updates Costs (Penalty) & Rewards (Multiplier).
+    3.  **Check:** Button asks `CostComponent` "Can I afford this?"
+    4.  **Fail:** `CostComponent` signals `MessageComponent` -> UI Feedback.
+    5.  **Success:** `CostComponent` pays -> `RewardComponent` gives loot -> Visuals play.
+
+---
+
+## 7. Workflow: Adding Content
+
+### **How to create a "Deep Work" Button:**
+1.  **Create Resource:** New `ActionData` (`Action_DeepWork.tres`).
+    * Set `vital_costs`: `{ FOCUS: 10 }`.
+    * Set `currency_gains`: `{ MONEY: 50 }`.
+    * Set `failure_messages`: `{ FOCUS: "Too distracted..." }`.
+2.  **Create Scene:** Duplicate `WorkButton.tscn`.
+3.  **Assign:** Drag `Action_DeepWork.tres` into the `Action Data` slot.
+4.  **Configure Streak (Optional):** Set `StreakComponent` to `Enabled` (Target: Focus, Bonus: Money).
+
+### **How to add a "Sanity" Vital:**
+1.  **Enum:** Add `SANITY` to `GameEnums.gd` (ID 104).
+2.  **Config:** Add Color/Icon to `ResourceConfig.gd`.
+3.  **Resource:** Create `Vital_Sanity.tres`. Set Gradient (Purple to Red).
+4.  **UI:** Create a `VitalsLabel` instance and assign `Vital_Sanity.tres`.
