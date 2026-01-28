@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://rpsmp7qml63x"]
+
+[ext_resource type="Script" uid="uid://b03p7j5k01mv" path="res://core/components/cost_component/cost_component.gd" id="1_f3c84"]
+
+[node name="CostComponent" type="Node"]
+script = ExtResource("1_f3c84")

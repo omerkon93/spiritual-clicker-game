@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_fldq7")
-stat_type = 1
+stat_type = 203
 display_name = "Auto Production"
 metadata/_custom_type_script = "uid://d10ci54nkut38"

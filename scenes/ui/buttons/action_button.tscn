@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://ebo8g81tnm2"]
+
+[ext_resource type="Script" uid="uid://bfhdr6pllvdob" path="res://scenes/ui/buttons/action_button.gd" id="1_eh05r"]
+[ext_resource type="PackedScene" uid="uid://rpsmp7qml63x" path="res://core/components/cost_component/cost_component.tscn" id="3_hlq6p"]
+[ext_resource type="PackedScene" uid="uid://ci5gf3i2xpxe5" path="res://core/components/reward_component/reward_component.tscn" id="4_0hr7k"]
+[ext_resource type="PackedScene" uid="uid://bisxuota8wv3p" path="res://core/components/message_component/message_component.tscn" id="5_e4x4h"]
+[ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="5_eso0p"]
+[ext_resource type="PackedScene" uid="uid://7sibx1jnc6bo" path="res://core/components/streak_component/streak_component.tscn" id="6_q48mf"]
+
+[node name="ActionButton" type="Button" node_paths=PackedStringArray("cost_component", "reward_component", "message_component", "streak_component", "progress_bar")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_eh05r")
+cost_component = NodePath("CostComponent")
+reward_component = NodePath("RewardComponent")
+message_component = NodePath("MessageComponent")
+streak_component = NodePath("StreakComponent")
+progress_bar = NodePath("CooldownBar")
+
+[node name="CooldownBar" type="TextureProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+fill_mode = 5
+nine_patch_stretch = true
+texture_progress = ExtResource("5_eso0p")
+tint_progress = Color(0, 0, 0, 0.6431373)
+
+[node name="CooldownTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="CostComponent" parent="." instance=ExtResource("3_hlq6p")]
+
+[node name="RewardComponent" parent="." instance=ExtResource("4_0hr7k")]
+
+[node name="MessageComponent" parent="." instance=ExtResource("5_e4x4h")]
+
+[node name="StreakComponent" parent="." node_paths=PackedStringArray("cost_component") instance=ExtResource("6_q48mf")]
+cost_component = NodePath("../CostComponent")

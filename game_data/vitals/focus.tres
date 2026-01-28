@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="VitalDefinition" load_steps=4 format=3 uid="uid://ndheoh48icml"]
+
+[ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="1_1mf8y"]
+
+[sub_resource type="Gradient" id="Gradient_1mf8y"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_25um7"]
+gradient = SubResource("Gradient_1mf8y")
+
+[resource]
+script = ExtResource("1_1mf8y")
+type = 103
+display_name = "Focus"
+gradient = SubResource("GradientTexture1D_25um7")
+metadata/_custom_type_script = "uid://derwj2ijevwkr"

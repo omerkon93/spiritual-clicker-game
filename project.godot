@@ -26,6 +26,7 @@ SignalBus="*res://core/globals/signal_bus.gd"
 SoundManager="*res://core/systems/sound_manager.tscn"
 DialogueManager="*res://scenes/ui/menus/dialogue_system.tscn"
 VitalManager="*res://core/systems/vital_manager.gd"
+StorySystem="*res://core/systems/story_system.gd"
 
 [file_customization]
 

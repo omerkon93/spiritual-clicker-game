@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://daljdrivo3gkr"]
+
+[ext_resource type="Script" uid="uid://dud38dojl8ysr" path="res://core/components/currency_monitor/currency_monitor.gd" id="1_aup5i"]
+
+[node name="CurrencyMonitor" type="Node"]
+script = ExtResource("1_aup5i")

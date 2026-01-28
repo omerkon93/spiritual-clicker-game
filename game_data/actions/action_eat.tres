@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ActionData" load_steps=2 format=3 uid="uid://ic1w0i1v3swl"]
+
+[ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="1_h888p"]
+
+[resource]
+script = ExtResource("1_h888p")
+display_name = "Eat"
+description = "I sure am Hungry!"
+currency_costs = Dictionary[int, float]({
+1: 50.0
+})
+vital_gains = Dictionary[int, float]({
+102: 30.0
+})
+metadata/_custom_type_script = "uid://cl7fnpxvwmebh"

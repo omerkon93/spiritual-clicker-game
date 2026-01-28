@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ActionData" load_steps=2 format=3 uid="uid://cdbyreyc7vb86"]
+
+[ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="1_luyet"]
+
+[resource]
+script = ExtResource("1_luyet")
+display_name = "Work"
+description = "A day job online"
+vital_costs = Dictionary[int, float]({
+101: 5.0,
+103: 5.0
+})
+currency_gains = Dictionary[int, float]({
+1: 10.0
+})
+metadata/_custom_type_script = "uid://cl7fnpxvwmebh"

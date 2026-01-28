@@ -10,7 +10,7 @@ gradient = SubResource("Gradient_xoqmm")
 
 [resource]
 script = ExtResource("1_xoqmm")
-type = 3
-display_name = "Hunger"
+type = 102
+display_name = "Fullness"
 gradient = SubResource("GradientTexture1D_oislf")
 metadata/_custom_type_script = "uid://derwj2ijevwkr"

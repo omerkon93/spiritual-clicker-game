@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://7sibx1jnc6bo"]
+
+[ext_resource type="Script" uid="uid://ctfoh2aaahdp8" path="res://core/components/streak_component/streak_component.gd" id="1_oplw0"]
+
+[node name="StreakComponent" type="Node"]
+script = ExtResource("1_oplw0")

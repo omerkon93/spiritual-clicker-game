@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ci5gf3i2xpxe5"]
+
+[ext_resource type="Script" uid="uid://bkxv7ey4cp15w" path="res://core/components/reward_component/reward_component.gd" id="1_yj36e"]
+
+[node name="RewardComponent" type="Node"]
+script = ExtResource("1_yj36e")

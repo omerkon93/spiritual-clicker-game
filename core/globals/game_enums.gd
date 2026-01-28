@@ -1,24 +1,27 @@
 class_name GameEnums
 
-# Things you accumulate and spend
+# --- IDs 0 to 99 ---
 enum CurrencyType {
-	NONE,
-	MONEY,
-	SPIRIT
+	NONE = 0,
+	MONEY = 1,
+	SPIRIT = 2
 }
 
-# Things that keep you alive (0 to 100%)
+# --- IDs 100+ ---
+# By setting the first item to 100, the rest follow automatically (101, 102...)
 enum VitalType {
-	NONE,
-	SANITY,
-	ENERGY,   # For short term stamina
-	HUNGER    # For survival mechanics
+	NONE = 100, # Start here to avoid collision with Currency
+	ENERGY,   # Becomes 101
+	FULLNESS, # Becomes 102
+	FOCUS,    # Becomes 103
+	SANITY    # Becomes 104
 }
 
+# --- IDs 200+ ---
 enum StatType {
-	NONE,
-	CLICK_POWER,       # The strength of the click
-	CLICK_COOLDOWN,    # The delay (Replaces COOLDOWN_REDUCTION)
-	AUTO_PRODUCTION,   # Passive income (for later)
-	CRIT_CHANCE        # (for later)
+	NONE = 200, # Optional: Start Stats at 200
+	CLICK_POWER,
+	CLICK_COOLDOWN,
+	AUTO_PRODUCTION,
+	CRIT_CHANCE
 }

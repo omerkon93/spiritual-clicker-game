@@ -19,7 +19,7 @@ enum UpgradeType {
 # --- SETTINGS ---
 @export_category("Settings")
 @export var upgrade_type: UpgradeType = UpgradeType.TOOL
-@export var target_stat: GameEnums.StatType 
+@export var target_stat: GameEnums.StatType = GameEnums.StatType.NONE
 @export var power_per_level: float = 1.0
 
 # --- COSTS ---

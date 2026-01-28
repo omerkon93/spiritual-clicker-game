@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_cy3mk")
-stat_type = 3
+stat_type = 204
 display_name = "Crit Chance"
 metadata/_custom_type_script = "uid://d10ci54nkut38"

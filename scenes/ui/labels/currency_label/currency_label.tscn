@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dg4h5aptq65se"]
+[gd_scene load_steps=4 format=3 uid="uid://dg4h5aptq65se"]
 
-[ext_resource type="Script" uid="uid://cmoy1lxq2bug7" path="res://scenes/ui/labels/currency_label.gd" id="1_5gk7m"]
+[ext_resource type="Script" uid="uid://cmoy1lxq2bug7" path="res://scenes/ui/labels/currency_label/currency_label.gd" id="1_5gk7m"]
+[ext_resource type="PackedScene" uid="uid://daljdrivo3gkr" path="res://core/components/currency_monitor/currency_monitor.tscn" id="3_h11p7"]
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="3_nrtni"]
 
-[node name="CurrencyLabel" type="Control"]
+[node name="CurrencyLabel" type="Control" node_paths=PackedStringArray("monitor", "currency_icon", "currency_label")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 3
 anchors_preset = 15
@@ -14,6 +15,9 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_5gk7m")
+monitor = NodePath("CurrencyMonitor")
+currency_icon = NodePath("HBoxContainer/CurrencyIcon")
+currency_label = NodePath("HBoxContainer/CurrencyLabel")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -35,3 +39,5 @@ expand_mode = 5
 [node name="CurrencyLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "test"
+
+[node name="CurrencyMonitor" parent="." instance=ExtResource("3_h11p7")]

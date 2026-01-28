@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_vd3ie")
-stat_type = 2
+stat_type = 202
 display_name = "Click Cooldown"
 base_value = 2.0
 metadata/_custom_type_script = "uid://d10ci54nkut38"

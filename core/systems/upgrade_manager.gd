@@ -5,6 +5,8 @@ signal upgrade_leveled_up(upgrade_id: String, new_level: int)
 # Key: String (Upgrade ID), Value: Int (Level)
 var upgrade_levels: Dictionary = {}
 
+var available_upgrades: Array[LevelableUpgrade] = []
+
 # --- CHANGED: We now look up by String ID, not Stat Enum ---
 func get_upgrade_level(upgrade_id: String) -> int:
 	return upgrade_levels.get(upgrade_id, 0)
@@ -35,3 +37,9 @@ func get_current_cost(upgrade: LevelableUpgrade) -> float:
 	# Use ID for lookup
 	var current_level = get_upgrade_level(upgrade.id) 
 	return upgrade.base_cost * pow(upgrade.cost_multiplier, current_level)
+
+func add_available_upgrade(upgrade: LevelableUpgrade):
+	if not upgrade in available_upgrades:
+		available_upgrades.append(upgrade)
+		# Emit signal to refresh Shop UI
+		# signal shop_inventory_updated
