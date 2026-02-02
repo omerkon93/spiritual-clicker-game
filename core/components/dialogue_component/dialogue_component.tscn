@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://b8pmafvaprey4"]
+
+[ext_resource type="Script" uid="uid://dof46vlpiof57" path="res://core/components/dialogue_component/dialogue_component.gd" id="1_b0hy6"]
+[ext_resource type="PackedScene" uid="uid://rpsmp7qml63x" path="res://core/components/cost_component/cost_component.tscn" id="2_4ma2t"]
+[ext_resource type="PackedScene" uid="uid://ci5gf3i2xpxe5" path="res://core/components/reward_component/reward_component.tscn" id="3_22jfw"]
+
+[node name="DialogueComponent" type="Node" unique_id=1491224937 node_paths=PackedStringArray("cost_component", "reward_component")]
+script = ExtResource("1_b0hy6")
+cost_component = NodePath("CostComponent")
+reward_component = NodePath("RewardComponent")
+
+[node name="CostComponent" parent="." unique_id=1090864746 instance=ExtResource("2_4ma2t")]
+
+[node name="RewardComponent" parent="." unique_id=219012902 instance=ExtResource("3_22jfw")]

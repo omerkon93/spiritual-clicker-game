@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="VitalDefinition" load_steps=4 format=3 uid="uid://ndheoh48icml"]
+[gd_resource type="Resource" script_class="VitalDefinition" format=3 uid="uid://ndheoh48icml"]
 
 [ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="1_1mf8y"]
 

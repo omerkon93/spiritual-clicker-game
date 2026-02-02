@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://clvys7pbyarur"]
+
+[ext_resource type="Script" uid="uid://bbajf7klmdgm7" path="res://scenes/ui/menus/main_menu/main_menu.gd" id="1_flhq8"]
+
+[node name="MainMenu" type="Control" unique_id=1512600831]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_flhq8")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=786013055]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=2127404676]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="GameTitle" type="Label" parent="CenterContainer/VBoxContainer" unique_id=935472421]
+layout_mode = 2
+text = "Game Title"
+
+[node name="ButtonStart" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1442234274]
+layout_mode = 2
+text = "Start"
+
+[node name="ButtonLoad" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1537507660]
+layout_mode = 2
+text = "Load"
+
+[node name="ButtonSettings" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2116142734]
+layout_mode = 2
+text = "Settings"
+
+[node name="ButtonExit" type="Button" parent="CenterContainer/VBoxContainer" unique_id=461431845]
+layout_mode = 2
+text = "Exit"

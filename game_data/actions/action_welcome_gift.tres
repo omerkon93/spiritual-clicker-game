@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://tt2itejtoq3e"]
+
+[ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="1_lixfq"]
+
+[resource]
+script = ExtResource("1_lixfq")
+display_name = "Welcome Gift"
+currency_gains = Dictionary[int, float]({
+1: 100.0
+})
+metadata/_custom_type_script = "uid://cl7fnpxvwmebh"

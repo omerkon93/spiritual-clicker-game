@@ -8,11 +8,15 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Spiritual_Clicker_Game"
 run/main_scene="uid://clvys7pbyarur"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -24,7 +28,7 @@ SaveSystem="*res://core/systems/save_system.gd"
 EffectsManager="*res://core/systems/effects_manager.gd"
 SignalBus="*res://core/globals/signal_bus.gd"
 SoundManager="*res://core/systems/sound_manager.tscn"
-DialogueManager="*res://scenes/ui/menus/dialogue_system.tscn"
+DialogueManager="*res://core/systems/dialogue_manager.tscn"
 VitalManager="*res://core/systems/vital_manager.gd"
 StorySystem="*res://core/systems/story_system.gd"
 

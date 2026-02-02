@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bymtdvkh5wiit"]
+
+[ext_resource type="Script" uid="uid://dnssq07erf3q5" path="res://scenes/ui/menus/shop_menu/shop_panel.gd" id="1_3b8rw"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="2_qecyp"]
+[ext_resource type="Resource" uid="uid://cwft1llqhhvm3" path="res://game_data/upgrades/upgrade_work_power.tres" id="3_sjk1b"]
+[ext_resource type="Resource" uid="uid://bt361nl08dgng" path="res://game_data/upgrades/upgrade_work_speed.tres" id="4_j21la"]
+[ext_resource type="PackedScene" uid="uid://dn2stxn2gia2u" path="res://scenes/ui/buttons/upgrade_button.tscn" id="4_sjk1b"]
+[ext_resource type="Resource" uid="uid://c425c6y6hji3d" path="res://game_data/technology/technology_meditation.tres" id="5_qeixu"]
+[ext_resource type="Resource" uid="uid://c2sf07a6bfe8k" path="res://game_data/technology/technology_automation.tres" id="6_viuf5"]
+[ext_resource type="Script" uid="uid://ci5urlgak6u58" path="res://scenes/ui/menus/shop_menu/shop_listener_component.gd" id="7_dbv4w"]
+
+[node name="ShopPanel" type="Control" unique_id=598056843]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3b8rw")
+shop_items = Array[ExtResource("2_qecyp")]([ExtResource("3_sjk1b"), ExtResource("4_j21la"), ExtResource("5_qeixu"), ExtResource("6_viuf5")])
+button_scene = ExtResource("4_sjk1b")
+
+[node name="Panel" type="Panel" parent="." unique_id=662819966]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1926752794]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=1032509349]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="UpgradeContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer" unique_id=803637050]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="CloseButton" type="Button" parent="." unique_id=291954224]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -8.0
+offset_bottom = 8.0
+grow_horizontal = 0
+text = "X"
+
+[node name="ShopListenerComponent" type="Node" parent="." unique_id=454568553 node_paths=PackedStringArray("target_panel")]
+script = ExtResource("7_dbv4w")
+target_panel = NodePath("..")
