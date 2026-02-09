@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dn2stxn2gia2u"]
+[gd_scene format=3 uid="uid://dn2stxn2gia2u"]
 
 [ext_resource type="Script" uid="uid://b88g2xp6ppl2t" path="res://scenes/ui/buttons/upgrade_button.gd" id="1_tii4b"]
 [ext_resource type="Resource" uid="uid://cwft1llqhhvm3" path="res://game_data/upgrades/upgrade_work_power.tres" id="2_3io4o"]
 
-[node name="UpgradeButton" type="Button"]
-custom_minimum_size = Vector2(160, 60)
+[node name="UpgradeButton" type="Button" unique_id=109600171]
+custom_minimum_size = Vector2(200, 60)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

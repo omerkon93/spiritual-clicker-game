@@ -1,16 +1,23 @@
 extends Node
 
-# Now accepts an Array of upgrades instead of a single one
+# Persistent flags (e.g. "met_wizard", "unlocked_meditation")
+var story_flags: Dictionary = {}
+
+func set_flag(flag_name: String, value: bool = true) -> void:
+	story_flags[flag_name] = value
+	# Optional: You could trigger a save here later
+
+func has_flag(flag_name: String) -> bool:
+	return story_flags.get(flag_name, false)
+
+# Calculates total power based on upgrades
 func get_stat_value(stat_def: StatDefinition, contributing_upgrades: Array[LevelableUpgrade]) -> float:
 	var total = stat_def.base_value
 	
-	# Loop through every upgrade attached to the producer
 	for upgrade in contributing_upgrades:
 		if upgrade == null: continue
 		
-		# Look up level using the STRING ID
 		var level = UpgradeManager.get_upgrade_level(upgrade.id)
-		
 		if level > 0:
 			total += (level * upgrade.power_per_level)
 			

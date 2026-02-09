@@ -10,7 +10,7 @@ var final_currency_gains: Dictionary[int, float] = {}
 
 # Modifiers
 var active_multipliers: Dictionary[int, float] = {}
-var current_extra_power: float = 0.0 # MEMORY: Stores the upgrade power
+var current_extra_power: float = 0.0
 
 # --- SETUP ---
 func configure(data: ActionData) -> void:
@@ -38,10 +38,14 @@ func recalculate_finals(extra_currency_power: float) -> void:
 	final_currency_gains = base_currency_gains.duplicate()
 	
 	# 3. Apply Upgrades (Add Flat Power)
-	# Logic: Add power to the first currency found (usually Money)
-	if not final_currency_gains.is_empty():
-		var first_key: int = final_currency_gains.keys()[0]
-		final_currency_gains[first_key] += current_extra_power
+	# IMPROVED LOGIC: Prioritize MONEY for the upgrade bonus.
+	# If no Money exists, fall back to the first available currency.
+	if current_extra_power > 0:
+		if final_currency_gains.has(GameEnums.CurrencyType.MONEY):
+			final_currency_gains[GameEnums.CurrencyType.MONEY] += current_extra_power
+		elif not final_currency_gains.is_empty():
+			var first_key: int = final_currency_gains.keys()[0]
+			final_currency_gains[first_key] += current_extra_power
 	
 	# 4. Apply Streak Multipliers (Multiply Total)
 	for type: int in final_currency_gains:
@@ -57,19 +61,22 @@ func deliver_rewards() -> Array[Dictionary]:
 		var amount: float = final_vital_gains[type]
 		VitalManager.restore(type, amount)
 		
-		events.append({
-			"text": ResourceConfig.format_gain(type, amount),
-			"color": ResourceConfig.get_color(type)
-		})
+		# Only show floating text if gain is positive
+		if amount > 0:
+			events.append({
+				"text": ResourceConfig.format_gain(type, amount),
+				"color": ResourceConfig.get_color(type)
+			})
 		
 	# 2. Give Currency
 	for type: int in final_currency_gains:
 		var amount: float = final_currency_gains[type]
 		Bank.add_currency(type, amount)
 		
-		events.append({
-			"text": ResourceConfig.format_gain(type, amount),
-			"color": ResourceConfig.get_color(type)
-		})
+		if amount > 0:
+			events.append({
+				"text": ResourceConfig.format_gain(type, amount),
+				"color": ResourceConfig.get_color(type)
+			})
 		
 	return events

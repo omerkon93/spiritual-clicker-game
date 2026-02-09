@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://brw4tnt3187u7"]
+
+[ext_resource type="Script" uid="uid://655k8i08l263" path="res://core/components/floating_text_component/floating_text_component.gd" id="1_cvlyp"]
+[ext_resource type="PackedScene" uid="uid://bncytqmxdx4si" path="res://scenes/ui/effects/floating_text.tscn" id="2_ykmmc"]
+
+[node name="FloatingTextComponent" type="CanvasLayer" unique_id=797333456]
+script = ExtResource("1_cvlyp")
+floating_text_scene = ExtResource("2_ykmmc")
+
+[node name="FloatingText" parent="." unique_id=1231180146 instance=ExtResource("2_ykmmc")]

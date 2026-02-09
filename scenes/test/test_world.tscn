@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://7kksc1qvtwyv" path="res://scenes/ui/buttons/shop_trigger.tscn" id="5_fddy8"]
 [ext_resource type="Resource" uid="uid://cejdboquer5lm" path="res://game_data/actions/action_rest.tres" id="5_rof45"]
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="5_xk5tv"]
+[ext_resource type="PackedScene" uid="uid://brw4tnt3187u7" path="res://core/components/floating_text_component/floating_text_component.tscn" id="6_78y6d"]
 [ext_resource type="Resource" uid="uid://ic1w0i1v3swl" path="res://game_data/actions/action_eat.tres" id="6_xk4pe"]
 [ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/menus/shop_menu/shop_panel.tscn" id="7_fddy8"]
 [ext_resource type="Resource" uid="uid://dqm22xe6kirin" path="res://game_data/currencies/spirit.tres" id="7_mbqn5"]
@@ -43,9 +44,10 @@ intro_conversation = SubResource("Resource_gt1f0")
 
 [node name="Components" type="Node" parent="." unique_id=920254965]
 
-[node name="ShopWindowComponent" parent="Components" unique_id=216790161 node_paths=PackedStringArray("shop_panel", "tech_panel") instance=ExtResource("3_yna3y")]
+[node name="ShopWindowComponent" parent="Components" unique_id=216790161 node_paths=PackedStringArray("shop_panel") instance=ExtResource("3_yna3y")]
 shop_panel = NodePath("../../HBoxContainer/VBoxContainer/MarginContainer2/ShopPanel")
-tech_panel = NodePath("../../HBoxContainer/VBoxContainer/MarginContainer3/TechPanel")
+
+[node name="FloatingTextComponent" parent="Components" unique_id=1240720882 instance=ExtResource("6_78y6d")]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=141167213]
 layout_mode = 1
@@ -56,7 +58,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1559174512]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=1726756815]
@@ -107,19 +109,6 @@ theme_override_constants/margin_bottom = 10
 [node name="ShopPanel" parent="HBoxContainer/VBoxContainer/MarginContainer2" unique_id=1946770693 instance=ExtResource("7_fddy8")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-filter_by_type = 0
-
-[node name="MarginContainer3" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=2047118162]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="TechPanel" parent="HBoxContainer/VBoxContainer/MarginContainer3" unique_id=730528125 instance=ExtResource("7_fddy8")]
-unique_name_in_owner = true
 layout_mode = 2
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer" unique_id=1058164294]
