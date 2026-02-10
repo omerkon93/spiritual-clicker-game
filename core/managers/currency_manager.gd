@@ -3,7 +3,7 @@ extends Node
 # Dictionary mapping [GameEnums.CurrencyType] -> [float Amount]
 var _wallet: Dictionary = {}
 
-# Signal now sends the Enum type, not a String ID
+# Signal sends the Enum type and the new amount
 signal currency_changed(type: GameEnums.CurrencyType, new_amount: float)
 
 func initialize_currencies(currencies: Array[CurrencyDefinition]):
@@ -14,11 +14,9 @@ func initialize_currencies(currencies: Array[CurrencyDefinition]):
 
 func add_currency(type: GameEnums.CurrencyType, amount: float):
 	if not _wallet.has(type): 
-		# Optional: Auto-initialize if it doesn't exist, or return error
 		_wallet[type] = 0.0
 	
 	_wallet[type] += amount
-	
 	currency_changed.emit(type, _wallet[type])
 
 func has_enough_currency(type: GameEnums.CurrencyType, amount: float) -> bool:
@@ -31,3 +29,8 @@ func spend_currency(type: GameEnums.CurrencyType, amount: float):
 
 func get_currency_amount(type: GameEnums.CurrencyType) -> float:
 	return _wallet.get(type, 0.0)
+
+# Added this Helper for the SaveManager to use when loading data
+func set_currency(type: GameEnums.CurrencyType, amount: float):
+	_wallet[type] = amount
+	currency_changed.emit(type, amount)

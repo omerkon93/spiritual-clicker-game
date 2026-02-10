@@ -14,11 +14,11 @@ func setup(type: int) -> void:
 	currency_type = type
 	
 	# 1. Connect
-	if not Bank.currency_changed.is_connected(_on_currency_changed):
-		Bank.currency_changed.connect(_on_currency_changed)
+	if not CurrencyManager.currency_changed.is_connected(_on_currency_changed):
+		CurrencyManager.currency_changed.connect(_on_currency_changed)
 	
 	# 2. Initial Fetch
-	var current: float = Bank.get_currency_amount(currency_type)
+	var current: float = CurrencyManager.get_currency_amount(currency_type)
 	_process_update(current)
 	_check_initial_visibility(current)
 

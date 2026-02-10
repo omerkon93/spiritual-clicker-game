@@ -61,7 +61,7 @@ func _on_clicked():
 		return
 		
 	# 3. Payday (Existing)
-	Bank.add_currency(currency_type, current_power)
+	CurrencyManager.add_currency(currency_type, current_power)
 	
 	if timer:
 		timer.start(current_cooldown)

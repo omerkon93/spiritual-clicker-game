@@ -36,8 +36,8 @@ func _ready() -> void:
 	reset_btn.pressed.connect(_on_reset_pressed)
 	back_btn.pressed.connect(close)
 	
-	save_btn.pressed.connect(func(): SaveSystem.save_game())
-	load_btn.pressed.connect(func(): SaveSystem.load_game())
+	save_btn.pressed.connect(func(): SaveManager.save_game())
+	load_btn.pressed.connect(func(): SaveManager.load_game())
 	
 	_load_current_settings()
 	hide()

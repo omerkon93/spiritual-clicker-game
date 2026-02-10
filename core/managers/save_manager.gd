@@ -5,16 +5,16 @@ const SAVE_PATH = "user://savegame.json"
 func save_game() -> void:
 	var save_data = {
 		# 1. CURRENCY
-		"money": Bank.get_currency_amount(GameEnums.CurrencyType.MONEY),
-		"spirit": Bank.get_currency_amount(GameEnums.CurrencyType.SPIRIT), # Don't forget Spirit!
+		"money": CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY),
+		"spirit": CurrencyManager.get_currency_amount(GameEnums.CurrencyType.SPIRIT),
 		
-		# 2. UPGRADES (The Dictionary)
+		# 2. UPGRADES
 		"upgrades": UpgradeManager.upgrade_levels,
 		
-		# 3. STORY FLAGS (Critical for Unlockables)
+		# 3. STORY FLAGS
 		"flags": GameStats.story_flags,
 		
-		# 4. VITALS (Optional: Save current values)
+		# 4. VITALS
 		"vitals": _get_vitals_data(),
 		
 		# 5. META
@@ -25,7 +25,9 @@ func save_game() -> void:
 	if file:
 		var json_str = JSON.stringify(save_data)
 		file.store_string(json_str)
-		print("Game Saved!")
+		print("Game Saved! Path: " + SAVE_PATH)
+	else:
+		printerr("Failed to open save file for writing.")
 
 func load_game() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
@@ -45,33 +47,29 @@ func load_game() -> void:
 		
 	var data = json.get_data()
 	
-	# --- 1. RESTORE BANK ---
+	# --- 1. RESTORE CURRENCY ---
 	if "money" in data:
-		Bank._wallet[GameEnums.CurrencyType.MONEY] = data["money"]
-		Bank.currency_changed.emit(GameEnums.CurrencyType.MONEY, data["money"])
+		CurrencyManager._wallet[GameEnums.CurrencyType.MONEY] = data["money"]
+		CurrencyManager.currency_changed.emit(GameEnums.CurrencyType.MONEY, data["money"])
 		
 	if "spirit" in data:
-		Bank._wallet[GameEnums.CurrencyType.SPIRIT] = data["spirit"]
-		Bank.currency_changed.emit(GameEnums.CurrencyType.SPIRIT, data["spirit"])
+		CurrencyManager._wallet[GameEnums.CurrencyType.SPIRIT] = data["spirit"]
+		CurrencyManager.currency_changed.emit(GameEnums.CurrencyType.SPIRIT, data["spirit"])
 		
 	# --- 2. RESTORE UPGRADES ---
 	if "upgrades" in data:
 		UpgradeManager.upgrade_levels.clear()
 		for id in data["upgrades"]:
-			var level = int(data["upgrades"][id]) # Ensure Int
+			var level = int(data["upgrades"][id])
 			var str_id = str(id)
 			
 			UpgradeManager.upgrade_levels[str_id] = level
-			# Emit so UI updates
+			# Emit so UI updates immediately
 			UpgradeManager.upgrade_leveled_up.emit(str_id, level)
 
-	# --- 3. RESTORE STORY FLAGS (The Fix) ---
+	# --- 3. RESTORE STORY FLAGS ---
 	if "flags" in data:
-		# Copy the dictionary directly
 		GameStats.story_flags = data["flags"]
-		
-		# If the shop is open, we might want to refresh it
-		# UpgradeManager.upgrade_leveled_up.emit("loaded_game", 0)
 
 	# --- 4. RESTORE VITALS ---
 	if "vitals" in data:
@@ -87,7 +85,6 @@ func save_file_exists() -> bool:
 func _get_vitals_data() -> Dictionary:
 	var v_data = {}
 	# Assuming VitalManager exposes its 'vitals' dictionary or keys
-	# We iterate through the Enums to be safe
 	var types = [
 		GameEnums.VitalType.ENERGY, 
 		GameEnums.VitalType.FULLNESS,
@@ -96,6 +93,7 @@ func _get_vitals_data() -> Dictionary:
 	]
 	
 	for t in types:
+		# Ensure VitalManager is using the correct 'current' getter
 		v_data[str(t)] = VitalManager.get_current(t)
 	
 	return v_data
@@ -103,9 +101,9 @@ func _get_vitals_data() -> Dictionary:
 func _restore_vitals(v_data: Dictionary) -> void:
 	for key in v_data:
 		var type = int(key)
-		var amount = float(v_data[key])
+		var amount = float(v_data[key]) # Fixed the syntax error here
 		
-		# Set current value directly (bypassing logic if needed)
+		# Set current value directly
 		if type in VitalManager.vitals:
 			VitalManager.vitals[type]["current"] = amount
 			# Emit signal to update UI bars

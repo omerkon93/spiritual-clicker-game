@@ -17,7 +17,7 @@ func _ready():
 	button_exit.pressed.connect(_on_exit_pressed)
 	
 	# Check for save file
-	if not SaveSystem.save_file_exists(): #
+	if not SaveManager.save_file_exists(): #
 		button_load.disabled = true
 		button_load.text = "No Save Found"
 
@@ -26,7 +26,7 @@ func _on_start_pressed():
 
 func _on_load_pressed():
 	# Flag the system to load automatically when the world is ready
-	SaveSystem.load_game() #
+	SaveManager.load_game() #
 	get_tree().change_scene_to_file(GAME_SCENE_PATH)
 
 func _on_settings_pressed():

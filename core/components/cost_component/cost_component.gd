@@ -76,7 +76,7 @@ func check_affordability() -> bool:
 	for type: int in final_currency_costs:
 		var cost: float = final_currency_costs[type]
 		
-		if not Bank.has_enough_currency(type, cost):
+		if not CurrencyManager.has_enough_currency(type, cost):
 			var currency_name = GameEnums.CurrencyType.find_key(type)
 			if currency_name:
 				currency_name = currency_name.capitalize()
@@ -109,12 +109,12 @@ func pay_all() -> void:
 	
 	# Pay Currency
 	for type: int in final_currency_costs:
-		Bank.spend_currency(type, final_currency_costs[type])
+		CurrencyManager.spend_currency(type, final_currency_costs[type])
 
 # --- HELPERS ---
 func _should_skip_sanity(type: int) -> bool:
 	if type == GameEnums.VitalType.SANITY:
 		# Example Logic: If you have no Spirit, you stop caring about Sanity
-		if Bank.get_currency_amount(GameEnums.CurrencyType.SPIRIT) <= 0:
+		if CurrencyManager.get_currency_amount(GameEnums.CurrencyType.SPIRIT) <= 0:
 			return true
 	return false

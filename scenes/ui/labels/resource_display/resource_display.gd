@@ -42,10 +42,10 @@ func _setup_currency(def: CurrencyDefinition) -> void:
 	progress_bar.visible = false # Money usually doesn't need a bar
 	
 	# Connect to Bank
-	Bank.currency_changed.connect(_on_currency_changed)
+	CurrencyManager.currency_changed.connect(_on_currency_changed)
 	
 	# Initial Value
-	var current = Bank.get_currency_amount(_id)
+	var current = CurrencyManager.get_currency_amount(_id)
 	_update_display(current, -1, false)
 
 func _setup_vital(def: VitalDefinition) -> void:

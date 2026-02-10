@@ -68,7 +68,7 @@ func deliver_rewards() -> Array[Dictionary]:
 	# 2. Give Currency
 	for type: int in final_currency_gains:
 		var amount: float = final_currency_gains[type]
-		Bank.add_currency(type, amount)
+		CurrencyManager.add_currency(type, amount)
 		
 		if amount > 0:
 			events.append(_format_event(type, amount, false))

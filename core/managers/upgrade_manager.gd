@@ -38,10 +38,10 @@ func get_upgrade_level(upgrade_id: String) -> int:
 func try_purchase_level(upgrade: LevelableUpgrade) -> bool:
 	var cost = get_current_cost(upgrade)
 	
-	if not Bank.has_enough_currency(upgrade.cost_currency, cost):
+	if not CurrencyManager.has_enough_currency(upgrade.cost_currency, cost):
 		return false
 		
-	Bank.spend_currency(upgrade.cost_currency, cost)
+	CurrencyManager.spend_currency(upgrade.cost_currency, cost)
 	
 	# --- NEW: ACTION TRIGGER LOGIC ---
 	if upgrade.on_purchase_action:
@@ -60,7 +60,7 @@ func try_purchase_level(upgrade: LevelableUpgrade) -> bool:
 	upgrade_levels[upgrade.id] = new_lvl
 	
 	if upgrade.unlock_currency != GameEnums.CurrencyType.NONE:
-		Bank.add_currency(upgrade.unlock_currency, upgrade.unlock_amount)
+		CurrencyManager.add_currency(upgrade.unlock_currency, upgrade.unlock_amount)
 	
 	upgrade_leveled_up.emit(upgrade.id, new_lvl)
 	return true
@@ -91,11 +91,11 @@ func try_purchase_upgrade(upgrade: LevelableUpgrade) -> bool:
 	
 	# 4. Check Affordability (Assuming Money for now)
 	# If you want upgrades to cost other things, you'd check that here.
-	if not Bank.has_enough_currency(GameEnums.CurrencyType.MONEY, cost):
+	if not CurrencyManager.has_enough_currency(GameEnums.CurrencyType.MONEY, cost):
 		return false
 		
 	# 5. Purchase!
-	Bank.remove_currency(GameEnums.CurrencyType.MONEY, cost)
+	CurrencyManager.remove_currency(GameEnums.CurrencyType.MONEY, cost)
 	level_up(upgrade.id) # This updates the dictionary and emits the signal
 	
 	return true

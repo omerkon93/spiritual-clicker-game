@@ -25,15 +25,15 @@ buses/default_bus_layout="uid://ck0e77xyf2loi"
 
 [autoload]
 
-Bank="*res://core/systems/bank_system.gd"
-GameStats="*res://core/systems/game_stats.gd"
-UpgradeManager="*res://core/systems/upgrade_manager.gd"
-SaveSystem="*res://core/systems/save_system.gd"
+CurrencyManager="*res://core/managers/currency_manager.gd"
+GameStats="*res://core/managers/game_stats.gd"
+UpgradeManager="*res://core/managers/upgrade_manager.gd"
+SaveManager="*res://core/managers/save_manager.gd"
 SignalBus="*res://core/globals/signal_bus.gd"
-SoundManager="*res://core/systems/sound_manager.tscn"
-DialogueManager="*res://core/systems/dialogue_manager.tscn"
-VitalManager="*res://core/systems/vital_manager.gd"
-StorySystem="*res://core/systems/story_system.gd"
+SoundManager="*res://core/managers/sound_manager.tscn"
+DialogueManager="*res://core/managers/dialogue_manager.tscn"
+VitalManager="*res://core/managers/vital_manager.gd"
+StoryManager="*res://core/managers/story_manager.gd"
 
 [file_customization]
 

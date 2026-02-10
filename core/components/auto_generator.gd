@@ -38,7 +38,7 @@ func _on_timeout():
 	
 	if amount <= 0: return
 
-	Bank.add_currency(currency_type, amount)
+	CurrencyManager.add_currency(currency_type, amount)
 	
 	# Visual Logic
 	var parent_node = get_parent()

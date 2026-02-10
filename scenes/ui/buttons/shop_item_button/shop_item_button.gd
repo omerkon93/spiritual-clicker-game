@@ -47,7 +47,7 @@ func _process(_delta: float) -> void:
 		return
 
 	var cost = UpgradeManager.get_current_cost(upgrade_resource)
-	var can_afford = Bank.has_enough_currency(upgrade_resource.cost_currency, cost)
+	var can_afford = CurrencyManager.has_enough_currency(upgrade_resource.cost_currency, cost)
 	
 	# Smoothly tint red if too expensive
 	if can_afford:

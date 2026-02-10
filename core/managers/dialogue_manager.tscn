@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b6newlnyw3q2f"]
 
-[ext_resource type="Script" uid="uid://dr12aadunjt0w" path="res://core/systems/dialogue_manager.gd" id="1_40lrj"]
+[ext_resource type="Script" uid="uid://dr12aadunjt0w" path="res://core/managers/dialogue_manager.gd" id="1_40lrj"]
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="2_mtipp"]
 
 [node name="DialogueSystem" type="CanvasLayer"]
