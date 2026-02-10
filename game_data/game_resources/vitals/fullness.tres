@@ -2,15 +2,13 @@
 
 [ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="1_xoqmm"]
 
-[sub_resource type="Gradient" id="Gradient_xoqmm"]
-colors = PackedColorArray(1, 1, 0.6784314, 1, 1, 1, 0, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_oislf"]
-gradient = SubResource("Gradient_xoqmm")
+[sub_resource type="Gradient" id="Gradient_2w7do"]
+offsets = PackedFloat32Array(0, 0.81229776, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.89644015, 0.89644015, 0, 1, 0, 1, 0, 1)
 
 [resource]
 script = ExtResource("1_xoqmm")
 type = 102
 display_name = "Fullness"
-gradient = SubResource("GradientTexture1D_oislf")
+gradient = SubResource("Gradient_2w7do")
 metadata/_custom_type_script = "uid://derwj2ijevwkr"

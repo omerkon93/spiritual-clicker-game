@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://clvys7pbyarur"]
 
 [ext_resource type="Script" uid="uid://bbajf7klmdgm7" path="res://scenes/ui/menus/main_menu/main_menu.gd" id="1_flhq8"]
+[ext_resource type="PackedScene" uid="uid://bxo11gelgnitj" path="res://scenes/ui/menus/settings_menu/settings_menu.tscn" id="2_e7q4l"]
 
 [node name="MainMenu" type="Control" unique_id=1512600831]
 layout_mode = 3
@@ -42,3 +43,7 @@ text = "Settings"
 [node name="ButtonExit" type="Button" parent="CenterContainer/VBoxContainer" unique_id=461431845]
 layout_mode = 2
 text = "Exit"
+
+[node name="SettingsMenu" parent="." unique_id=721209956 instance=ExtResource("2_e7q4l")]
+visible = false
+layout_mode = 1

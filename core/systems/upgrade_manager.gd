@@ -1,20 +1,25 @@
 extends Node
 
-signal upgrade_leveled_up(upgrade_id: String, new_level: int)
-
-# Key: String (Upgrade ID), Value: Int (Level)
-var upgrade_levels: Dictionary = {}
-
-# The central list of ALL shop items
-var available_upgrades: Array[LevelableUpgrade] = []
-
 # Folders to scan automatically on startup
 # Adjust these paths to match your project structure!
 const AUTO_LOAD_PATHS = [
-	"res://game_data/upgrades/",
-	"res://game_data/technology/",
+	"res://game_data/game_progression/upgrades/",
+	"res://game_data/game_progression/technology/",
 	"res://game_data/consumables/" # If you put consumables here
 ]
+
+# --- SIGNALS ---
+signal upgrade_leveled_up(id: String, new_level: int)
+
+# --- STATE ---
+# This Dictionary holds your save data: { "upgrade_id": level }
+var _unlocked_upgrades: Dictionary = {}   # <--- THIS IS MISSING
+
+# --- CONFIGURATION ---
+# (Your existing lists of upgrades go here...)
+var available_upgrades: Array[LevelableUpgrade] = []
+# Key: String (Upgrade ID), Value: Int (Level)
+var upgrade_levels: Dictionary = {}
 
 var reward_calculator: RewardComponent
 
@@ -72,6 +77,39 @@ func add_available_upgrade(upgrade: LevelableUpgrade):
 		# Optional: Sort by price or name so the shop looks tidy
 		# available_upgrades.sort_custom(func(a, b): return a.base_cost < b.base_cost)
 
+func try_purchase_upgrade(upgrade: LevelableUpgrade) -> bool:
+	# 1. Get current state
+	var current_lvl = get_upgrade_level(upgrade.id)
+	
+	# 2. Safety Check: Is it already maxed?
+	if upgrade.max_level != -1 and current_lvl >= upgrade.max_level:
+		return false
+
+	# 3. Calculate Cost
+	# Formula: Base Cost * (Multiplier ^ Current Level)
+	var cost = upgrade.base_cost * pow(upgrade.cost_multiplier, current_lvl)
+	
+	# 4. Check Affordability (Assuming Money for now)
+	# If you want upgrades to cost other things, you'd check that here.
+	if not Bank.has_enough_currency(GameEnums.CurrencyType.MONEY, cost):
+		return false
+		
+	# 5. Purchase!
+	Bank.remove_currency(GameEnums.CurrencyType.MONEY, cost)
+	level_up(upgrade.id) # This updates the dictionary and emits the signal
+	
+	return true
+
+func level_up(upgrade_id: String) -> void:
+	var current_val = 0
+	if _unlocked_upgrades.has(upgrade_id):
+		current_val = _unlocked_upgrades[upgrade_id]
+	
+	_unlocked_upgrades[upgrade_id] = current_val + 1
+	
+	# Emit signal so the UI knows to refresh
+	upgrade_leveled_up.emit(upgrade_id, _unlocked_upgrades[upgrade_id])
+
 func _scan_for_upgrades() -> void:
 	for path in AUTO_LOAD_PATHS:
 		_load_dir_recursive(path)
@@ -116,3 +154,5 @@ func _execute_action_rewards(action: ActionData) -> void:
 			event.text,      # Arg 2: Text
 			event.color      # Arg 3: Color
 		)
+
+# Tries to buy an upgrade. Returns true if successful.

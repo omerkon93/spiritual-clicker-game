@@ -7,7 +7,7 @@ class_name ShopListenerComponent
 
 @export_category("References")
 # The panel to open when the signal is heard
-@export var target_panel: ShopPanel
+@export var target_panel: ShopMenu
 
 func _ready() -> void:
 	SignalBus.dialogue_action.connect(_on_dialogue_action)

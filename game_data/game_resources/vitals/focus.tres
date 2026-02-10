@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="1_1mf8y"]
 
 [sub_resource type="Gradient" id="Gradient_1mf8y"]
+colors = PackedColorArray(0, 0, 0, 1, 0.87058824, 0, 1, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_25um7"]
 gradient = SubResource("Gradient_1mf8y")

@@ -9,4 +9,4 @@ class_name VitalDefinition
 
 # Stats specific to Vitals
 @export var default_max_value: float = 100.0
-@export var gradient: GradientTexture1D # Cool feature: Color changes from Empty -> Full
+@export var gradient: Gradient

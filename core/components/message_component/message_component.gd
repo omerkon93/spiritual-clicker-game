@@ -1,25 +1,26 @@
 extends Node
 class_name MessageComponent
 
-# --- DATA ---
-# Not exported! This is injected by the ActionButton at runtime.
-var failure_messages: Dictionary[int, String] = {}
+# Defines specific messages for specific failures (Optional)
+# Key: The text to match (e.g. "Not enough Energy!"), Value: Custom override
+@export var failure_messages: Dictionary = {}
 
-# Fallback in case the Resource didn't provide a specific message
-var default_message: String = "Not enough resources."
-
-# --- PUBLIC API ---
-
-# Connect this to cost_component.check_failed
-func on_check_failed(reason_type: int) -> void:
-	var msg: String = failure_messages.get(reason_type, default_message)
+func on_check_failed(reason: String) -> void:
+	# 1. Check if we have a custom override for this specific string
+	# (Rarely used now since CostComponent generates good text, but good to have)
+	var final_message: String = reason
+	if failure_messages.has(reason):
+		final_message = failure_messages[reason]
 	
-	# DYNAMIC COLOR FETCHING
-	# No more hardcoded "if money == gold" checks!
-	var color: Color = ResourceConfig.get_color(reason_type)
+	# 2. Display the Feedback
+	_spawn_floating_text(final_message, Color.RED)
+
+func _spawn_floating_text(text: String, color: Color) -> void:
+	var pos: Vector2 = get_viewport().get_mouse_position()
 	
-	# Fallback: If color is white (maybe default), make it red for error visibility
-	if color == Color.WHITE:
-		color = Color.RED
-		
-	SignalBus.message_logged.emit(msg, color)
+	# Add a little randomness so they don't stack perfectly
+	pos.x += randf_range(-10, 10)
+	pos.y += randf_range(-10, 10)
+	
+	# Send to the global event bus
+	SignalBus.request_floating_text.emit(pos, text, color)

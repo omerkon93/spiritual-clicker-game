@@ -1,55 +1,74 @@
-[gd_scene format=3 uid="uid://8kq0xrdwg7tg"]
+[gd_scene format=3 uid="uid://dnql0wnfnqy0d"]
 
-[ext_resource type="Script" uid="uid://rksw2s3x3xlh" path="res://scenes/test/test_world.gd" id="1_k3yvu"]
-[ext_resource type="Script" uid="uid://dnv2amsfje5td" path="res://core/resources/dialogue_sequence.gd" id="2_78y6d"]
-[ext_resource type="PackedScene" uid="uid://dg4h5aptq65se" path="res://scenes/ui/labels/currency_label/currency_label.tscn" id="2_k3yvu"]
-[ext_resource type="PackedScene" uid="uid://ebo8g81tnm2" path="res://scenes/ui/buttons/action_button.tscn" id="3_rof45"]
-[ext_resource type="Script" uid="uid://bcsexecu62rxe" path="res://core/resources/dialogue_slide.gd" id="3_ylxeo"]
-[ext_resource type="PackedScene" uid="uid://bat5nsx25qnvb" path="res://core/components/shop_window_component/shop_window_component.tscn" id="3_yna3y"]
-[ext_resource type="Resource" uid="uid://cdbyreyc7vb86" path="res://game_data/actions/action_work.tres" id="4_0ehgn"]
-[ext_resource type="PackedScene" uid="uid://7kksc1qvtwyv" path="res://scenes/ui/buttons/shop_trigger.tscn" id="5_fddy8"]
-[ext_resource type="Resource" uid="uid://cejdboquer5lm" path="res://game_data/actions/action_rest.tres" id="5_rof45"]
-[ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="5_xk5tv"]
-[ext_resource type="PackedScene" uid="uid://brw4tnt3187u7" path="res://core/components/floating_text_component/floating_text_component.tscn" id="6_78y6d"]
-[ext_resource type="Resource" uid="uid://ic1w0i1v3swl" path="res://game_data/actions/action_eat.tres" id="6_xk4pe"]
-[ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/menus/shop_menu/shop_panel.tscn" id="7_fddy8"]
-[ext_resource type="Resource" uid="uid://dqm22xe6kirin" path="res://game_data/currencies/spirit.tres" id="7_mbqn5"]
-[ext_resource type="PackedScene" uid="uid://chhrvwnrgoavo" path="res://scenes/ui/labels/chat_log/chat_log.tscn" id="7_r010t"]
-[ext_resource type="PackedScene" uid="uid://cmm38u5fxvtkf" path="res://scenes/ui/labels/vitals_label/vitals_label.tscn" id="8_fddy8"]
-[ext_resource type="Resource" uid="uid://y3ehljvnfi6r" path="res://game_data/currencies/money.tres" id="8_fmur5"]
-[ext_resource type="Resource" uid="uid://1wwmuacjfdx3" path="res://game_data/vitals/energy.tres" id="12_rof45"]
-[ext_resource type="Resource" uid="uid://ndheoh48icml" path="res://game_data/vitals/focus.tres" id="12_xk4pe"]
-[ext_resource type="Resource" uid="uid://c0n16drryeoss" path="res://game_data/vitals/fullness.tres" id="13_xk4pe"]
+[ext_resource type="Script" uid="uid://cg4tvvr3xcavd" path="res://scenes/test/test_world.gd" id="1_mhjrp"]
+[ext_resource type="PackedScene" uid="uid://brw4tnt3187u7" path="res://core/components/floating_text_component/floating_text_component.tscn" id="2_4j6oq"]
+[ext_resource type="PackedScene" uid="uid://cqe0o1s22480x" path="res://scenes/ui/labels/resource_display/resource_display.tscn" id="3_0xc2k"]
+[ext_resource type="Script" uid="uid://cmjd7pxovwsxn" path="res://core/resources/currency_definition.gd" id="4_4j6oq"]
+[ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="5_vdk5t"]
+[ext_resource type="PackedScene" uid="uid://diw24lvqdympd" path="res://scenes/ui/menus/actions_menu/actions_menu.tscn" id="6_4fu3m"]
+[ext_resource type="PackedScene" uid="uid://bxo11gelgnitj" path="res://scenes/ui/menus/settings_menu/settings_menu.tscn" id="7_d54ay"]
+[ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/menus/shop_menu/shop_menu.tscn" id="8_mopo4"]
 
-[sub_resource type="Resource" id="Resource_e2ghx"]
-script = ExtResource("3_ylxeo")
-text = "Hello! I have the best tech in town."
-portrait = ExtResource("5_xk5tv")
-metadata/_custom_type_script = "uid://bcsexecu62rxe"
+[sub_resource type="Gradient" id="Gradient_4cp3g"]
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 0, 1)
 
-[sub_resource type="Resource" id="Resource_gt1f0"]
-script = ExtResource("2_78y6d")
-slides = Array[ExtResource("3_ylxeo")]([SubResource("Resource_e2ghx")])
-metadata/_custom_type_script = "uid://dnv2amsfje5td"
+[sub_resource type="Resource" id="Resource_f82ok"]
+script = ExtResource("5_vdk5t")
+type = 101
+display_name = "Energy"
+gradient = SubResource("Gradient_4cp3g")
+metadata/_custom_type_script = "uid://derwj2ijevwkr"
 
-[node name="TestWorld" type="Control" unique_id=1370352673]
+[sub_resource type="Gradient" id="Gradient_2w7do"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 1, 0, 1)
+
+[sub_resource type="Resource" id="Resource_kpecj"]
+script = ExtResource("5_vdk5t")
+type = 102
+display_name = "Fullness"
+gradient = SubResource("Gradient_2w7do")
+metadata/_custom_type_script = "uid://derwj2ijevwkr"
+
+[sub_resource type="Gradient" id="Gradient_4j6oq"]
+colors = PackedColorArray(0, 0, 0, 1, 0.6392157, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_a3kcf"]
+script = ExtResource("5_vdk5t")
+type = 103
+display_name = "Focus"
+gradient = SubResource("Gradient_4j6oq")
+metadata/_custom_type_script = "uid://derwj2ijevwkr"
+
+[sub_resource type="Resource" id="Resource_82yio"]
+script = ExtResource("4_4j6oq")
+type = 1
+display_name = "Money"
+metadata/_custom_type_script = "uid://cmjd7pxovwsxn"
+
+[sub_resource type="Resource" id="Resource_l46gi"]
+script = ExtResource("4_4j6oq")
+type = 2
+display_name = "Spirit"
+metadata/_custom_type_script = "uid://cmjd7pxovwsxn"
+
+[node name="TestWorld" type="Node2D" unique_id=1004633402]
+script = ExtResource("1_mhjrp")
+
+[node name="Components" type="Node" parent="." unique_id=1798389312]
+
+[node name="FloatingTextComponent" parent="Components" unique_id=797333456 instance=ExtResource("2_4j6oq")]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1925021350]
+
+[node name="HUD" type="Control" parent="UI" unique_id=1584648114]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_k3yvu")
-intro_conversation = SubResource("Resource_gt1f0")
 
-[node name="Components" type="Node" parent="." unique_id=920254965]
-
-[node name="ShopWindowComponent" parent="Components" unique_id=216790161 node_paths=PackedStringArray("shop_panel") instance=ExtResource("3_yna3y")]
-shop_panel = NodePath("../../HBoxContainer/VBoxContainer/MarginContainer2/ShopPanel")
-
-[node name="FloatingTextComponent" parent="Components" unique_id=1240720882 instance=ExtResource("6_78y6d")]
-
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=141167213]
+[node name="Panel" type="Panel" parent="UI/HUD" unique_id=177599683]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -57,108 +76,72 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1559174512]
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=1726756815]
-layout_mode = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="HBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/MarginContainer" unique_id=1097148633]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="MoneyButton2" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1421207610 instance=ExtResource("3_rof45")]
-layout_mode = 2
-text = "Money"
-action_data = ExtResource("4_0ehgn")
-
-[node name="RestButton" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=793303021 instance=ExtResource("3_rof45")]
-layout_mode = 2
-text = "Rest"
-action_data = ExtResource("5_rof45")
-
-[node name="FoodButton" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1230737808 instance=ExtResource("3_rof45")]
-layout_mode = 2
-text = "Eat"
-action_data = ExtResource("6_xk4pe")
-
-[node name="ShopTrigger" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1311836220 instance=ExtResource("5_fddy8")]
-layout_mode = 2
-
-[node name="Save" type="Button" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=734749047]
-layout_mode = 2
-text = "Save"
-
-[node name="Load" type="Button" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1264358398]
-layout_mode = 2
-text = "Load"
-
-[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=58710978]
-layout_mode = 2
-size_flags_vertical = 3
+[node name="MarginContainer" type="MarginContainer" parent="UI/HUD/Panel" unique_id=486811361]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ShopPanel" parent="HBoxContainer/VBoxContainer/MarginContainer2" unique_id=1946770693 instance=ExtResource("7_fddy8")]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/HUD/Panel/MarginContainer" unique_id=1533625624]
+layout_mode = 2
+theme_override_constants/separation = 50
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=217987100]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Energy" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=762132846 instance=ExtResource("3_0xc2k")]
+layout_mode = 2
+resource_def = SubResource("Resource_f82ok")
+
+[node name="Fullness" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=268868763 instance=ExtResource("3_0xc2k")]
+layout_mode = 2
+resource_def = SubResource("Resource_kpecj")
+
+[node name="Focus" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=178671366 instance=ExtResource("3_0xc2k")]
+layout_mode = 2
+resource_def = SubResource("Resource_a3kcf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=956887607]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Money" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VBoxContainer" unique_id=708812145 instance=ExtResource("3_0xc2k")]
+layout_mode = 2
+resource_def = SubResource("Resource_82yio")
+
+[node name="Spirit" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1986776042 instance=ExtResource("3_0xc2k")]
+layout_mode = 2
+resource_def = SubResource("Resource_l46gi")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=2099914842]
+anchors_preset = -1
+anchor_top = 0.3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="TabContainer" type="TabContainer" parent="UI/MarginContainer" unique_id=1306956362]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
+current_tab = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer" unique_id=1058164294]
-custom_minimum_size = Vector2(300, 0)
+[node name="Settings" parent="UI/MarginContainer/TabContainer" unique_id=721209956 instance=ExtResource("7_d54ay")]
+visible = false
 layout_mode = 2
-theme_override_constants/separation = 6
+metadata/_tab_index = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer2" unique_id=1873120524]
+[node name="Actions" parent="UI/MarginContainer/TabContainer" unique_id=772517719 instance=ExtResource("6_4fu3m")]
+visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
+metadata/_tab_index = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer2/MarginContainer" unique_id=538806201]
+[node name="Shop" parent="UI/MarginContainer/TabContainer" unique_id=598056843 instance=ExtResource("8_mopo4")]
 layout_mode = 2
-
-[node name="MoneyLabel" parent="HBoxContainer/VBoxContainer2/MarginContainer/VBoxContainer" unique_id=689701585 instance=ExtResource("2_k3yvu")]
-layout_mode = 2
-monitored_currency = ExtResource("8_fmur5")
-
-[node name="SpiritLabel" parent="HBoxContainer/VBoxContainer2/MarginContainer/VBoxContainer" unique_id=1577944242 instance=ExtResource("2_k3yvu")]
-layout_mode = 2
-monitored_currency = ExtResource("7_mbqn5")
-
-[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer2" unique_id=1268777503]
-layout_mode = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer2/MarginContainer2" unique_id=151500714]
-layout_mode = 2
-
-[node name="EnergyLabel" parent="HBoxContainer/VBoxContainer2/MarginContainer2/VBoxContainer" unique_id=381674187 instance=ExtResource("8_fddy8")]
-layout_mode = 2
-vital_definition = ExtResource("12_rof45")
-
-[node name="FullnessLabel" parent="HBoxContainer/VBoxContainer2/MarginContainer2/VBoxContainer" unique_id=1585254881 instance=ExtResource("8_fddy8")]
-layout_mode = 2
-vital_definition = ExtResource("13_xk4pe")
-
-[node name="FocusLabel" parent="HBoxContainer/VBoxContainer2/MarginContainer2/VBoxContainer" unique_id=2007635991 instance=ExtResource("8_fddy8")]
-layout_mode = 2
-vital_definition = ExtResource("12_xk4pe")
-
-[node name="ChatLog" parent="HBoxContainer" unique_id=1335920570 instance=ExtResource("7_r010t")]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Load" to="." method="_on_load_pressed"]
+metadata/_tab_index = 2

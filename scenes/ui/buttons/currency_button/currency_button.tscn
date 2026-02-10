@@ -1,9 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cqjm2iv5ibos"]
+[gd_scene format=3 uid="uid://cqjm2iv5ibos"]
 
-[ext_resource type="Script" uid="uid://c07o6o608i8td" path="res://scenes/ui/buttons/currency_button.gd" id="1_ei5tu"]
+[ext_resource type="Script" uid="uid://c07o6o608i8td" path="res://scenes/ui/buttons/currency_button/currency_button.gd" id="1_ei5tu"]
 [ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="4_ei5tu"]
-[ext_resource type="Resource" uid="uid://cwft1llqhhvm3" path="res://game_data/upgrades/upgrade_work_power.tres" id="5_peuum"]
-[ext_resource type="Resource" uid="uid://bt361nl08dgng" path="res://game_data/upgrades/upgrade_work_speed.tres" id="6_sqpfg"]
+[ext_resource type="Resource" uid="uid://cwft1llqhhvm3" path="res://game_data/game_progression/upgrades/upgrade_work_power.tres" id="5_peuum"]
+[ext_resource type="Resource" uid="uid://bt361nl08dgng" path="res://game_data/game_progression/upgrades/upgrade_work_speed.tres" id="6_sqpfg"]
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="7_peuum"]
 
 [node name="CurrencyButton" type="Button" node_paths=PackedStringArray("progress_bar")]

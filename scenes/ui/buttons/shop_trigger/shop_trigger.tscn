@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://7kksc1qvtwyv"]
 
-[ext_resource type="Script" uid="uid://c8dpo150pvqh0" path="res://scenes/ui/buttons/shop_trigger.gd" id="1_l8ys1"]
+[ext_resource type="Script" uid="uid://c8dpo150pvqh0" path="res://scenes/ui/buttons/shop_trigger/shop_trigger.gd" id="1_l8ys1"]
 [ext_resource type="Resource" uid="uid://cags6m33ueobw" path="res://game_data/dialogue/dialogue_sequences/shop_intro.tres" id="2_6huq3"]
 [ext_resource type="PackedScene" uid="uid://b8pmafvaprey4" path="res://core/components/dialogue_component/dialogue_component.tscn" id="2_ke5s2"]
 [ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="4_0y0vd"]

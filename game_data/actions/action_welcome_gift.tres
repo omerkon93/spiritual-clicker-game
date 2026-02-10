@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_lixfq")
 display_name = "Welcome Gift"
+is_visible_in_menu = false
 currency_gains = Dictionary[int, float]({
 1: 100.0
 })

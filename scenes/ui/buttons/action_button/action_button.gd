@@ -2,7 +2,12 @@ extends Button
 class_name ActionButton
 
 # --- DATA ---
-@export var action_data: ActionData
+@export var action_data: ActionData:
+	set(value):
+		action_data = value
+		# If the node is already in the scene, update immediately!
+		if is_node_ready(): 
+			_load_data_into_components()
 
 # --- COMPONENTS ---
 @export_category("Components")
@@ -14,18 +19,20 @@ class_name ActionButton
 
 # --- SETTINGS ---
 @export_category("Settings")
-@export var base_cooldown: float = 0.5
+@export var base_cooldown: float = 0.5 # Will be overwritten by ActionData
 
 @export_group("Upgrades")
-# 1. PRIMARY: The main upgrade for this button (Source of Truth!)
 @export var primary_upgrade: LevelableUpgrade
-
-# 2. CONTRIBUTORS: Other items that might boost this (e.g. "Coffee" boosts "Work")
 @export var contributing_upgrades: Array[LevelableUpgrade] = []
 
 # --- DEPENDENCIES ---
 @onready var timer: Timer = $CooldownTimer
 @export var progress_bar: TextureProgressBar
+
+# --- VISUAL REFERENCES ---
+@onready var title_label: Label = %TitleLabel
+@onready var details_label: Label = %DetailsLabel
+@onready var icon_rect: TextureRect = %IconRect
 
 var current_cooldown: float = 1.0
 
@@ -38,7 +45,7 @@ func _ready() -> void:
 	if action_data:
 		_load_data_into_components()
 	
-	# Initial calculation
+	# Initial calculation to set the correct Cooldown before the first click
 	_recalculate_upgrades()
 
 func _process(_delta: float) -> void:
@@ -86,50 +93,78 @@ func _validate_and_connect_components() -> void:
 		streak_component.cost_component = cost_component
 
 func _load_data_into_components() -> void:
+	if not action_data: return
+
+	# 1. SYNC SETTINGS
+	# The Resource is the "Source of Truth"
+	base_cooldown = action_data.base_duration
+	
+	# We set this temporarily; _recalculate_upgrades will finalize it momentarily
+	current_cooldown = base_cooldown
+	if timer: 
+		timer.wait_time = current_cooldown
+		timer.one_shot = true 
+
+	# 2. SYNC VISUALS
+	_update_ui()
+
+	# 3. CONFIGURE COMPONENTS
 	if cost_component: cost_component.configure(action_data)
 	if reward_component: reward_component.configure(action_data)
+	
 	if message_component and not action_data.failure_messages.is_empty():
 		message_component.failure_messages = action_data.failure_messages.duplicate()
+		
 	if streak_component: streak_component.configure(action_data)
+
+func _update_ui() -> void:
+	if not action_data: return
+	
+	# Set Title
+	if title_label: 
+		title_label.text = action_data.display_name
+	
+	# Set Icon
+	if icon_rect and action_data.icon:
+		icon_rect.texture = action_data.icon
+		
+	# Set Tooltip
+	if action_data.description != "":
+		tooltip_text = action_data.description
+		
+	# Set Details (Optional placeholder)
+	if details_label:
+		details_label.text = "Click to Start"
 
 func _recalculate_upgrades() -> void:
 	var total_extra_power: float = 0.0
 	var reduction_time: float = 0.0
 	
-	# 1. Combine Primary + Contributors into one list to process them identically
 	var all_upgrades: Array[LevelableUpgrade] = contributing_upgrades.duplicate()
 	if primary_upgrade:
 		all_upgrades.append(primary_upgrade)
 	
-	# 2. Loop through EVERYTHING
 	for upg: LevelableUpgrade in all_upgrades:
 		var lvl: int = UpgradeManager.get_upgrade_level(upg.id)
 		
 		if lvl > 0:
 			var effect: float = upg.power_per_level * lvl
-			
-			# Logic is now driven purely by the Resource's 'target_stat'
 			match upg.target_stat:
 				GameEnums.StatType.CLICK_POWER:
 					total_extra_power += effect
 				GameEnums.StatType.CLICK_COOLDOWN:
 					reduction_time += effect
-				_:
-					# Handle custom stats if needed
-					pass
 	
-	# --- APPLY TO COMPONENT ---
+	# Apply Power
 	if reward_component and reward_component.has_method("recalculate_finals"):
 		reward_component.recalculate_finals(total_extra_power)
 	
-	# Apply Cooldown Reduction
+	# Apply Cooldown Reduction (Don't let it go below 0.1s)
 	current_cooldown = max(0.1, base_cooldown - reduction_time)
 	if timer: timer.wait_time = current_cooldown
 
 func _on_upgrade_leveled(id: String, _lvl: int) -> void:
-	# Optimization: Check if the leveled-up item is relevant to us
 	var is_relevant: bool = false
-	
 	if primary_upgrade and primary_upgrade.id == id:
 		is_relevant = true
 	else:
@@ -143,21 +178,21 @@ func _on_upgrade_leveled(id: String, _lvl: int) -> void:
 
 # --- VISUALS ---
 
-func _visualize_feedback(events: Array[Dictionary]) -> void:
-	for event: Dictionary in events:
-		_spawn_floating_text(event.get("text", ""), event.get("color", Color.WHITE))
-
-func _spawn_floating_text(floating_text: String, color: Color) -> void:
-	var pos: Vector2 = get_global_mouse_position() # Use global mouse pos for safety
-	pos.x += randf_range(-20, 20)
-	pos.y += randf_range(-20, 20)
-	SignalBus.request_floating_text.emit(pos, floating_text, color)
-
 func play_shake() -> void:
 	var tween: Tween = create_tween()
 	tween.tween_property(self, "position:x", position.x + 5, 0.05)
 	tween.tween_property(self, "position:x", position.x - 5, 0.05)
 	tween.tween_property(self, "position:x", position.x, 0.05)
+
+func _visualize_feedback(events: Array[Dictionary]) -> void:
+	for event: Dictionary in events:
+		_spawn_floating_text(event.get("text", ""), event.get("color", Color.WHITE))
+
+func _spawn_floating_text(floating_text: String, color: Color) -> void:
+	var pos: Vector2 = get_global_mouse_position()
+	pos.x += randf_range(-20, 20)
+	pos.y += randf_range(-20, 20)
+	SignalBus.request_floating_text.emit(pos, floating_text, color)
 
 func _play_bounce_animation() -> void:
 	pivot_offset = size / 2

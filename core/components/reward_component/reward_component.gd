@@ -2,14 +2,14 @@ extends Node
 class_name RewardComponent
 
 # --- STATE ---
-var base_vital_gains: Dictionary[int, float] = {}
-var base_currency_gains: Dictionary[int, float] = {}
+var base_vital_gains: Dictionary = {}
+var base_currency_gains: Dictionary = {}
 
-var final_vital_gains: Dictionary[int, float] = {}
-var final_currency_gains: Dictionary[int, float] = {}
+var final_vital_gains: Dictionary = {}
+var final_currency_gains: Dictionary = {}
 
 # Modifiers
-var active_multipliers: Dictionary[int, float] = {}
+var active_multipliers: Dictionary = {}
 var current_extra_power: float = 0.0
 
 # --- SETUP ---
@@ -17,7 +17,7 @@ func configure(data: ActionData) -> void:
 	base_vital_gains = data.vital_gains.duplicate()
 	base_currency_gains = data.currency_gains.duplicate()
 	
-	# Initial reset
+	# Initial calculation (Power starts at 0)
 	recalculate_finals(0.0)
 
 # --- PUBLIC API ---
@@ -25,8 +25,8 @@ func configure(data: ActionData) -> void:
 # Called by StreakComponent (Frequent Updates)
 func set_multiplier(currency_type: int, mult: float) -> void:
 	active_multipliers[currency_type] = mult
-	# CRITICAL FIX: Re-use the stored upgrade power, don't reset it to 0.0!
-	recalculate_finals(current_extra_power) 
+	# RE-CALCULATE: Use the stored power so we don't lose upgrade bonuses!
+	recalculate_finals(current_extra_power)
 
 # Called by ActionButton (When Upgrades happen)
 func recalculate_finals(extra_currency_power: float) -> void:
@@ -38,16 +38,17 @@ func recalculate_finals(extra_currency_power: float) -> void:
 	final_currency_gains = base_currency_gains.duplicate()
 	
 	# 3. Apply Upgrades (Add Flat Power)
-	# IMPROVED LOGIC: Prioritize MONEY for the upgrade bonus.
-	# If no Money exists, fall back to the first available currency.
 	if current_extra_power > 0:
+		# Priority: Add to Money first
 		if final_currency_gains.has(GameEnums.CurrencyType.MONEY):
 			final_currency_gains[GameEnums.CurrencyType.MONEY] += current_extra_power
+		# Fallback: Add to the first currency found (e.g., Spirit)
 		elif not final_currency_gains.is_empty():
-			var first_key: int = final_currency_gains.keys()[0]
+			var first_key = final_currency_gains.keys()[0]
 			final_currency_gains[first_key] += current_extra_power
 	
 	# 4. Apply Streak Multipliers (Multiply Total)
+	# Logic: (Base + Upgrade) * Multiplier
 	for type: int in final_currency_gains:
 		var mult: float = active_multipliers.get(type, 1.0)
 		final_currency_gains[type] = final_currency_gains[type] * mult
@@ -61,12 +62,8 @@ func deliver_rewards() -> Array[Dictionary]:
 		var amount: float = final_vital_gains[type]
 		VitalManager.restore(type, amount)
 		
-		# Only show floating text if gain is positive
 		if amount > 0:
-			events.append({
-				"text": ResourceConfig.format_gain(type, amount),
-				"color": ResourceConfig.get_color(type)
-			})
+			events.append(_format_event(type, amount, true))
 		
 	# 2. Give Currency
 	for type: int in final_currency_gains:
@@ -74,9 +71,38 @@ func deliver_rewards() -> Array[Dictionary]:
 		Bank.add_currency(type, amount)
 		
 		if amount > 0:
-			events.append({
-				"text": ResourceConfig.format_gain(type, amount),
-				"color": ResourceConfig.get_color(type)
-			})
+			events.append(_format_event(type, amount, false))
 		
 	return events
+
+# --- HELPER ---
+func _format_event(type: int, amount: float, is_vital: bool) -> Dictionary:
+	var text = ""
+	var color = Color.WHITE
+	
+	if is_vital:
+		# FIX: Use find_key() to safely get the name, regardless of the ID value
+		var vital_name = GameEnums.VitalType.find_key(type)
+		if vital_name:
+			vital_name = vital_name.capitalize()
+		else:
+			vital_name = "Unknown Vital"
+			
+		text = "+%d %s" % [amount, vital_name]
+		color = Color.GREEN_YELLOW 
+	else:
+		if type == GameEnums.CurrencyType.MONEY:
+			text = "+$%d" % amount
+			color = Color.GOLD
+		else:
+			# FIX: Use find_key() here too for safety
+			var curr_name = GameEnums.CurrencyType.find_key(type)
+			if curr_name:
+				curr_name = curr_name.capitalize()
+			else:
+				curr_name = "Currency"
+				
+			text = "+%d %s" % [amount, curr_name]
+			color = Color.CYAN
+
+	return {"text": text, "color": color}

@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://diw24lvqdympd"]
+
+[ext_resource type="Script" uid="uid://cydeug6k8hqt4" path="res://scenes/ui/menus/actions_menu/actions_menu.gd" id="1_8pol2"]
+[ext_resource type="PackedScene" uid="uid://ebo8g81tnm2" path="res://scenes/ui/buttons/action_button/action_button.tscn" id="2_0lbaa"]
+
+[node name="ActionsMenu" type="Control" unique_id=772517719 node_paths=PackedStringArray("grid_container")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8pol2")
+action_button_scene = ExtResource("2_0lbaa")
+grid_container = NodePath("MarginContainer/ScrollContainer/GridContainer")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=387269871]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=1382078900]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/ScrollContainer" unique_id=1989423941]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
