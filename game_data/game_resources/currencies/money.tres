@@ -6,4 +6,5 @@
 script = ExtResource("1_qirpe")
 type = 1
 display_name = "Money"
+prefix = "$"
 metadata/_custom_type_script = "uid://cmjd7pxovwsxn"

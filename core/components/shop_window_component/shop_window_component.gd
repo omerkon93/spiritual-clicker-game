@@ -3,8 +3,8 @@ class_name ShopWindowComponent
 
 # --- DEPENDENCIES ---
 # Assign these in Inspector
-@export var shop_panel: ShopPanel
-@export var tech_panel: ShopPanel
+@export var shop_panel: ShopMenu
+@export var tech_panel: ShopMenu
 
 # --- SETUP ---
 func _ready() -> void:
@@ -29,7 +29,7 @@ func _on_dialogue_action(action_id: String) -> void:
 			SignalBus.message_logged.emit("Leaving shop...", Color.WHITE)
 
 # --- HELPERS ---
-func _open_panel(target: ShopPanel) -> void:
+func _open_panel(target: ShopMenu) -> void:
 	# Enforce "One at a time" rule
 	_close_all()
 	

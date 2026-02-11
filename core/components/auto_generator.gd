@@ -34,7 +34,7 @@ func _on_timeout():
 	if not stat_def: return
 
 	# CHANGE 2: Pass the Array (contributing_upgrades) instead of the single var
-	var amount = GameStats.get_stat_value(stat_def, contributing_upgrades)
+	var amount = GameStatsManager.get_stat_value(stat_def, contributing_upgrades)
 	
 	if amount <= 0: return
 

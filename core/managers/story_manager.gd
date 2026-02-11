@@ -15,7 +15,7 @@ func _on_vital_depleted(type: int):
 
 func _trigger_burnout_event():
 	# 1. Check if already happened (Persistent Check)
-	if GameStats.has_flag("unlocked_meditation"):
+	if GameStatsManager.has_flag("unlocked_meditation"):
 		return
 		
 	if has_triggered_burnout: 
@@ -33,7 +33,7 @@ func _trigger_burnout_event():
 	SignalBus.message_logged.emit("You feel a sudden clarity...", Color.VIOLET)
 	
 	# 3. CRITICAL FIX: Set the Flag!
-	GameStats.set_flag("unlocked_meditation", true)
+	GameStatsManager.set_flag("unlocked_meditation", true)
 	
 	# 4. Force Shop Refresh
 	# We emit a "fake" upgrade event so the ShopPanel re-runs its _populate_shop() function

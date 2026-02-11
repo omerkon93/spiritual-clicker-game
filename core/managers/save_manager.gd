@@ -1,110 +1,67 @@
 extends Node
 
-const SAVE_PATH = "user://savegame.json"
+const SAVE_PATH = "user://save_game.json"
+const AUTO_SAVE_INTERVAL = 30.0 
+
+var _timer: Timer
+
+func _ready() -> void:
+	# Setup Auto-Save
+	_timer = Timer.new()
+	_timer.wait_time = AUTO_SAVE_INTERVAL
+	_timer.autostart = true
+	_timer.timeout.connect(save_game)
+	add_child(_timer)
+	
+	# Load automatically on startup
+	load_game()
 
 func save_game() -> void:
+	print("Saving game...")
+	
 	var save_data = {
-		# 1. CURRENCY
-		"money": CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY),
-		"spirit": CurrencyManager.get_currency_amount(GameEnums.CurrencyType.SPIRIT),
-		
-		# 2. UPGRADES
-		"upgrades": UpgradeManager.upgrade_levels,
-		
-		# 3. STORY FLAGS
-		"flags": GameStats.story_flags,
-		
-		# 4. VITALS
-		"vitals": _get_vitals_data(),
-		
-		# 5. META
-		"timestamp": Time.get_unix_time_from_system()
+		"version": "1.0",
+		"timestamp": Time.get_unix_time_from_system(),
+		"currency": CurrencyManager.get_save_data(),
+		"vitals": VitalManager.get_save_data(),
+		"upgrades": UpgradeManager.get_save_data(),
+		"stats": GameStatsManager.get_save_data(),
+		"settings": SettingsManager.get_save_data()
 	}
 	
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
-		var json_str = JSON.stringify(save_data)
-		file.store_string(json_str)
-		print("Game Saved! Path: " + SAVE_PATH)
-	else:
-		printerr("Failed to open save file for writing.")
+		var json_text = JSON.stringify(save_data, "\t")
+		file.store_string(json_text)
+		file.close()
 
 func load_game() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		print("No save file found.")
 		return
-		
+	
 	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if not file: return
-	
-	var json_str = file.get_as_text()
+	var text = file.get_as_text()
 	var json = JSON.new()
-	var parse_result = json.parse(json_str)
+	var error = json.parse(text)
 	
-	if parse_result != OK:
-		printerr("JSON Parse Error: ", json.get_error_message())
-		return
+	if error == OK:
+		var data = json.data
+		print("Loading save...")
 		
-	var data = json.get_data()
-	
-	# --- 1. RESTORE CURRENCY ---
-	if "money" in data:
-		CurrencyManager._wallet[GameEnums.CurrencyType.MONEY] = data["money"]
-		CurrencyManager.currency_changed.emit(GameEnums.CurrencyType.MONEY, data["money"])
+		if data.has("currency"): CurrencyManager.load_save_data(data.currency)
+		if data.has("vitals"): VitalManager.load_save_data(data.vitals)
+		if data.has("upgrades"): UpgradeManager.load_save_data(data.upgrades)
+		if data.has("stats"): GameStatsManager.load_save_data(data.stats)
+		if data.has("settings"): SettingsManager.load_save_data(data.settings)
 		
-	if "spirit" in data:
-		CurrencyManager._wallet[GameEnums.CurrencyType.SPIRIT] = data["spirit"]
-		CurrencyManager.currency_changed.emit(GameEnums.CurrencyType.SPIRIT, data["spirit"])
-		
-	# --- 2. RESTORE UPGRADES ---
-	if "upgrades" in data:
-		UpgradeManager.upgrade_levels.clear()
-		for id in data["upgrades"]:
-			var level = int(data["upgrades"][id])
-			var str_id = str(id)
-			
-			UpgradeManager.upgrade_levels[str_id] = level
-			# Emit so UI updates immediately
-			UpgradeManager.upgrade_leveled_up.emit(str_id, level)
+		print("Game Loaded Successfully!")
+	else:
+		print("JSON Parse Error: ", json.get_error_message())
 
-	# --- 3. RESTORE STORY FLAGS ---
-	if "flags" in data:
-		GameStats.story_flags = data["flags"]
-
-	# --- 4. RESTORE VITALS ---
-	if "vitals" in data:
-		_restore_vitals(data["vitals"])
-
-	print("Game Loaded Successfully!")
+func delete_save() -> void:
+	DirAccess.remove_absolute(SAVE_PATH)
+	print("Save deleted.")
 
 func save_file_exists() -> bool:
 	return FileAccess.file_exists(SAVE_PATH)
-
-# --- HELPER FUNCTIONS ---
-
-func _get_vitals_data() -> Dictionary:
-	var v_data = {}
-	# Assuming VitalManager exposes its 'vitals' dictionary or keys
-	var types = [
-		GameEnums.VitalType.ENERGY, 
-		GameEnums.VitalType.FULLNESS,
-		GameEnums.VitalType.FOCUS,
-		GameEnums.VitalType.SANITY
-	]
-	
-	for t in types:
-		# Ensure VitalManager is using the correct 'current' getter
-		v_data[str(t)] = VitalManager.get_current(t)
-	
-	return v_data
-
-func _restore_vitals(v_data: Dictionary) -> void:
-	for key in v_data:
-		var type = int(key)
-		var amount = float(v_data[key]) # Fixed the syntax error here
-		
-		# Set current value directly
-		if type in VitalManager.vitals:
-			VitalManager.vitals[type]["current"] = amount
-			# Emit signal to update UI bars
-			VitalManager.vital_changed.emit(type, amount, VitalManager.get_max(type))

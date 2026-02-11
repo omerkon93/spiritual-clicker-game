@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://bq5rrfocfi1d5"]
+
+[ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="1_628t3"]
+
+[resource]
+script = ExtResource("1_628t3")
+id = "rest"
+display_name = "Rest"
+category = 1
+vital_costs = Dictionary[int, float]({
+102: 10.0
+})
+vital_gains = Dictionary[int, float]({
+101: 50.0
+})
+metadata/_custom_type_script = "uid://cl7fnpxvwmebh"

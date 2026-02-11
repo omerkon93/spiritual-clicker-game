@@ -4,8 +4,7 @@ class_name VitalDefinition
 @export var type: GameEnums.VitalType = GameEnums.VitalType.NONE
 @export var display_name: String
 @export var icon: Texture2D
-
-# Link to the Enum so code knows what logic to run
+@export var display_color: Color = Color.WHITE
 
 # Stats specific to Vitals
 @export var default_max_value: float = 100.0

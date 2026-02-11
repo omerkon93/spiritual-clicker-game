@@ -9,9 +9,9 @@ signal panel_closed
 # We export the GRIDS, not the tabs. 
 # The TabContainer handles the tabs; we just need to know where to put buttons.
 @export_category("Grids")
+@export var consumable_grid: GridContainer
 @export var tools_grid: GridContainer
 @export var technology_grid: GridContainer
-@export var consumable_grid: GridContainer
 
 @export_group("Settings")
 @export var show_locked: bool = true
@@ -21,17 +21,16 @@ signal panel_closed
 @onready var tab_container: TabContainer = %TabContainer
 
 func _ready() -> void:
+	# CRITICAL: Wait for Managers to finish their auto-scan
+	await get_tree().process_frame
+	
 	# 1. Listen for data changes
 	UpgradeManager.upgrade_leveled_up.connect(_on_upgrade_event)
-	
-	# 2. Listen for TAB SWITCHES (Crucial Fix!)
 	visibility_changed.connect(_on_visibility_changed)
 	
-	# 3. Initial check
+	# 2. Populate (now that data is safe)
 	if visible:
 		_populate_shop()
-	
-	tab_container.current_tab = 0
 
 func open() -> void:
 	_populate_shop()
@@ -76,7 +75,7 @@ func _populate_shop() -> void:
 
 func _process_item_for_container(item: LevelableUpgrade, container: Container) -> void:
 	# --- VISIBILITY LOGIC ---
-	if item.required_story_flag != "" and not GameStats.has_flag(item.required_story_flag):
+	if item.required_story_flag != "" and not GameStatsManager.has_flag(item.required_story_flag):
 		return 
 
 	var is_unlocked: bool = _check_requirements(item)

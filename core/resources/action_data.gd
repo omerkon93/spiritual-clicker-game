@@ -1,18 +1,29 @@
 extends Resource
 class_name ActionData
 
+enum ActionCategory {
+	CAREER,
+	SURVIVAL,
+	SPIRITUAL,
+	OTHER
+}
+
 # --- IDENTITY ---
 @export_category("Identity")
 @export var id: String = "action_id"
-@export var display_name: String = ""
+@export var display_name: String = "New Action"
+@export var category: ActionCategory = ActionCategory.CAREER
 @export_multiline var description: String = ""
 @export var icon: Texture2D
 
 # --- SETTINGS ---
 @export_category("Settings")
-@export var base_duration: float = 1.0 # NEW: This drives the Progress Bar!
-@export var is_unlocked_by_default: bool = true # NEW: Simple toggle
+@export var base_duration: float = 1.0 
+@export var is_unlocked_by_default: bool = true 
 @export var is_visible_in_menu: bool = true
+
+@export_group("Time Settings")
+@export var time_cost_minutes: int = 60 # Default 1 hour
 
 @export_category("Requirements")
 @export var required_story_flag: String = "" 
@@ -33,4 +44,5 @@ class_name ActionData
 
 # --- MESSAGES ---
 @export_category("Messages")
-@export var failure_messages: Dictionary[int, String] = {}
+# Format: { GameEnums.VitalType.ENERGY: "Not enough energy!" }
+@export var failure_messages: Dictionary = {}

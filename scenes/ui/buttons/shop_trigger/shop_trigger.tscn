@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://cags6m33ueobw" path="res://game_data/dialogue/dialogue_sequences/shop_intro.tres" id="2_6huq3"]
 [ext_resource type="PackedScene" uid="uid://b8pmafvaprey4" path="res://core/components/dialogue_component/dialogue_component.tscn" id="2_ke5s2"]
 [ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="4_0y0vd"]
-[ext_resource type="Resource" uid="uid://tt2itejtoq3e" path="res://game_data/actions/action_welcome_gift.tres" id="5_rjxrq"]
+[ext_resource type="Resource" uid="uid://tt2itejtoq3e" path="res://game_data/actions/game_actions/shop_welcome_gift.tres" id="5_rjxrq"]
 
 [node name="ShopTrigger" type="Button" unique_id=201105961 node_paths=PackedStringArray("dialogue_component")]
 text = "Shop trigger"

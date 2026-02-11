@@ -1,55 +1,59 @@
 extends Control
 class_name ActionsMenu
 
-# 1. SETTINGS
-# The "Blueprint" button we created earlier
+# --- CONFIGURATION ---
 @export var action_button_scene: PackedScene
 
-# The container where buttons will be organized
-@export var grid_container: GridContainer
-
-# Folder path to scan (Make sure this folder exists!)
-const ACTIONS_PATH = "res://game_data/actions/"
+@export_category("Grids")
+@export var career_grid: GridContainer
+@export var survival_grid: GridContainer
+@export var spiritual_grid: GridContainer
 
 func _ready() -> void:
-	_populate_actions()
+	visibility_changed.connect(_on_visibility_changed)
+	if visible:
+		_populate_menu()
 
-func _populate_actions() -> void:
-	# Clear any dummy buttons you might have added in the editor
-	for child in grid_container.get_children():
-		child.queue_free()
+func _on_visibility_changed() -> void:
+	if visible:
+		_populate_menu()
+
+func _populate_menu() -> void:
+	if not action_button_scene: return
 	
-	# Open the folder
-	var dir = DirAccess.open(ACTIONS_PATH)
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
+	_clear_all_grids()
 		
-		while file_name != "":
-			# Check if it's a valid resource file (.tres or .res)
-			if not dir.current_is_dir() and (file_name.ends_with(".tres") or file_name.ends_with(".res")):
-				var data = load(ACTIONS_PATH + "/" + file_name)
-				
-				# Safety Check: Is this actually ActionData?
-				if data is ActionData:
-					_create_button(data)
-			
-			file_name = dir.get_next()
-		dir.list_dir_end()
-	else:
-		printerr("ActionsPanel: Could not open path ", ACTIONS_PATH)
+	# Now it works exactly like the ShopMenu!
+	for action in ActionManager.all_actions:
+		
+		# Visibility Checks
+		if not action.is_visible_in_menu: continue
+		if action.required_story_flag != "" and not GameStatsManager.has_flag(action.required_story_flag):
+			continue
 
-func _create_button(data: ActionData) -> void:
-	# 1. Visibility Check
-	if not data.is_visible_in_menu:
-		return
+		# Sort into Grids based on the ENUM you added to the Resource
+		var target_grid = _get_grid_for_category(action.category)
+		if target_grid:
+			_create_action_button(action, target_grid)
 
-	# 2. Existing Requirement Check
-	if data.required_story_flag != "":
-		if not GameStats.has_flag(data.required_story_flag):
-			return 
+func _get_grid_for_category(category: ActionData.ActionCategory) -> GridContainer:
+	match category:
+		ActionData.ActionCategory.CAREER: return career_grid
+		ActionData.ActionCategory.SURVIVAL: return survival_grid
+		ActionData.ActionCategory.SPIRITUAL: return spiritual_grid
+	return career_grid
 
-	# 3. Spawn the Button (Existing Logic)
-	var btn = action_button_scene.instantiate()
-	grid_container.add_child(btn)
+func _create_action_button(data: ActionData, container: GridContainer) -> void:
+	var btn = action_button_scene.instantiate() as ActionButton
+	container.add_child(btn)
 	btn.action_data = data
+
+func _clear_all_grids() -> void:
+	_clear_container(career_grid)
+	_clear_container(survival_grid)
+	_clear_container(spiritual_grid)
+
+func _clear_container(container: Container) -> void:
+	if not container: return
+	for child in container.get_children():
+		child.queue_free()

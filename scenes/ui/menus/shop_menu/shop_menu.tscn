@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dn2stxn2gia2u" path="res://scenes/ui/buttons/shop_item_button/shop_item_button.tscn" id="4_sjk1b"]
 [ext_resource type="Script" uid="uid://ci5urlgak6u58" path="res://scenes/ui/menus/shop_menu/shop_listener_component.gd" id="7_dbv4w"]
 
-[node name="ShopPanel" type="Control" unique_id=598056843 node_paths=PackedStringArray("tools_grid", "technology_grid", "consumable_grid")]
+[node name="ShopMenu" type="Control" unique_id=598056843 node_paths=PackedStringArray("consumable_grid", "tools_grid", "technology_grid")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,9 +13,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_3b8rw")
 button_scene = ExtResource("4_sjk1b")
+consumable_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Consumable/Consumable/ConsumableGrid")
 tools_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Tools/Tools/ToolsGrid")
 technology_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Technology/Technology/TechnologyGrid")
-consumable_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Consumable/Consumable/ConsumableGrid")
 
 [node name="Panel" type="Panel" parent="." unique_id=662819966]
 layout_mode = 1
@@ -96,6 +96,7 @@ layout_mode = 2
 
 [node name="CloseButton" type="Button" parent="." unique_id=291954224]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0

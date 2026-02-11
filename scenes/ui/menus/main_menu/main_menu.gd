@@ -16,10 +16,11 @@ func _ready():
 	button_settings.pressed.connect(_on_settings_pressed) # Connect this!
 	button_exit.pressed.connect(_on_exit_pressed)
 	
-	# Check for save file
-	if not SaveManager.save_file_exists(): #
+	# Check if we can continue
+	if SaveManager.save_file_exists(): 
+		button_load.disabled = false
+	else:
 		button_load.disabled = true
-		button_load.text = "No Save Found"
 
 func _on_start_pressed():
 	get_tree().change_scene_to_file(GAME_SCENE_PATH)
