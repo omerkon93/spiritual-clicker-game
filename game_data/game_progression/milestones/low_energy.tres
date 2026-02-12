@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Milestone" format=3 uid="uid://b1e6b3qxtbmb4"]
+
+[ext_resource type="Script" uid="uid://b7uf1g2gx6qdg" path="res://core/resources/milestone.gd" id="1_dc0w6"]
+[ext_resource type="Resource" uid="uid://dcp8sy218hj03" path="res://game_data/game_progression/story_flags/unlocked_survival.tres" id="2_1p6ce"]
+
+[resource]
+script = ExtResource("1_dc0w6")
+target_flag = ExtResource("2_1p6ce")
+condition_type = 1
+is_less_than = true
+target_vital = 101
+metadata/_custom_type_script = "uid://b7uf1g2gx6qdg"

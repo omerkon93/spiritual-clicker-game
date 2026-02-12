@@ -9,7 +9,6 @@ class_name ActionButton
 @export var action_data: ActionData:
 	set(value):
 		action_data = value
-		# If the node is already in the scene, update immediately!
 		if is_node_ready(): 
 			_load_data_into_components()
 
@@ -24,11 +23,11 @@ class_name ActionButton
 
 # --- SETTINGS ---
 @export_category("Settings")
-@export var base_cooldown: float = 0.5 # Overwritten by ActionData
+@export var base_cooldown: float = 0.5 
 
 @export_group("Upgrades")
-@export var primary_upgrade: LevelableUpgrade
-@export var contributing_upgrades: Array[LevelableUpgrade] = []
+@export var primary_upgrade: GameItem
+@export var contributing_upgrades: Array[GameItem] = []
 
 # --- DEPENDENCIES ---
 @onready var timer: Timer = $CooldownTimer
@@ -47,15 +46,14 @@ var current_cooldown: float = 1.0
 func _ready() -> void:
 	pressed.connect(_on_clicked)
 	
-	# FIX 1: Connect to ProgressionManager for level updates
+	# Connect to ProgressionManager for level updates
 	ProgressionManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
 	
 	_validate_and_connect_components()
 	
-	# Load data if set in inspector
 	if action_data: 
 		_load_data_into_components()
-		_recalculate_upgrades() # Apply initial upgrade bonuses
+		_recalculate_upgrades() 
 	
 	if animation_component and icon_rect:
 		animation_component.target_control = icon_rect
@@ -69,8 +67,8 @@ func _on_clicked() -> void:
 		return
 
 	# 1. CHECK AFFORDABILITY
+	# CostComponent handles "Burnout" (allowing 0.1 energy to pay for 10 cost)
 	if cost_component and not cost_component.check_affordability():
-		# DELEGATED: Use the component for the shake
 		if animation_component: animation_component.play_shake()
 		return
 
@@ -78,15 +76,14 @@ func _on_clicked() -> void:
 	if cost_component: cost_component.pay_all()
 	
 	if action_data:
-		# Assuming TimeManager exists and is an AutoLoad
 		TimeManager.advance_time(action_data.time_cost_minutes)
 	
 	# 3. REWARDS & VISUALS
 	var feedback = []
 	if reward_component:
+		# Delivers the FINAL calculated rewards (Base + Upgrades)
 		feedback = reward_component.deliver_rewards()
 	
-	# DELEGATED: Floating Text
 	if animation_component: 
 		animation_component.visualize_feedback(feedback)
 		animation_component.play_bounce()
@@ -110,7 +107,6 @@ func _validate_and_connect_components() -> void:
 func _load_data_into_components() -> void:
 	if not action_data: return
 	
-	# Sync Cooldowns
 	base_cooldown = action_data.base_duration
 	current_cooldown = base_cooldown
 	if timer: timer.wait_time = current_cooldown
@@ -136,7 +132,7 @@ func _generate_stats_text() -> void:
 	
 	var text_lines: Array[String] = []
 	
-	# 1. COSTS (Red/Salmon)
+	# COSTS
 	for type in action_data.currency_costs:
 		var amount = action_data.currency_costs[type]
 		var def = CurrencyManager.get_definition(type)
@@ -149,7 +145,7 @@ func _generate_stats_text() -> void:
 		if def and amount > 0:
 			text_lines.append("[color=salmon]-%s %s[/color]" % [amount, def.display_name])
 
-	# 2. REWARDS (Green/Cyan)
+	# REWARDS
 	for type in action_data.currency_gains:
 		var amount = action_data.currency_gains[type]
 		var def = CurrencyManager.get_definition(type)
@@ -172,30 +168,29 @@ func _recalculate_upgrades() -> void:
 	var total_extra_power: float = 0.0
 	var reduction_time: float = 0.0
 	
-	var all_upgrades: Array[LevelableUpgrade] = contributing_upgrades.duplicate()
+	var all_upgrades: Array[GameItem] = contributing_upgrades.duplicate()
 	if primary_upgrade:
 		all_upgrades.append(primary_upgrade)
 	
-	for upg: LevelableUpgrade in all_upgrades:
+	for upg: GameItem in all_upgrades:
 		if upg == null: continue
 		
-		# FIX 2: Get level from ProgressionManager
+		# Get level from ProgressionManager
 		var lvl: int = ProgressionManager.get_upgrade_level(upg.id)
 		
 		if lvl > 0:
 			var effect: float = upg.power_per_level * lvl
-			# Using int cast for Enum comparison safety
 			match int(upg.target_stat):
 				GameEnums.StatType.CLICK_POWER:
 					total_extra_power += effect
 				GameEnums.StatType.CLICK_COOLDOWN:
 					reduction_time += effect
 	
-	# Apply Power (assuming RewardComponent has this method from previous context)
+	# CONFIRMED: This calls the function you pasted in RewardComponent
 	if reward_component and reward_component.has_method("recalculate_finals"):
 		reward_component.recalculate_finals(total_extra_power)
 	
-	# Apply Cooldown Reduction (Clamp minimum to 0.1s)
+	# Apply Cooldown Reduction
 	current_cooldown = max(0.1, base_cooldown - reduction_time)
 	if timer: 
 		timer.wait_time = current_cooldown

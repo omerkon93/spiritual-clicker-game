@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dn2stxn2gia2u"]
 
 [ext_resource type="Script" uid="uid://b88g2xp6ppl2t" path="res://scenes/ui/buttons/shop_item_button/shop_item_button.gd" id="1_tii4b"]
-[ext_resource type="Resource" uid="uid://cwft1llqhhvm3" path="res://game_data/game_progression/upgrades/upgrade_work_power.tres" id="2_3io4o"]
+[ext_resource type="Resource" uid="uid://cwft1llqhhvm3" path="res://game_data/items/upgrades/upgrade_work_power.tres" id="2_3io4o"]
 
 [node name="ShopItemButton" type="Button" unique_id=109600171]
 custom_minimum_size = Vector2(200, 60)

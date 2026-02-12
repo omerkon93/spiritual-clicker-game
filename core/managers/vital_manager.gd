@@ -67,6 +67,8 @@ func get_definition(type: GameEnums.VitalType) -> VitalDefinition:
 	push_error("Vital Definition not found for type: %s" % type)
 	return null
 
+func get_vital_value(vital_type: int) -> float:
+	return get_current(vital_type)
 
 # ==============================================================================
 # PUBLIC API: MODIFIERS

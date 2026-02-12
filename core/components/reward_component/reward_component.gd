@@ -75,6 +75,7 @@ func deliver_rewards() -> Array[Dictionary]:
 		
 	return events
 
+
 # --- HELPER ---
 func _format_event(type: int, amount: float, is_vital: bool) -> Dictionary:
 	var text = ""

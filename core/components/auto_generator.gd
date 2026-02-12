@@ -10,7 +10,7 @@ class_name AutoGenerator extends Node
 
 # CHANGE 1: Rename 'upgrade_def' to 'contributing_upgrades' and make it an Array
 # This fixes the type mismatch error.
-@export var contributing_upgrades: Array[LevelableUpgrade] = []
+@export var contributing_upgrades: Array[GameItem] = []
 
 var _timer: Timer
 

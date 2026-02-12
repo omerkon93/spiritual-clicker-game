@@ -2,7 +2,7 @@
 
 [ext_resource type="AudioStream" uid="uid://cbkm3sakf01l5" path="res://assetes/sound/mixkit-winning-a-coin-video-game-2069.ogg" id="1_4k4nk"]
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="2_uxi5e"]
-[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="3_mvq0o"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/game_item.gd" id="3_mvq0o"]
 
 [resource]
 script = ExtResource("3_mvq0o")

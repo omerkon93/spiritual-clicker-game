@@ -7,7 +7,7 @@ script = ExtResource("1_x535r")
 id = "work"
 display_name = "Work"
 vital_costs = Dictionary[int, float]({
-101: 10.0,
+101: 30.0,
 102: 10.0
 })
 currency_gains = Dictionary[int, float]({

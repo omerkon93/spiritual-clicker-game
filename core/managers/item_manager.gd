@@ -4,13 +4,13 @@ extends Node
 # CONFIGURATION
 # ==============================================================================
 const AUTO_LOAD_PATHS = [
-	"res://game_data/game_progression/upgrades/",
-	"res://game_data/game_progression/technology/",
-	"res://game_data/consumables/" 
+	"res://game_data/items/upgrades/",
+	"res://game_data/items/technology/",
+	"res://game_data/items/consumables/" 
 ]
 
 # The master list of all item definitions (The "Catalog")
-var available_items: Array[LevelableUpgrade] = []
+var available_items: Array[GameItem] = []
 
 # Internal logic for rewards
 var reward_calculator: RewardComponent
@@ -26,12 +26,12 @@ func _ready() -> void:
 # ==============================================================================
 # PUBLIC API
 # ==============================================================================
-func get_current_cost(item: LevelableUpgrade) -> float:
+func get_current_cost(item: GameItem) -> float:
 	# REFACTOR: Get level from ProgressionManager
 	var current_level = ProgressionManager.get_upgrade_level(item.id) 
 	return item.base_cost * pow(item.cost_multiplier, current_level)
 
-func try_purchase_item(item: LevelableUpgrade) -> bool:
+func try_purchase_item(item: GameItem) -> bool:
 	# 1. Validation
 	var current_lvl = ProgressionManager.get_upgrade_level(item.id)
 	if item.max_level != -1 and current_lvl >= item.max_level:
@@ -50,7 +50,7 @@ func try_purchase_item(item: LevelableUpgrade) -> bool:
 		_execute_action_rewards(item.on_purchase_action)
 		
 		# Consumables are one-offs; they usually don't gain levels or increase cost
-		if item.upgrade_type == LevelableUpgrade.UpgradeType.CONSUMABLE:
+		if item.upgrade_type == GameItem.ItemType.CONSUMABLE:
 			if item.audio_on_purchase:
 				SoundManager.play_sfx(item.audio_on_purchase)
 			return true
@@ -62,7 +62,7 @@ func try_purchase_item(item: LevelableUpgrade) -> bool:
 # ==============================================================================
 # PRIVATE HELPERS
 # ==============================================================================
-func _apply_level_up(item: LevelableUpgrade) -> void:
+func _apply_level_up(item: GameItem) -> void:
 	# REFACTOR: Tell ProgressionManager to update state
 	ProgressionManager.increment_upgrade_level(item.id)
 	
@@ -98,7 +98,7 @@ func _load_dir_recursive(path: String) -> void:
 			else:
 				if file_name.ends_with(".tres") or file_name.ends_with(".res"):
 					var resource = load(path + "/" + file_name)
-					if resource is LevelableUpgrade:
+					if resource is GameItem:
 						if not available_items.any(func(x): return x.id == resource.id):
 							available_items.append(resource)
 			file_name = dir.get_next()

@@ -11,10 +11,16 @@ class_name ActionsMenu
 
 func _ready() -> void:
 	visibility_changed.connect(_on_visibility_changed)
+	ProgressionManager.flag_changed.connect(_on_flag_changed)
 	if visible:
 		_populate_menu()
 
+
 func _on_visibility_changed() -> void:
+	if visible:
+		_populate_menu()
+
+func _on_flag_changed(_id: String, _val: bool) -> void:
 	if visible:
 		_populate_menu()
 
@@ -23,15 +29,19 @@ func _populate_menu() -> void:
 	
 	_clear_all_grids()
 		
-	# Now it works exactly like the ShopMenu!
 	for action in ActionManager.all_actions:
-		
-		# Visibility Checks
-		if not action.is_visible_in_menu: continue
-		if action.required_story_flag != "" and not GameStatsManager.has_flag(action.required_story_flag):
+		# 1. VISIBILITY CHECK (Basic)
+		if not action.is_visible_in_menu: 
 			continue
 
-		# Sort into Grids based on the ENUM you added to the Resource
+		# 2. PROGRESSION CHECK (The Fix)
+		# We check if the Resource is assigned (not null)
+		# Then we ask ProgressionManager if we have it.
+		if action.required_story_flag != null:
+			if not ProgressionManager.get_flag(action.required_story_flag):
+				continue
+		
+		# 3. SORTING
 		var target_grid = _get_grid_for_category(action.category)
 		if target_grid:
 			_create_action_button(action, target_grid)

@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="LevelableUpgrade" format=3 uid="uid://c2sf07a6bfe8k"]
+[gd_resource type="Resource" script_class="GameItem" format=3 uid="uid://c2sf07a6bfe8k"]
 
-[ext_resource type="AudioStream" uid="uid://bvg1r2c8yx3po" path="res://assetes/sound/mixkit-bonus-earned-in-video-game-2058.ogg" id="1_p7qyf"]
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="2_fgt20"]
-[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/levelable_upgrade.gd" id="3_dg5jm"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/game_item.gd" id="3_dg5jm"]
 
 [resource]
 script = ExtResource("3_dg5jm")
@@ -11,9 +10,8 @@ display_name = "Research Automation"
 description = "I keep doing the same operation over and over, maybe i can automate it.
 "
 icon = ExtResource("2_fgt20")
-upgrade_type = 1
+item_type = 1
 base_cost = 100.0
 cost_multiplier = 1.0
-audio_on_use = ExtResource("1_p7qyf")
 max_level = 1
 metadata/_custom_type_script = "uid://ibattlbh7e1t"

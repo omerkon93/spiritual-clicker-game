@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Milestone" format=3 uid="uid://g3ypscv1m7ik"]
+
+[ext_resource type="Script" uid="uid://b7uf1g2gx6qdg" path="res://core/resources/milestone.gd" id="1_s8s7t"]
+[ext_resource type="Resource" uid="uid://j0ndhq8em4tj" path="res://game_data/game_progression/story_flags/unlock_meditation.tres" id="2_4s2vr"]
+
+[resource]
+script = ExtResource("1_s8s7t")
+target_flag = ExtResource("2_4s2vr")
+currency_amount = 100.0
+metadata/_custom_type_script = "uid://b7uf1g2gx6qdg"

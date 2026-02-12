@@ -26,7 +26,7 @@ enum ActionCategory {
 @export var time_cost_minutes: int = 60 # Default 1 hour
 
 @export_category("Requirements")
-@export var required_story_flag: String = "" 
+@export var required_story_flag: StoryFlag
 
 # --- EVENTS ---
 @export_category("Events")

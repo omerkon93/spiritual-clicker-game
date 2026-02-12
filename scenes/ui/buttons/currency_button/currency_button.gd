@@ -11,7 +11,7 @@ class_name CurrencyButton
 @export var progress_bar: TextureProgressBar # Drag CooldownBar here in Inspector
 
 # --- Upgrades ---
-@export var contributing_upgrades: Array[LevelableUpgrade] = []
+@export var contributing_upgrades: Array[GameItem] = []
 
 # --- Visual Settings ---
 @export_group("Visuals")

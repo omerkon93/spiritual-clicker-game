@@ -2,7 +2,7 @@ extends Button
 class_name ShopItemButton
 
 # The Setter ensures UI updates whenever data changes
-@export var upgrade_resource: LevelableUpgrade :
+@export var upgrade_resource: GameItem :
 	set(value):
 		upgrade_resource = value
 		if is_inside_tree():
@@ -16,7 +16,7 @@ var color_expensive: Color = Color(1, 0.4, 0.4)
 func _ready() -> void:
 	pressed.connect(_on_pressed)
 	
-	# FIX 1: Listen to ProgressionManager, not ItemManager
+	# Correctly listen to ProgressionManager
 	ProgressionManager.upgrade_leveled_up.connect(_on_level_changed)
 	
 	# --- LAYOUT SETTINGS ---
@@ -41,7 +41,6 @@ func _process(_delta: float) -> void:
 	if disabled or upgrade_resource == null:
 		return
 
-	# ItemManager still handles Cost Calculation logic
 	var cost = ItemManager.get_current_cost(upgrade_resource)
 	var can_afford = CurrencyManager.has_enough_currency(upgrade_resource.cost_currency, cost)
 	
@@ -53,16 +52,13 @@ func _process(_delta: float) -> void:
 func _on_pressed() -> void:
 	if not upgrade_resource: return
 	
-	# FIX 2: Function was renamed to try_purchase_item in the refactor
 	ItemManager.try_purchase_item(upgrade_resource)
 	
-	# Visual feedback (Bounce)
 	var tween = create_tween()
 	tween.tween_property(self, "scale", Vector2(0.95, 0.95), 0.05)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.05)
 
 func _on_level_changed(changed_id: String, _new_lvl: int) -> void:
-	# Update if *this* item changed, OR if it's a generic update
 	if upgrade_resource and upgrade_resource.id == changed_id:
 		_update_label()
 		_update_display()
@@ -73,10 +69,9 @@ func _update_label() -> void:
 		return
 	
 	var cost = ItemManager.get_current_cost(upgrade_resource)
-	
-	# Get level from ProgressionManager
 	var current_lvl = ProgressionManager.get_upgrade_level(upgrade_resource.id)
 	
+	# Static call to NumberFormatter
 	var cost_str = NumberFormatter.format_value(cost)
 	
 	var name_text = upgrade_resource.display_name
