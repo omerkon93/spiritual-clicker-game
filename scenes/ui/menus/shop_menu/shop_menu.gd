@@ -4,10 +4,9 @@ class_name ShopMenu
 signal panel_closed
 
 # --- CONFIGURATION ---
-@export var button_scene: PackedScene
+@export var shop_button_scene: PackedScene
 
-# We export the GRIDS, not the tabs. 
-# The TabContainer handles the tabs; we just need to know where to put buttons.
+# Category Containers (Assign these in the Inspector to your GridContainers inside the Tabs)
 @export_category("Grids")
 @export var consumable_grid: GridContainer
 @export var tools_grid: GridContainer
@@ -15,30 +14,26 @@ signal panel_closed
 
 @export_group("Settings")
 @export var show_locked: bool = true
-@export var show_purchased: bool = true
+@export var show_purchased: bool = true # If false, hides items heavily (like one-time upgrades)
 
-@onready var close_button: Button = %CloseButton
-@onready var tab_container: TabContainer = %TabContainer
-
+# --- LIFECYCLE ---
 func _ready() -> void:
-	# CRITICAL: Wait for Managers to finish their auto-scan
-	await get_tree().process_frame
+	# Connect to the new ProgressionManager signal
+	ProgressionManager.upgrade_leveled_up.connect(_on_upgrade_event)
 	
-	# 1. Listen for data changes
-	UpgradeManager.upgrade_leveled_up.connect(_on_upgrade_event)
-	visibility_changed.connect(_on_visibility_changed)
+	# Optional: Listen for currency changes if you want to update button affordability in real-time
+	CurrencyManager.currency_changed.connect(func(_t, _a): _populate_shop())
 	
-	# 2. Populate (now that data is safe)
-	if visible:
-		_populate_shop()
+	_populate_shop()
 
 func open() -> void:
+	show()
 	_populate_shop()
 
 func close() -> void:
+	hide()
 	panel_closed.emit()
 
-# This runs automatically whenever you click the Shop Tab
 func _on_visibility_changed() -> void:
 	if visible:
 		_populate_shop()
@@ -47,8 +42,9 @@ func _on_upgrade_event(_id: String, _lvl: int) -> void:
 	if visible:
 		_populate_shop()
 
+# --- POPULATION LOGIC ---
 func _populate_shop() -> void:
-	if not button_scene: return
+	if not shop_button_scene: return
 	
 	# 1. Clear everything
 	_clear_container(tools_grid)
@@ -56,7 +52,8 @@ func _populate_shop() -> void:
 	_clear_container(consumable_grid)
 		
 	# 2. Sort items into the correct grid
-	for item: LevelableUpgrade in UpgradeManager.available_upgrades:
+	# Note: We use ItemManager.available_items (renamed from available_upgrades)
+	for item: LevelableUpgrade in ItemManager.available_items:
 		
 		var target_container: Container = null
 		
@@ -74,38 +71,49 @@ func _populate_shop() -> void:
 			_process_item_for_container(item, target_container)
 
 func _process_item_for_container(item: LevelableUpgrade, container: Container) -> void:
-	# --- VISIBILITY LOGIC ---
-	if item.required_story_flag != "" and not GameStatsManager.has_flag(item.required_story_flag):
+	# --- 1. STORY & FLAG CHECKS ---
+	# Uses ProgressionManager for flags
+	if item.required_story_flag != "" and not ProgressionManager.get_flag(item.required_story_flag):
 		return 
 
+	# --- 2. STATUS CHECKS ---
 	var is_unlocked: bool = _check_requirements(item)
-	var current_lvl: int = UpgradeManager.get_upgrade_level(item.id)
+	# Uses ProgressionManager for levels
+	var current_lvl: int = ProgressionManager.get_upgrade_level(item.id)
 	var is_maxed: bool = (item.max_level != -1 and current_lvl >= item.max_level)
 	
-	# Hide outdated tools (e.g., Don't show Stone Pickaxe if you have Iron)
+	# Feature: Hide superseded tools (e.g. Hide "Stone Axe" if "Iron Axe" is unlocked)
 	if is_unlocked and not is_maxed and item.upgrade_type == LevelableUpgrade.UpgradeType.TOOL:
 		if _is_superseded(item): return
 
-	# User Preference Checks
+	# --- 3. FILTER SETTINGS ---
 	if not is_unlocked and not show_locked: return
 	if is_maxed and not show_purchased: return
 
-	# --- SPAWN BUTTON ---
-	var btn = button_scene.instantiate() as ShopItemButton
+	# --- 4. SPAWN BUTTON ---
+	var btn = shop_button_scene.instantiate()
 	container.add_child(btn)
 	
-	# The Button Script handles its own label updates via this setter
-	btn.upgrade_resource = item
+	# Pass the data to the button
+	# Ensure your ShopItemButton script has a 'setup' function or 'upgrade_resource' setter
+	if btn.has_method("setup"):
+		btn.setup(item)
+	elif "upgrade_resource" in btn:
+		btn.upgrade_resource = item
 	
-	# --- LOCK STATE ---
+	# --- 5. UI FEEDBACK ---
+	# We handle the "Container" side of logic (hiding/disabling) here.
+	# The Button script should handle the "Inner" logic (Name, Cost, Icon).
+	
 	if not is_unlocked:
 		btn.disabled = true
-		btn.modulate = Color(0.5, 0.5, 0.5, 0.5)
+		btn.modulate = Color(0.5, 0.5, 0.5, 0.5) # Dimmed
 		btn.tooltip_text = "Requirements not met"
 	elif is_maxed:
+		# Keep it visible but clearly finished
 		btn.disabled = true
-		btn.modulate = Color(0.5, 1.0, 0.5, 1.0) # Green tint for maxed
-		btn.text += " (MAX)"
+		btn.modulate = Color(0.5, 1.0, 0.5, 1.0) # Green tint
+		btn.tooltip_text = "Max Level Reached"
 
 func _clear_container(container: Container) -> void:
 	if not container: return
@@ -114,14 +122,17 @@ func _clear_container(container: Container) -> void:
 
 func _check_requirements(item: LevelableUpgrade) -> bool:
 	if item.required_upgrade_id != "":
-		var req_lvl = UpgradeManager.get_upgrade_level(item.required_upgrade_id)
+		# Check requirement against ProgressionManager
+		var req_lvl = ProgressionManager.get_upgrade_level(item.required_upgrade_id)
 		if req_lvl < item.required_level:
 			return false
 	return true
 
 func _is_superseded(item: LevelableUpgrade) -> bool:
 	# Check if a better version of this specific tool is already unlocked
-	for other in UpgradeManager.available_upgrades:
+	for other in ItemManager.available_items:
+		# If another item requires THIS item, and that other item is unlocked...
 		if other.required_upgrade_id == item.id and _check_requirements(other):
+			# ...then THIS item is obsolete.
 			return true
 	return false

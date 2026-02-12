@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dnssq07erf3q5" path="res://scenes/ui/menus/shop_menu/shop_menu.gd" id="1_3b8rw"]
 [ext_resource type="PackedScene" uid="uid://dn2stxn2gia2u" path="res://scenes/ui/buttons/shop_item_button/shop_item_button.tscn" id="4_sjk1b"]
-[ext_resource type="Script" uid="uid://ci5urlgak6u58" path="res://scenes/ui/menus/shop_menu/shop_listener_component.gd" id="7_dbv4w"]
 
 [node name="ShopMenu" type="Control" unique_id=598056843 node_paths=PackedStringArray("consumable_grid", "tools_grid", "technology_grid")]
 layout_mode = 3
@@ -12,7 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_3b8rw")
-button_scene = ExtResource("4_sjk1b")
+shop_button_scene = ExtResource("4_sjk1b")
 consumable_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Consumable/Consumable/ConsumableGrid")
 tools_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Tools/Tools/ToolsGrid")
 technology_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Technology/Technology/TechnologyGrid")
@@ -105,7 +104,3 @@ offset_left = -8.0
 offset_bottom = 8.0
 grow_horizontal = 0
 text = "X"
-
-[node name="ShopListenerComponent" type="Node" parent="." unique_id=454568553 node_paths=PackedStringArray("target_panel")]
-script = ExtResource("7_dbv4w")
-target_panel = NodePath("..")

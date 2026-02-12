@@ -27,7 +27,7 @@ func _ready():
 	pressed.connect(_on_clicked)
 	
 	# 2. Upgrade Listener
-	UpgradeManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
+	ItemManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
 	
 	# 3. Setup UI
 	if progress_bar:
@@ -79,7 +79,7 @@ func _recalculate_stats():
 	var removed_time = 0.0
 	
 	for upgrade in contributing_upgrades:
-		var level = UpgradeManager.get_upgrade_level(upgrade.id)
+		var level = ItemManager.get_upgrade_level(upgrade.id)
 		if level > 0:
 			var total_effect = upgrade.power_per_level * level 
 			
@@ -113,7 +113,7 @@ func _play_click_sound():
 	var sound_to_play: AudioStream = null
 	for i in range(contributing_upgrades.size() - 1, -1, -1):
 		var upg = contributing_upgrades[i]
-		if UpgradeManager.get_upgrade_level(upg.id) > 0 and upg.audio_on_use:
+		if ItemManager.get_upgrade_level(upg.id) > 0 and upg.audio_on_use:
 			sound_to_play = upg.audio_on_use
 			break
 	if sound_to_play:
@@ -122,7 +122,7 @@ func _play_click_sound():
 func _update_visuals():
 	var sprite_to_use: Texture2D = null
 	for upg in contributing_upgrades:
-		if UpgradeManager.get_upgrade_level(upg.id) > 0 and upg.world_sprite:
+		if ItemManager.get_upgrade_level(upg.id) > 0 and upg.world_sprite:
 			sprite_to_use = upg.world_sprite
 	
 	if sprite_to_use:

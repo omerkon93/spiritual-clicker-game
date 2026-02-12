@@ -32,7 +32,6 @@ class_name ActionButton
 
 # --- DEPENDENCIES ---
 @onready var timer: Timer = $CooldownTimer
-@export var progress_bar: TextureProgressBar
 
 # --- VISUAL REFERENCES ---
 @onready var title_label: Label = %TitleLabel
@@ -47,21 +46,19 @@ var current_cooldown: float = 1.0
 # ==============================================================================
 func _ready() -> void:
 	pressed.connect(_on_clicked)
-	# Assuming UpgradeManager is an Autoload
-	UpgradeManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
+	
+	# FIX 1: Connect to ProgressionManager for level updates
+	ProgressionManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
 	
 	_validate_and_connect_components()
-	if action_data: _load_data_into_components()
+	
+	# Load data if set in inspector
+	if action_data: 
+		_load_data_into_components()
+		_recalculate_upgrades() # Apply initial upgrade bonuses
 	
 	if animation_component and icon_rect:
 		animation_component.target_control = icon_rect
-
-func _process(_delta: float) -> void:
-	if timer and not timer.is_stopped() and progress_bar:
-		progress_bar.visible = true
-		progress_bar.value = (timer.time_left / timer.wait_time) * 100
-	elif progress_bar:
-		progress_bar.visible = false
 
 
 # ==============================================================================
@@ -72,18 +69,22 @@ func _on_clicked() -> void:
 		return
 
 	# 1. CHECK AFFORDABILITY
-	if not cost_component.check_affordability():
+	if cost_component and not cost_component.check_affordability():
 		# DELEGATED: Use the component for the shake
 		if animation_component: animation_component.play_shake()
 		return
 
 	# 2. EXECUTE
-	cost_component.pay_all()
+	if cost_component: cost_component.pay_all()
+	
 	if action_data:
+		# Assuming TimeManager exists and is an AutoLoad
 		TimeManager.advance_time(action_data.time_cost_minutes)
 	
 	# 3. REWARDS & VISUALS
-	var feedback = reward_component.deliver_rewards()
+	var feedback = []
+	if reward_component:
+		feedback = reward_component.deliver_rewards()
 	
 	# DELEGATED: Floating Text
 	if animation_component: 
@@ -135,44 +136,32 @@ func _generate_stats_text() -> void:
 	
 	var text_lines: Array[String] = []
 	
-	# 1. COSTS (Red/Salmon) - "Pay X"
-	# ---------------------------------------------------------
-	# Currency Costs
+	# 1. COSTS (Red/Salmon)
 	for type in action_data.currency_costs:
 		var amount = action_data.currency_costs[type]
 		var def = CurrencyManager.get_definition(type)
 		if def and amount > 0:
-			# Example: "-$10" in Red
 			text_lines.append("[color=salmon]-%s%s[/color]" % [def.prefix, amount])
 
-	# Vital Costs
 	for type in action_data.vital_costs:
 		var amount = action_data.vital_costs[type]
 		var def = VitalManager.get_definition(type)
 		if def and amount > 0:
-			# Example: "-10 Energy" in Red
 			text_lines.append("[color=salmon]-%s %s[/color]" % [amount, def.display_name])
 
-	# 2. REWARDS (Green/Cyan) - "Get Y"
-	# ---------------------------------------------------------
-	# Currency Rewards
+	# 2. REWARDS (Green/Cyan)
 	for type in action_data.currency_gains:
 		var amount = action_data.currency_gains[type]
 		var def = CurrencyManager.get_definition(type)
 		if def and amount > 0:
-			# Example: "+$100" in Green
 			text_lines.append("[color=light_green]+%s%s[/color]" % [def.prefix, amount])
 
-	# Vital Rewards
 	for type in action_data.vital_gains:
 		var amount = action_data.vital_gains[type]
 		var def = VitalManager.get_definition(type)
 		if def and amount > 0:
-			# Example: "+5 Spirit" in Cyan
 			text_lines.append("[color=cyan]+%s %s[/color]" % [amount, def.display_name])
 
-	# 3. APPLY TO LABEL
-	# ---------------------------------------------------------
 	stats_label.text = "[center]%s[/center]" % "\n".join(text_lines)
 
 
@@ -188,17 +177,21 @@ func _recalculate_upgrades() -> void:
 		all_upgrades.append(primary_upgrade)
 	
 	for upg: LevelableUpgrade in all_upgrades:
-		var lvl: int = UpgradeManager.get_upgrade_level(upg.id)
+		if upg == null: continue
+		
+		# FIX 2: Get level from ProgressionManager
+		var lvl: int = ProgressionManager.get_upgrade_level(upg.id)
 		
 		if lvl > 0:
 			var effect: float = upg.power_per_level * lvl
-			match upg.target_stat:
+			# Using int cast for Enum comparison safety
+			match int(upg.target_stat):
 				GameEnums.StatType.CLICK_POWER:
 					total_extra_power += effect
 				GameEnums.StatType.CLICK_COOLDOWN:
 					reduction_time += effect
 	
-	# Apply Power
+	# Apply Power (assuming RewardComponent has this method from previous context)
 	if reward_component and reward_component.has_method("recalculate_finals"):
 		reward_component.recalculate_finals(total_extra_power)
 	
@@ -214,7 +207,7 @@ func _on_upgrade_leveled(id: String, _lvl: int) -> void:
 		is_relevant = true
 	else:
 		for upg in contributing_upgrades:
-			if upg.id == id:
+			if upg and upg.id == id:
 				is_relevant = true
 				break
 	

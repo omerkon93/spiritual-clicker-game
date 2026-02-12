@@ -8,17 +8,17 @@ func _ready():
 	
 	# Reset for test
 	CurrencyManager._currencies.clear()
-	UpgradeManager.upgrade_levels.clear()
+	ItemManager.upgrade_levels.clear()
 	
 	# Add Test Values
 	CurrencyManager.add_currency(GameEnums.CurrencyType.MONEY, 500.0)
 	CurrencyManager.add_currency(GameEnums.CurrencyType.SPIRIT, 25.0)
-	UpgradeManager.upgrade_levels["test_upgrade_1"] = 3
+	ItemManager.upgrade_levels["test_upgrade_1"] = 3
 	GameStatsManager.set_flag("test_flag_visited_shop", true)
 	
 	print("   > Money Set To: ", CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY))
 	print("   > Spirit Set To: ", CurrencyManager.get_currency_amount(GameEnums.CurrencyType.SPIRIT))
-	print("   > Upgrade 'test_upgrade_1' Level: ", UpgradeManager.get_upgrade_level("test_upgrade_1"))
+	print("   > Upgrade 'test_upgrade_1' Level: ", ItemManager.get_upgrade_level("test_upgrade_1"))
 	print("   > Flag 'test_flag_visited_shop': ", GameStatsManager.has_flag("test_flag_visited_shop"))
 
 	# --- STEP 2: SAVE THE GAME ---
@@ -29,11 +29,11 @@ func _ready():
 	print("\n[Step 3] Modifying values (Simulating gameplay changes)...")
 	
 	CurrencyManager.add_currency(GameEnums.CurrencyType.MONEY, 99999.0) # Add a lot
-	UpgradeManager.upgrade_levels["test_upgrade_1"] = 100
+	ItemManager.upgrade_levels["test_upgrade_1"] = 100
 	GameStatsManager.set_flag("test_flag_visited_shop", false)
 	
 	print("   > Current Money (Modified): ", CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY))
-	print("   > Current Upgrade Level (Modified): ", UpgradeManager.get_upgrade_level("test_upgrade_1"))
+	print("   > Current Upgrade Level (Modified): ", ItemManager.get_upgrade_level("test_upgrade_1"))
 	print("   > Current Flag (Modified): ", GameStatsManager.has_flag("test_flag_visited_shop"))
 	
 	# --- STEP 4: LOAD THE GAME ---
@@ -45,7 +45,7 @@ func _ready():
 	
 	var loaded_money = CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY)
 	var loaded_spirit = CurrencyManager.get_currency_amount(GameEnums.CurrencyType.SPIRIT)
-	var loaded_upgrade = UpgradeManager.get_upgrade_level("test_upgrade_1")
+	var loaded_upgrade = ItemManager.get_upgrade_level("test_upgrade_1")
 	var loaded_flag = GameStatsManager.has_flag("test_flag_visited_shop")
 	
 	var all_passed = true

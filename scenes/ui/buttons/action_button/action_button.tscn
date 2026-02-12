@@ -77,10 +77,6 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_aa0hu")
 bbcode_enabled = true
 fit_content = true
 
-[node name="ProgressBar" type="TextureProgressBar" parent="MarginContainer/VBoxContainer" unique_id=1836099]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-
 [node name="CooldownTimer" type="Timer" parent="." unique_id=204163779]
 wait_time = 2.0
 one_shot = true
