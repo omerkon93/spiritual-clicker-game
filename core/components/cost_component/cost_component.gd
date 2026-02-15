@@ -13,10 +13,10 @@ var final_currency_costs: Dictionary = {}
 var active_penalties: Dictionary = {}
 
 # --- BURNOUT SETTINGS ---
-@export var burnout_vitals: Array[GameEnums.VitalType] = [
-	GameEnums.VitalType.FOCUS,
-	GameEnums.VitalType.ENERGY,
-	GameEnums.VitalType.FULLNESS
+@export var burnout_vitals: Array[VitalDefinition.VitalType] = [
+	VitalDefinition.VitalType.FOCUS,
+	VitalDefinition.VitalType.ENERGY,
+	VitalDefinition.VitalType.FULLNESS
 ]
 
 # --- SETUP ---
@@ -54,7 +54,7 @@ func check_affordability() -> bool:
 
 		# Strict Check (for non-burnout vitals or if vital is exactly 0)
 		if not VitalManager.has_enough(type, cost):
-			var vital_name = GameEnums.VitalType.find_key(type)
+			var vital_name = VitalDefinition.VitalType.find_key(type)
 			if vital_name:
 				vital_name = vital_name.capitalize()
 			else:
@@ -68,7 +68,7 @@ func check_affordability() -> bool:
 		var cost: float = final_currency_costs[type]
 		
 		if not CurrencyManager.has_enough_currency(type, cost):
-			var currency_name = GameEnums.CurrencyType.find_key(type)
+			var currency_name = CurrencyDefinition.CurrencyType.find_key(type)
 			if currency_name:
 				currency_name = currency_name.capitalize()
 			else:

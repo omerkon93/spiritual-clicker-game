@@ -19,12 +19,12 @@ enum UnlockCondition {
 
 @export_group("Currency Checks")
 # For Currency Checks
-@export var target_currency: GameEnums.CurrencyType = GameEnums.CurrencyType.MONEY
+@export var target_currency: CurrencyDefinition.CurrencyType = CurrencyDefinition.CurrencyType.MONEY
 @export var currency_amount: float = 0.0
 
 @export_group("Vital Checks")
 # For Currency Checks
-@export var target_vital: GameEnums.VitalType = GameEnums.VitalType.NONE
+@export var target_vital: VitalDefinition.VitalType = VitalDefinition.VitalType.NONE
 @export var vital_amount: float = 0.0
 
 @export_group("Upgrade Checks")

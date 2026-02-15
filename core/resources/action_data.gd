@@ -34,15 +34,15 @@ enum ActionCategory {
 
 # --- COSTS ---
 @export_category("Costs")
-@export var vital_costs: Dictionary[GameEnums.VitalType, float] = {}
-@export var currency_costs: Dictionary[GameEnums.CurrencyType, float] = {}
+@export var vital_costs: Dictionary[VitalDefinition.VitalType, float] = {}
+@export var currency_costs: Dictionary[CurrencyDefinition.CurrencyType, float] = {}
 
 # --- REWARDS ---
 @export_category("Rewards")
-@export var vital_gains: Dictionary[GameEnums.VitalType, float] = {}
-@export var currency_gains: Dictionary[GameEnums.CurrencyType, float] = {}
+@export var vital_gains: Dictionary[VitalDefinition.VitalType, float] = {}
+@export var currency_gains: Dictionary[CurrencyDefinition.CurrencyType, float] = {}
 
 # --- MESSAGES ---
 @export_category("Messages")
-# Format: { GameEnums.VitalType.ENERGY: "Not enough energy!" }
+# Format: { VitalDefinition.VitalType.ENERGY: "Not enough energy!" }
 @export var failure_messages: Dictionary = {}

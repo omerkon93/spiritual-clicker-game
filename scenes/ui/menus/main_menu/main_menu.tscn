@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bbajf7klmdgm7" path="res://scenes/ui/menus/main_menu/main_menu.gd" id="1_flhq8"]
 [ext_resource type="PackedScene" uid="uid://bxo11gelgnitj" path="res://scenes/ui/menus/settings_menu/settings_menu.tscn" id="2_e7q4l"]
+[ext_resource type="PackedScene" uid="uid://c6mlqgeqwc8v2" path="res://scenes/ui/buttons/main_menu_buttons/start_button/start_button.tscn" id="2_p82i1"]
+[ext_resource type="PackedScene" uid="uid://p67sh883luna" path="res://scenes/ui/buttons/main_menu_buttons/open_button/open_button.tscn" id="3_ywmah"]
+[ext_resource type="PackedScene" uid="uid://dawjnuyrcr1pr" path="res://scenes/ui/buttons/main_menu_buttons/exit_button/exit_button.tscn" id="4_kmtll"]
+[ext_resource type="PackedScene" uid="uid://cocrwyr1w6m0b" path="res://scenes/ui/menus/save_selection_menu/save_selection_menu.tscn" id="6_ubod5"]
 
 [node name="MainMenu" type="Control" unique_id=1512600831]
 layout_mode = 3
@@ -28,22 +32,21 @@ theme_override_constants/separation = 10
 layout_mode = 2
 text = "Game Title"
 
-[node name="ButtonStart" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1442234274]
+[node name="StartButton" parent="CenterContainer/VBoxContainer" unique_id=1769231790 node_paths=PackedStringArray("save_selection_menu") instance=ExtResource("2_p82i1")]
 layout_mode = 2
-text = "Start"
+save_selection_menu = NodePath("../../../SaveSelectionMenu")
 
-[node name="ButtonLoad" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1537507660]
+[node name="SettingsButton" parent="CenterContainer/VBoxContainer" unique_id=1441828222 node_paths=PackedStringArray("chosen_menu") instance=ExtResource("3_ywmah")]
 layout_mode = 2
-text = "Load"
+chosen_menu = NodePath("../../../SettingsMenu")
 
-[node name="ButtonSettings" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2116142734]
+[node name="ExitButton" parent="CenterContainer/VBoxContainer" unique_id=692634948 instance=ExtResource("4_kmtll")]
 layout_mode = 2
-text = "Settings"
-
-[node name="ButtonExit" type="Button" parent="CenterContainer/VBoxContainer" unique_id=461431845]
-layout_mode = 2
-text = "Exit"
 
 [node name="SettingsMenu" parent="." unique_id=721209956 instance=ExtResource("2_e7q4l")]
+visible = false
+layout_mode = 1
+
+[node name="SaveSelectionMenu" parent="." unique_id=998581770 instance=ExtResource("6_ubod5")]
 visible = false
 layout_mode = 1

@@ -11,11 +11,11 @@ class_name StreakComponent
 @export var safe_streak: int = 3
 
 @export_category("Risk (Debuff)")
-@export var penalty_vital: GameEnums.VitalType = GameEnums.VitalType.FOCUS
+@export var penalty_vital: VitalDefinition.VitalType = VitalDefinition.VitalType.FOCUS
 @export var penalty_per_step: float = 5.0 
 
 @export_category("Reward (Bonus)")
-@export var bonus_currency: GameEnums.CurrencyType = GameEnums.CurrencyType.MONEY
+@export var bonus_currency: CurrencyDefinition.CurrencyType = CurrencyDefinition.CurrencyType.MONEY
 # CHANGE: Now represents a percentage (0.1 = +10% per step)
 @export var bonus_multiplier_step: float = 0.1 
 

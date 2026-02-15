@@ -10,8 +10,7 @@ description = "With no skills and zero certification this is the best you got.
 Luckely your mom has some connections within local company."
 base_duration = 1.5
 vital_costs = Dictionary[int, float]({
-101: 15.0,
-102: 10.0
+101: 20.0
 })
 currency_gains = Dictionary[int, float]({
 1: 12.0

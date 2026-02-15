@@ -3,16 +3,16 @@ extends Node
 # ==============================================================================
 # SIGNALS
 # ==============================================================================
-signal currency_changed(type: GameEnums.CurrencyType, new_amount: float)
+signal currency_changed(type: CurrencyDefinition.CurrencyType, new_amount: float)
 
 
 # ==============================================================================
 # DATA STORAGE
 # ==============================================================================
-# Dynamic State: Mapping [GameEnums.CurrencyType] -> [float Amount]
+# Dynamic State: Mapping [CurrencyDefinition.CurrencyType] -> [float Amount]
 var _currencies: Dictionary = {}
 
-# Static Config: Mapping [GameEnums.CurrencyType] -> [CurrencyDefinition]
+# Static Config: Mapping [CurrencyDefinition.CurrencyType] -> [CurrencyDefinition]
 var _definitions: Dictionary = {} 
 
 
@@ -34,24 +34,24 @@ func initialize_currencies(currencies: Array[CurrencyDefinition]):
 # PUBLIC API: GETTERS
 # ==============================================================================
 # Retrieves the static Resource file (for UI Icons/Colors)
-func get_definition(type: GameEnums.CurrencyType) -> CurrencyDefinition:
+func get_definition(type: CurrencyDefinition.CurrencyType) -> CurrencyDefinition:
 	if _definitions.has(type):
 		return _definitions[type]
 	
 	push_error("Currency Definition not found for type: %s" % type)
 	return null
 
-func get_currency_amount(type: GameEnums.CurrencyType) -> float:
+func get_currency_amount(type: CurrencyDefinition.CurrencyType) -> float:
 	return _currencies.get(type, 0.0)
 
-func has_enough_currency(type: GameEnums.CurrencyType, amount: float) -> bool:
+func has_enough_currency(type: CurrencyDefinition.CurrencyType, amount: float) -> bool:
 	return _currencies.get(type, 0.0) >= amount
 
 
 # ==============================================================================
 # PUBLIC API: MODIFIERS
 # ==============================================================================
-func add_currency(type: GameEnums.CurrencyType, amount: float):
+func add_currency(type: CurrencyDefinition.CurrencyType, amount: float):
 	if not _currencies.has(type): 
 		_currencies[type] = 0.0
 	
@@ -64,13 +64,13 @@ func add_currency(type: GameEnums.CurrencyType, amount: float):
 		
 	currency_changed.emit(type, _currencies[type])
 
-func spend_currency(type: GameEnums.CurrencyType, amount: float):
+func spend_currency(type: CurrencyDefinition.CurrencyType, amount: float):
 	if has_enough_currency(type, amount):
 		_currencies[type] -= amount
 		currency_changed.emit(type, _currencies[type])
 
 # Used primarily by the Save System to force a specific state
-func set_currency(type: GameEnums.CurrencyType, amount: float):
+func set_currency(type: CurrencyDefinition.CurrencyType, amount: float):
 	_currencies[type] = amount
 	currency_changed.emit(type, amount)
 

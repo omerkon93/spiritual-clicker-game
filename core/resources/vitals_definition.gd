@@ -1,7 +1,15 @@
 extends Resource
 class_name VitalDefinition
 
-@export var type: GameEnums.VitalType = GameEnums.VitalType.NONE
+enum VitalType {
+	NONE = 100,
+	ENERGY,
+	FULLNESS,
+	FOCUS,
+	SANITY
+}
+
+@export var type: VitalType = VitalType.NONE
 @export var display_name: String
 @export var icon: Texture2D
 @export var display_color: Color = Color.WHITE

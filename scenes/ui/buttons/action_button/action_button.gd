@@ -40,7 +40,7 @@ class_name ActionButton
 var current_cooldown: float = 1.0
 
 
-# ==============================================================================
+# ========================================================s======================
 # 2. LIFECYCLE
 # ==============================================================================
 func _ready() -> void:
@@ -133,29 +133,51 @@ func _generate_stats_text() -> void:
 	var text_lines: Array[String] = []
 	
 	# COSTS
-	for type in action_data.currency_costs:
-		var amount = action_data.currency_costs[type]
+	for type_key in action_data.currency_costs:
+		var amount = action_data.currency_costs[type_key]
+		if amount <= 0: continue # Skip zero costs
+		
+		# Ensure key is treated as Int (Enum)
+		var type = type_key as int 
 		var def = CurrencyManager.get_definition(type)
-		if def and amount > 0:
+		
+		if def:
 			text_lines.append("[color=salmon]-%s%s[/color]" % [def.prefix, amount])
 
-	for type in action_data.vital_costs:
-		var amount = action_data.vital_costs[type]
+	for type_key in action_data.vital_costs:
+		var amount = action_data.vital_costs[type_key]
+		if amount <= 0: continue
+		
+		# Explicit cast to int to match the new 100+ Enum IDs
+		var type = type_key as int 
 		var def = VitalManager.get_definition(type)
-		if def and amount > 0:
+		
+		# If def is missing (because of ID mismatch), this skips safely
+		if def:
 			text_lines.append("[color=salmon]-%s %s[/color]" % [amount, def.display_name])
+		else:
+			# Optional: Print to console to know EXACTLY which action is broken
+			print("Warning: Action '%s' has stale Vital ID: %s" % [name, type])
 
 	# REWARDS
-	for type in action_data.currency_gains:
-		var amount = action_data.currency_gains[type]
+	for type_key in action_data.currency_gains:
+		var amount = action_data.currency_gains[type_key]
+		if amount <= 0: continue
+		
+		var type = type_key as int
 		var def = CurrencyManager.get_definition(type)
-		if def and amount > 0:
+		
+		if def:
 			text_lines.append("[color=light_green]+%s%s[/color]" % [def.prefix, amount])
 
-	for type in action_data.vital_gains:
-		var amount = action_data.vital_gains[type]
+	for type_key in action_data.vital_gains:
+		var amount = action_data.vital_gains[type_key]
+		if amount <= 0: continue
+
+		var type = type_key as int
 		var def = VitalManager.get_definition(type)
-		if def and amount > 0:
+		
+		if def:
 			text_lines.append("[color=cyan]+%s %s[/color]" % [amount, def.display_name])
 
 	stats_label.text = "[center]%s[/center]" % "\n".join(text_lines)
@@ -181,9 +203,9 @@ func _recalculate_upgrades() -> void:
 		if lvl > 0:
 			var effect: float = upg.power_per_level * lvl
 			match int(upg.target_stat):
-				GameEnums.StatType.CLICK_POWER:
+				StatDefinition.StatType.CLICK_POWER:
 					total_extra_power += effect
-				GameEnums.StatType.CLICK_COOLDOWN:
+				StatDefinition.StatType.CLICK_COOLDOWN:
 					reduction_time += effect
 	
 	# CONFIRMED: This calls the function you pasted in RewardComponent

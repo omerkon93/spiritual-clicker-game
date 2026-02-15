@@ -22,18 +22,18 @@ enum ItemType {
 # --- SETTINGS ---
 @export_category("Settings")
 @export var item_type: ItemType = ItemType.TOOL
-@export var target_stat: GameEnums.StatType = GameEnums.StatType.NONE
+@export var target_stat: StatDefinition.StatType = StatDefinition.StatType.NONE
 @export var power_per_level: float = 1.0
 
 # --- COSTS ---
 @export_category("Costs")
-@export var cost_currency: GameEnums.CurrencyType = GameEnums.CurrencyType.MONEY
+@export var cost_currency: CurrencyDefinition.CurrencyType = CurrencyDefinition.CurrencyType.MONEY
 @export var base_cost: float = 10.0
 @export var cost_multiplier: float = 2.0
 
 # --- REWARD ---
 @export_category("One-Time Reward")
-@export var unlock_currency: GameEnums.CurrencyType = GameEnums.CurrencyType.NONE
+@export var unlock_currency: CurrencyDefinition.CurrencyType = CurrencyDefinition.CurrencyType.NONE
 @export var unlock_amount: float = 0.0
 
 # --- AUDIO ---

@@ -1,6 +1,12 @@
 class_name CurrencyDefinition extends Resource
 
-@export var type: GameEnums.CurrencyType = GameEnums.CurrencyType.NONE
+enum CurrencyType {
+	NONE = 0,
+	MONEY = 1,
+	SPIRIT = 2
+}
+
+@export var type: CurrencyType = CurrencyType.NONE
 @export var display_name: String = "Currency Name"
 @export var icon: Texture2D
 @export var display_color: Color = Color.WHITE

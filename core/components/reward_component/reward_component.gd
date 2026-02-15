@@ -40,8 +40,8 @@ func recalculate_finals(extra_currency_power: float) -> void:
 	# 3. Apply Upgrades (Add Flat Power)
 	if current_extra_power > 0:
 		# Priority: Add to Money first
-		if final_currency_gains.has(GameEnums.CurrencyType.MONEY):
-			final_currency_gains[GameEnums.CurrencyType.MONEY] += current_extra_power
+		if final_currency_gains.has(CurrencyDefinition.CurrencyType.MONEY):
+			final_currency_gains[CurrencyDefinition.CurrencyType.MONEY] += current_extra_power
 		# Fallback: Add to the first currency found (e.g., Spirit)
 		elif not final_currency_gains.is_empty():
 			var first_key = final_currency_gains.keys()[0]
@@ -83,7 +83,7 @@ func _format_event(type: int, amount: float, is_vital: bool) -> Dictionary:
 	
 	if is_vital:
 		# FIX: Use find_key() to safely get the name, regardless of the ID value
-		var vital_name = GameEnums.VitalType.find_key(type)
+		var vital_name = VitalDefinition.VitalType.find_key(type)
 		if vital_name:
 			vital_name = vital_name.capitalize()
 		else:
@@ -92,12 +92,12 @@ func _format_event(type: int, amount: float, is_vital: bool) -> Dictionary:
 		text = "+%d %s" % [amount, vital_name]
 		color = Color.GREEN_YELLOW 
 	else:
-		if type == GameEnums.CurrencyType.MONEY:
+		if type == CurrencyDefinition.CurrencyType.MONEY:
 			text = "+$%d" % amount
 			color = Color.GOLD
 		else:
 			# FIX: Use find_key() here too for safety
-			var curr_name = GameEnums.CurrencyType.find_key(type)
+			var curr_name = CurrencyDefinition.CurrencyType.find_key(type)
 			if curr_name:
 				curr_name = curr_name.capitalize()
 			else:

@@ -3,34 +3,34 @@ class_name ResourceConfig
 # Define the "Look and Feel" for every ID here
 const CONFIG: Dictionary = {
 	# --- CURRENCIES ---
-	GameEnums.CurrencyType.MONEY: {
+	CurrencyDefinition.CurrencyType.MONEY: {
 		"name": "Money",
 		"icon": "$", 
 		"color": Color("#FFD700") # Gold
 	},
-	GameEnums.CurrencyType.SPIRIT: {
+	CurrencyDefinition.CurrencyType.SPIRIT: {
 		"name": "Spirit",
 		"icon": "Ψ",
 		"color": Color("#9370DB") # Medium Purple
 	},
 	
 	# --- VITALS ---
-	GameEnums.VitalType.ENERGY: {
+	VitalDefinition.VitalType.ENERGY: {
 		"name": "Energy",
 		"icon": "⚡", 
 		"color": Color("#00BFFF") # Deep Sky Blue
 	},
-	GameEnums.VitalType.FULLNESS: {
+	VitalDefinition.VitalType.FULLNESS: {
 		"name": "Fullness",
 		"icon": "🍔", 
 		"color": Color("#FFA500") # Orange
 	},
-	GameEnums.VitalType.FOCUS: {
+	VitalDefinition.VitalType.FOCUS: {
 		"name": "Focus",
 		"icon": "👁", 
 		"color": Color("#32CD32") # Lime Green
 	},
-	GameEnums.VitalType.SANITY: {
+	VitalDefinition.VitalType.SANITY: {
 		"name": "Sanity",
 		"icon": "🧠", 
 		"color": Color("#FF69B4") # Hot Pink
@@ -57,7 +57,7 @@ static func format_gain(id: int, amount: float) -> String:
 	var icon = entry.get("icon", "")
 	
 	# Special formatting for Money (Prefix)
-	if id == GameEnums.CurrencyType.MONEY:
+	if id == CurrencyDefinition.CurrencyType.MONEY:
 		return "+%s%s" % [icon, NumberFormatter.format_value(amount)]
 	
 	# Standard formatting for Vitals (Suffix)

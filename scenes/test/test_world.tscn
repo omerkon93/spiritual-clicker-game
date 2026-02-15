@@ -139,14 +139,14 @@ metadata/_edit_use_anchors_ = true
 [node name="TabContainer" type="TabContainer" parent="UI/MarginContainer" unique_id=1306956362]
 unique_name_in_owner = true
 layout_mode = 2
-current_tab = 1
+current_tab = 0
 
 [node name="Actions" parent="UI/MarginContainer/TabContainer" unique_id=772517719 instance=ExtResource("6_4fu3m")]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="Shop" parent="UI/MarginContainer/TabContainer" unique_id=598056843 instance=ExtResource("8_mopo4")]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 

@@ -7,7 +7,7 @@ signal data_updated(formatted_text: String)
 signal visibility_requested(should_show: bool)
 
 # --- STATE ---
-var currency_type: int = GameEnums.CurrencyType.NONE
+var currency_type: int = CurrencyDefinition.CurrencyType.NONE
 
 # --- SETUP ---
 func setup(type: int) -> void:
@@ -41,7 +41,7 @@ func _process_update(amount: float) -> void:
 
 func _check_initial_visibility(amount: float) -> void:
 	# Always show MONEY, otherwise check if we have > 0
-	if currency_type == GameEnums.CurrencyType.MONEY:
+	if currency_type == CurrencyDefinition.CurrencyType.MONEY:
 		visibility_requested.emit(true)
 	elif amount > 0:
 		visibility_requested.emit(true)

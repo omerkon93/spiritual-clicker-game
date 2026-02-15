@@ -11,13 +11,13 @@ func _ready():
 	ItemManager.upgrade_levels.clear()
 	
 	# Add Test Values
-	CurrencyManager.add_currency(GameEnums.CurrencyType.MONEY, 500.0)
-	CurrencyManager.add_currency(GameEnums.CurrencyType.SPIRIT, 25.0)
+	CurrencyManager.add_currency(CurrencyDefinition.CurrencyType.MONEY, 500.0)
+	CurrencyManager.add_currency(CurrencyDefinition.CurrencyType.SPIRIT, 25.0)
 	ItemManager.upgrade_levels["test_upgrade_1"] = 3
 	GameStatsManager.set_flag("test_flag_visited_shop", true)
 	
-	print("   > Money Set To: ", CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY))
-	print("   > Spirit Set To: ", CurrencyManager.get_currency_amount(GameEnums.CurrencyType.SPIRIT))
+	print("   > Money Set To: ", CurrencyManager.get_currency_amount(CurrencyDefinition.CurrencyType.MONEY))
+	print("   > Spirit Set To: ", CurrencyManager.get_currency_amount(CurrencyDefinition.CurrencyType.SPIRIT))
 	print("   > Upgrade 'test_upgrade_1' Level: ", ItemManager.get_upgrade_level("test_upgrade_1"))
 	print("   > Flag 'test_flag_visited_shop': ", GameStatsManager.has_flag("test_flag_visited_shop"))
 
@@ -28,11 +28,11 @@ func _ready():
 	# --- STEP 3: MODIFY (CORRUPT) STATE ---
 	print("\n[Step 3] Modifying values (Simulating gameplay changes)...")
 	
-	CurrencyManager.add_currency(GameEnums.CurrencyType.MONEY, 99999.0) # Add a lot
+	CurrencyManager.add_currency(CurrencyDefinition.CurrencyType.MONEY, 99999.0) # Add a lot
 	ItemManager.upgrade_levels["test_upgrade_1"] = 100
 	GameStatsManager.set_flag("test_flag_visited_shop", false)
 	
-	print("   > Current Money (Modified): ", CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY))
+	print("   > Current Money (Modified): ", CurrencyManager.get_currency_amount(CurrencyDefinition.CurrencyType.MONEY))
 	print("   > Current Upgrade Level (Modified): ", ItemManager.get_upgrade_level("test_upgrade_1"))
 	print("   > Current Flag (Modified): ", GameStatsManager.has_flag("test_flag_visited_shop"))
 	
@@ -43,8 +43,8 @@ func _ready():
 	# --- STEP 5: VERIFY RESULTS ---
 	print("\n[Step 5] Verifying Restored Values...")
 	
-	var loaded_money = CurrencyManager.get_currency_amount(GameEnums.CurrencyType.MONEY)
-	var loaded_spirit = CurrencyManager.get_currency_amount(GameEnums.CurrencyType.SPIRIT)
+	var loaded_money = CurrencyManager.get_currency_amount(CurrencyDefinition.CurrencyType.MONEY)
+	var loaded_spirit = CurrencyManager.get_currency_amount(CurrencyDefinition.CurrencyType.SPIRIT)
 	var loaded_upgrade = ItemManager.get_upgrade_level("test_upgrade_1")
 	var loaded_flag = GameStatsManager.has_flag("test_flag_visited_shop")
 	

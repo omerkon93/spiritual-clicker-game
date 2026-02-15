@@ -6,7 +6,7 @@ class_name VitalMonitor
 signal data_updated(current: float, max_val: float, bar_color: Color)
 
 # --- STATE ---
-var vital_type: int = GameEnums.VitalType.NONE
+var vital_type: int = VitalDefinition.VitalType.NONE
 var gradient: GradientTexture1D # We hold the gradient logic here
 
 # --- SETUP ---

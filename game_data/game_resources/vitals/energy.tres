@@ -1,13 +1,14 @@
-[gd_resource type="Resource" script_class="VitalDefinition" format=3 uid="uid://1wwmuacjfdx3"]
+[gd_resource type="Resource" script_class="VitalDefinition" format=3 uid="uid://cdr1jgug886xp"]
 
 [ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="1_4cp3g"]
 
-[sub_resource type="Gradient" id="Gradient_4cp3g"]
-colors = PackedColorArray(0, 0, 0, 1, 1, 1, 0, 1)
+[sub_resource type="Gradient" id="Gradient_u1tk0"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 1, 1)
 
 [resource]
 script = ExtResource("1_4cp3g")
 type = 101
 display_name = "Energy"
-gradient = SubResource("Gradient_4cp3g")
+display_color = Color(0, 0, 1, 1)
+gradient = SubResource("Gradient_u1tk0")
 metadata/_custom_type_script = "uid://derwj2ijevwkr"

@@ -1,4 +1,4 @@
-class_name GameEnums
+class_name GameEnumss
 
 # --- IDs 0 to 99 ---
 enum CurrencyType {

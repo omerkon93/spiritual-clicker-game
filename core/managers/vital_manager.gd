@@ -4,21 +4,21 @@ extends Node
 # SIGNALS
 # ==============================================================================
 # Emitted whenever a vital changes value (for UI bars/text)
-signal vital_changed(type: GameEnums.VitalType, current: float, max_val: float)
+signal vital_changed(type: VitalDefinition.VitalType, current: float, max_val: float)
 
 # Emitted specifically when a vital hits 0 (for Game Over or Debuffs)
-signal vital_depleted(type: GameEnums.VitalType) 
+signal vital_depleted(type: VitalDefinition.VitalType) 
 
 
 # ==============================================================================
 # DATA STORAGE
 # ==============================================================================
 # Dynamic State: Stores the current numbers.
-# Format: { GameEnums.VitalType : { "current": 50.0, "max": 100.0 } }
+# Format: { VitalDefinition.VitalType : { "current": 50.0, "max": 100.0 } }
 var _vitals: Dictionary = {}
 
 # Static Config: Stores the resource files (Icon, Name, Color).
-# Format: { GameEnums.VitalType : VitalDefinition }
+# Format: { VitalDefinition.VitalType : VitalDefinition }
 var _definitions: Dictionary = {}
 
 
@@ -28,10 +28,10 @@ var _definitions: Dictionary = {}
 func _ready() -> void:
 	# Fallback initialization if definitions aren't loaded externally
 	# (You can remove this if you call initialize_vitals from a Bootstrap script)
-	_init_fallback_vital(GameEnums.VitalType.ENERGY, 100.0)
-	_init_fallback_vital(GameEnums.VitalType.FULLNESS, 100.0)
-	_init_fallback_vital(GameEnums.VitalType.FOCUS, 100.0)
-	_init_fallback_vital(GameEnums.VitalType.SANITY, 100.0)
+	_init_fallback_vital(VitalDefinition.VitalType.ENERGY, 100.0)
+	_init_fallback_vital(VitalDefinition.VitalType.FULLNESS, 100.0)
+	_init_fallback_vital(VitalDefinition.VitalType.FOCUS, 100.0)
+	_init_fallback_vital(VitalDefinition.VitalType.SANITY, 100.0)
 
 func initialize_vitals(vitals: Array[VitalDefinition]) -> void:
 	for v in vitals:
@@ -61,10 +61,14 @@ func has_enough(type: int, amount: float) -> bool:
 	return get_current(type) >= amount
 
 # Retrieves the static Resource file (for UI Icons/Colors)
-func get_definition(type: GameEnums.VitalType) -> VitalDefinition:
+func get_definition(type: VitalDefinition.VitalType) -> VitalDefinition:
 	if _definitions.has(type):
 		return _definitions[type]
-	push_error("Vital Definition not found for type: %s" % type)
+	
+	# DEBUG: Print warning but don't crash
+	push_warning("Vital Definition missing for ID %s. Have you called initialize_vitals()?" % type)
+	
+	# Return a dummy or null to prevent the crash
 	return null
 
 func get_vital_value(vital_type: int) -> float:

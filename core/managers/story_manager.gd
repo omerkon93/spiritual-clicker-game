@@ -7,7 +7,7 @@ func _ready():
 		VitalManager.vital_depleted.connect(_on_vital_depleted)
 
 func _on_vital_depleted(type: int):
-	if type == GameEnums.VitalType.FOCUS:
+	if type == VitalDefinition.VitalType.FOCUS:
 		_trigger_burnout_event()
 
 func _trigger_burnout_event():

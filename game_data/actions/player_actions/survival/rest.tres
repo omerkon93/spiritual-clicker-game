@@ -11,7 +11,7 @@ category = 1
 is_unlocked_by_default = false
 required_story_flag = ExtResource("1_jxcoe")
 vital_costs = Dictionary[int, float]({
-102: 10.0
+102: 20.0
 })
 vital_gains = Dictionary[int, float]({
 101: 50.0

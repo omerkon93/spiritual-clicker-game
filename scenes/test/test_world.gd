@@ -8,7 +8,7 @@ func _ready() -> void:
 	
 	# Optional: Force the game to start on the "Actions" tab (Index 1 based on your screenshot)
 	# Index 0 = Settings, 1 = Actions, 2 = Shop
-	tab_container.current_tab = 1 
+	tab_container.current_tab = 0
 
 func _on_tab_changed(tab_index: int) -> void:
 	# Get the actual node that was just opened (e.g., ShopPanel)

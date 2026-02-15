@@ -67,7 +67,7 @@ func _apply_level_up(item: GameItem) -> void:
 	ProgressionManager.increment_upgrade_level(item.id)
 	
 	# Apply instant rewards (like unlocking a new currency type)
-	if item.unlock_currency != GameEnums.CurrencyType.NONE:
+	if item.unlock_currency != CurrencyDefinition.CurrencyType.NONE:
 		CurrencyManager.add_currency(item.unlock_currency, item.unlock_amount)
 
 func _execute_action_rewards(action: ActionData) -> void:

@@ -2,7 +2,7 @@ extends Button
 class_name CurrencyButton
 
 # --- Configuration ---
-@export var currency_type: GameEnums.CurrencyType = GameEnums.CurrencyType.MONEY
+@export var currency_type: CurrencyDefinition.CurrencyType = CurrencyDefinition.CurrencyType.MONEY
 @export var base_cooldown: float = 2.0
 @export var sanity_cost: float = 5.0 # Costs 5 sanity to work
 
@@ -55,7 +55,7 @@ func _on_clicked():
 
 	# 2. Vital Check (NEW)
 	# We ask the VitalManager if we have enough Sanity
-	if not VitalManager.consume(GameEnums.VitalType.SANITY, sanity_cost):
+	if not VitalManager.consume(VitalDefinition.VitalType.SANITY, sanity_cost):
 		SignalBus.message_logged.emit("I'm too burnt out...", Color.RED)
 		_play_bounce_animation() # Visual feedback for failure
 		return
@@ -85,10 +85,10 @@ func _recalculate_stats():
 			
 			# NEW LOGIC: Check the Global StatType
 			match upgrade.target_stat:
-				GameEnums.StatType.CLICK_POWER:
+				StatDefinition.StatType.CLICK_POWER:
 					added_power += total_effect
 				
-				GameEnums.StatType.CLICK_COOLDOWN:
+				StatDefinition.StatType.CLICK_COOLDOWN:
 					removed_time += total_effect
 	
 	# Logic: If we have upgrades, use them. Otherwise default to 1.
