@@ -50,7 +50,7 @@ func try_purchase_item(item: GameItem) -> bool:
 		_execute_action_rewards(item.on_purchase_action)
 		
 		# Consumables are one-offs; they usually don't gain levels or increase cost
-		if item.upgrade_type == GameItem.ItemType.CONSUMABLE:
+		if item.item_type == GameItem.ItemType.CONSUMABLE:
 			if item.audio_on_purchase:
 				SoundManager.play_sfx(item.audio_on_purchase)
 			return true

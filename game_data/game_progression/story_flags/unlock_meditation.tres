@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="StoryFlag" format=3 uid="uid://j0ndhq8em4tj"]
-
-[ext_resource type="Script" uid="uid://cwsq8isjkr33d" path="res://core/resources/story_flagt.gd" id="1_w5h41"]
-
-[resource]
-script = ExtResource("1_w5h41")
-id = "unlock_meditation"
-metadata/_custom_type_script = "uid://cwsq8isjkr33d"
