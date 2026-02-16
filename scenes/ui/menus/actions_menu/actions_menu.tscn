@@ -12,9 +12,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8pol2")
 action_button_scene = ExtResource("2_0lbaa")
-career_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Career/Career/CareerGrid")
-survival_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Survival/Survival/SurvivalGrid")
-spiritual_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Spiritual/Spiritual/SpiritualGrid")
+career_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Career/CareerScroll/CareerGrid")
+survival_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Survival/SurvivalScroll/SurvivalGrid")
+spiritual_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Spiritual/SpiritualScroll/SpiritualGrid")
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="." unique_id=662819966]
@@ -58,10 +58,10 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 metadata/_tab_index = 0
 
-[node name="Career" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Career" unique_id=719891427]
+[node name="CareerScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Career" unique_id=719891427]
 layout_mode = 2
 
-[node name="CareerGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Career/Career" unique_id=1776912608]
+[node name="CareerGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Career/CareerScroll" unique_id=1776912608]
 layout_mode = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
@@ -75,10 +75,10 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 metadata/_tab_index = 1
 
-[node name="Survival" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Survival" unique_id=2069156364]
+[node name="SurvivalScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Survival" unique_id=2069156364]
 layout_mode = 2
 
-[node name="SurvivalGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Survival/Survival" unique_id=1057169241]
+[node name="SurvivalGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Survival/SurvivalScroll" unique_id=1057169241]
 layout_mode = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
@@ -92,10 +92,10 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 metadata/_tab_index = 2
 
-[node name="Spiritual" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Spiritual" unique_id=1289642]
+[node name="SpiritualScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Spiritual" unique_id=1289642]
 layout_mode = 2
 
-[node name="SpiritualGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Spiritual/Spiritual" unique_id=35541590]
+[node name="SpiritualGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Spiritual/SpiritualScroll" unique_id=35541590]
 layout_mode = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10

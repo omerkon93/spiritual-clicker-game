@@ -1,6 +1,6 @@
 extends Button
 
-@export var settings_menu: Control
+@export var settings_menu: SettingsMenu
 
 func _ready() -> void:
 	pressed.connect(_on_pressed)

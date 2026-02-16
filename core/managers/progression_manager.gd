@@ -4,6 +4,7 @@ extends Node
 signal upgrade_leveled_up(id: String, new_level: int)
 signal flag_changed(flag_id: String, value: bool)
 signal milestone_unlocked(flag_id: String, description: String)
+signal item_seen(item_id: String)
 
 # --- CONFIGURATION ---
 const MILESTONE_PATH = "res://game_data/game_progression/milestones/"
@@ -14,6 +15,9 @@ var story_flags: Dictionary = {}
 
 # --- DATABASE ---
 var all_milestones: Array[Milestone] = []
+
+# --- NOTIFICATION TRACKING (NEW) ---
+var seen_items: Dictionary = {}
 
 # ==============================================================================
 # LIFECYCLE
@@ -26,9 +30,12 @@ func _connect_signals() -> void:
 	if CurrencyManager:
 		CurrencyManager.currency_changed.connect(_on_currency_changed)
 	
-	if VitalManager:
-		if VitalManager.has_signal("vital_changed"):
-			VitalManager.vital_changed.connect(_on_vital_changed)
+	if VitalManager and VitalManager.has_signal("vital_changed"):
+		VitalManager.vital_changed.connect(_on_vital_changed)
+
+	if TimeManager:
+		TimeManager.time_updated.connect(_on_time_updated)
+		TimeManager.day_started.connect(func(_d): _check_all_milestones())
 
 func _load_milestones() -> void:
 	var dir = DirAccess.open(MILESTONE_PATH)
@@ -46,67 +53,85 @@ func _load_milestones() -> void:
 		push_error("ProgressionManager: Could not open folder: " + MILESTONE_PATH)
 
 # ==============================================================================
-# CHECK LOGIC
+# EVENT LISTENERS
 # ==============================================================================
 func _on_currency_changed(type: int, _amount: float) -> void:
 	for m in all_milestones:
-		if m.condition_type == Milestone.UnlockCondition.CURRENCY_THRESHOLD:
-			if m.target_currency == type:
-				_evaluate_milestone(m)
-
-func _on_upgrade_leveled_internal(id: String, _level: int) -> void:
-	for m in all_milestones:
-		if m.condition_type == Milestone.UnlockCondition.UPGRADE_LEVEL:
-			if m.target_upgrade_id == id:
-				_evaluate_milestone(m)
+		if m.currency_amount > 0 and m.required_currency == type:
+			_evaluate_milestone(m)
 
 func _on_vital_changed(type: int, _current: float, _max: float) -> void:
 	for m in all_milestones:
-		# Changed VITAL_VALUE -> VITAL_THRESHOLD
-		if m.condition_type == Milestone.UnlockCondition.VITAL_THRESHOLD:
-			if m.target_vital == type:
+		if m.vital_amount > 0 and m.required_vital == type:
+			_evaluate_milestone(m)
+
+func _on_upgrade_leveled_internal(id: String, _level: int) -> void:
+	for m in all_milestones:
+		if m.required_upgrade_id == id:
+			_evaluate_milestone(m)
+
+func _on_time_updated(_day: int, _hour: int, _minute: int) -> void:
+	if _minute == 0:
+		for m in all_milestones:
+			if m.min_day != -1:
 				_evaluate_milestone(m)
 
+func _check_all_milestones() -> void:
+	for m in all_milestones:
+		_evaluate_milestone(m)
+
+# ==============================================================================
+# EVALUATION LOGIC
+# ==============================================================================
 func _evaluate_milestone(m: Milestone) -> void:
 	if m.target_flag == null: return
 	if get_flag(m.target_flag): return 
-
-	var passed: bool = false
-	var current_val: float = 0.0
-	var target_val: float = 0.0
 	
-	# 1. Get Values based on Type
-	match m.condition_type:
-		Milestone.UnlockCondition.CURRENCY_THRESHOLD:
-			current_val = CurrencyManager.get_currency_amount(m.target_currency)
-			target_val = m.currency_amount
-			
-		Milestone.UnlockCondition.UPGRADE_LEVEL:
-			current_val = float(get_upgrade_level(m.target_upgrade_id))
-			target_val = float(m.upgrade_level)
-			
-		Milestone.UnlockCondition.VITAL_THRESHOLD:
-			if VitalManager.has_method("get_vital_value"):
-				current_val = VitalManager.get_vital_value(m.target_vital)
-				target_val = m.vital_amount
+	# --- A. Currency Check ---
+	if m.currency_amount > 0:
+		var current = CurrencyManager.get_currency(m.required_currency)
+		if m.currency_is_less_than:
+			if current >= m.currency_amount: return
+		else:
+			if current < m.currency_amount: return
 
-	# 2. Compare Values
-	if m.is_less_than:
-		passed = current_val <= target_val # Lower Than Logic
-	else:
-		passed = current_val >= target_val # Higher Than Logic (Default)
+	# --- B. Vital Check ---
+	if m.vital_amount > 0 and VitalManager.has_method("get_vital_value"):
+		var current = VitalManager.get_vital_value(m.required_vital)
+		if m.vital_is_less_than:
+			if current >= m.vital_amount: return
+		else:
+			if current < m.vital_amount: return
 
-	if passed:
-		unlock_milestone(m.target_flag.id, m.notification_text)
-
-func unlock_milestone(flag_id: String, display_text: String) -> void:
-	if not get_flag(flag_id):
-		set_flag(flag_id, true)
-		milestone_unlocked.emit(flag_id, display_text)
+	# --- C. Time Check ---
+	if m.min_day != -1:
+		var current_total = (TimeManager.current_day * 24) + TimeManager.current_hour
+		var target_total = (m.min_day * 24) + m.min_hour
 		
-		# Visuals
+		if m.time_is_deadline:
+			if current_total >= target_total: return
+		else:
+			if current_total < target_total: return
+
+	# --- D. Upgrade Check ---
+	if m.required_upgrade_id != "":
+		var current = get_upgrade_level(m.required_upgrade_id)
+		if m.upgrade_is_less_than:
+			if current >= m.required_upgrade_level: return
+		else:
+			if current < m.required_upgrade_level: return
+
+	unlock_milestone(m.target_flag, m.notification_text)
+
+func unlock_milestone(flag_or_id, display_text: String) -> void:
+	var id = _resolve_key(flag_or_id)
+	
+	if not get_flag(id):
+		set_flag(id, true)
+		milestone_unlocked.emit(id, display_text)
 		print("🏆 Milestone Reached: ", display_text)
-		SignalBus.message_logged.emit(display_text, Color.GOLD)
+		if SignalBus.has_signal("message_logged"):
+			SignalBus.message_logged.emit(display_text, Color.GOLD)
 
 # ==============================================================================
 # PUBLIC API
@@ -130,23 +155,48 @@ func set_flag(key, value: bool = true) -> void:
 	if story_flags.get(id) != value:
 		story_flags[id] = value
 		flag_changed.emit(id, value)
+		
+		if value == true:
+			if key is StoryFlag and key.display_name != "":
+				SignalBus.message_logged.emit("Story Update: " + key.display_name, Color.MAGENTA)
+
+		_check_all_milestones()
 
 func _resolve_key(key) -> String:
 	if key is StoryFlag: return key.id
 	return str(key)
 
+# --- NOTIFICATION API (NEW) ---
+func is_item_new(id: String) -> bool:
+	# It is new if it is NOT in the dictionary
+	return not seen_items.has(id)
+
+func mark_item_as_seen(id: String) -> void:
+	if not seen_items.has(id):
+		seen_items[id] = true
+		item_seen.emit(id)
+		# Note: We rely on Auto-Save to persist this to disk
+
 # ==============================================================================
 # PERSISTENCE
 # ==============================================================================
 func get_save_data() -> Dictionary:
-	return { "upgrades": upgrade_levels.duplicate(), "flags": story_flags.duplicate() }
+	return {
+		"upgrades": upgrade_levels.duplicate(),
+		"flags": story_flags.duplicate(),
+		"seen_items": seen_items.duplicate() # <--- Added
+	}
 
 func load_save_data(data: Dictionary) -> void:
 	if data.has("upgrades"): upgrade_levels = data["upgrades"]
 	if data.has("flags"): story_flags = data["flags"]
+	if data.has("seen_items"): seen_items = data["seen_items"] # <--- Added
 	
-	for id in upgrade_levels: upgrade_leveled_up.emit(id, upgrade_levels[id])
-	for flag in story_flags: flag_changed.emit(flag, story_flags[flag])
+	# Restore state signals
+	for id in upgrade_levels: 
+		upgrade_leveled_up.emit(id, upgrade_levels[id])
 	
-	for m in all_milestones:
-		_evaluate_milestone(m)
+	for flag_id in story_flags: 
+		flag_changed.emit(flag_id, story_flags[flag_id])
+	
+	_check_all_milestones()

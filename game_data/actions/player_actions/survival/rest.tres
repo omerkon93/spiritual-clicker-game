@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://bq5rrfocfi1d5"]
 
 [ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="1_628t3"]
-[ext_resource type="Resource" uid="uid://dcp8sy218hj03" path="res://game_data/game_progression/story_flags/unlocked_survival.tres" id="1_jxcoe"]
+[ext_resource type="Resource" uid="uid://bd6cui2bjv8w3" path="res://game_data/game_progression/story_flags/unlock_survival.tres" id="1_jxcoe"]
 
 [resource]
 script = ExtResource("1_628t3")
@@ -9,6 +9,7 @@ id = "rest"
 display_name = "Rest"
 category = 1
 is_unlocked_by_default = false
+time_cost_minutes = 180
 required_story_flag = ExtResource("1_jxcoe")
 vital_costs = Dictionary[int, float]({
 102: 20.0

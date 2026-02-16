@@ -37,10 +37,12 @@ class_name ActionButton
 @onready var stats_label: RichTextLabel = %StatsLabel 
 @onready var icon_rect: TextureRect = %IconRect
 
+# We use unique name (%) because it might be deeply nested, or standard ($) if direct child
+@onready var notification_indicator_component: NotificationIndicatorComponent = %NotificationIndicatorComponent
+
 var current_cooldown: float = 1.0
 
-
-# ========================================================s======================
+# ==============================================================================
 # 2. LIFECYCLE
 # ==============================================================================
 func _ready() -> void:
@@ -66,8 +68,11 @@ func _on_clicked() -> void:
 	if timer and not timer.is_stopped(): 
 		return
 
+	# --- NEW: DELEGATE "SEEN" LOGIC ---
+	if notification_indicator_component:
+		notification_indicator_component.mark_as_seen()
+
 	# 1. CHECK AFFORDABILITY
-	# CostComponent handles "Burnout" (allowing 0.1 energy to pay for 10 cost)
 	if cost_component and not cost_component.check_affordability():
 		if animation_component: animation_component.play_shake()
 		return
@@ -81,7 +86,6 @@ func _on_clicked() -> void:
 	# 3. REWARDS & VISUALS
 	var feedback = []
 	if reward_component:
-		# Delivers the FINAL calculated rewards (Base + Upgrades)
 		feedback = reward_component.deliver_rewards()
 	
 	if animation_component: 
@@ -113,6 +117,11 @@ func _load_data_into_components() -> void:
 
 	_update_ui()
 
+	# --- NEW: CONFIGURE NOTIFICATION ---
+	if notification_indicator_component:
+		# We pass 'self' as the target so the BUTTON blinks, not just the indicator
+		notification_indicator_component.configure(action_data.id, self)
+
 	if cost_component: cost_component.configure(action_data)
 	if reward_component: reward_component.configure(action_data)
 	if message_component: message_component.failure_messages = action_data.failure_messages.duplicate()
@@ -135,53 +144,34 @@ func _generate_stats_text() -> void:
 	# COSTS
 	for type_key in action_data.currency_costs:
 		var amount = action_data.currency_costs[type_key]
-		if amount <= 0: continue # Skip zero costs
-		
-		# Ensure key is treated as Int (Enum)
+		if amount <= 0: continue
 		var type = type_key as int 
 		var def = CurrencyManager.get_definition(type)
-		
-		if def:
-			text_lines.append("[color=salmon]-%s%s[/color]" % [def.prefix, amount])
+		if def: text_lines.append("[color=salmon]-%s%s[/color]" % [def.prefix, amount])
 
 	for type_key in action_data.vital_costs:
 		var amount = action_data.vital_costs[type_key]
 		if amount <= 0: continue
-		
-		# Explicit cast to int to match the new 100+ Enum IDs
 		var type = type_key as int 
 		var def = VitalManager.get_definition(type)
-		
-		# If def is missing (because of ID mismatch), this skips safely
-		if def:
-			text_lines.append("[color=salmon]-%s %s[/color]" % [amount, def.display_name])
-		else:
-			# Optional: Print to console to know EXACTLY which action is broken
-			print("Warning: Action '%s' has stale Vital ID: %s" % [name, type])
+		if def: text_lines.append("[color=salmon]-%s %s[/color]" % [amount, def.display_name])
 
 	# REWARDS
 	for type_key in action_data.currency_gains:
 		var amount = action_data.currency_gains[type_key]
 		if amount <= 0: continue
-		
 		var type = type_key as int
 		var def = CurrencyManager.get_definition(type)
-		
-		if def:
-			text_lines.append("[color=light_green]+%s%s[/color]" % [def.prefix, amount])
+		if def: text_lines.append("[color=light_green]+%s%s[/color]" % [def.prefix, amount])
 
 	for type_key in action_data.vital_gains:
 		var amount = action_data.vital_gains[type_key]
 		if amount <= 0: continue
-
 		var type = type_key as int
 		var def = VitalManager.get_definition(type)
-		
-		if def:
-			text_lines.append("[color=cyan]+%s %s[/color]" % [amount, def.display_name])
+		if def: text_lines.append("[color=cyan]+%s %s[/color]" % [amount, def.display_name])
 
 	stats_label.text = "[center]%s[/center]" % "\n".join(text_lines)
-
 
 # ==============================================================================
 # 7. UPGRADE LOGIC
@@ -196,37 +186,26 @@ func _recalculate_upgrades() -> void:
 	
 	for upg: GameItem in all_upgrades:
 		if upg == null: continue
-		
-		# Get level from ProgressionManager
 		var lvl: int = ProgressionManager.get_upgrade_level(upg.id)
 		
 		if lvl > 0:
 			var effect: float = upg.power_per_level * lvl
 			match int(upg.target_stat):
-				StatDefinition.StatType.CLICK_POWER:
-					total_extra_power += effect
-				StatDefinition.StatType.CLICK_COOLDOWN:
-					reduction_time += effect
+				StatDefinition.StatType.CLICK_POWER: total_extra_power += effect
+				StatDefinition.StatType.CLICK_COOLDOWN: reduction_time += effect
 	
-	# CONFIRMED: This calls the function you pasted in RewardComponent
 	if reward_component and reward_component.has_method("recalculate_finals"):
 		reward_component.recalculate_finals(total_extra_power)
 	
-	# Apply Cooldown Reduction
 	current_cooldown = max(0.1, base_cooldown - reduction_time)
-	if timer: 
-		timer.wait_time = current_cooldown
+	if timer: timer.wait_time = current_cooldown
 
 func _on_upgrade_leveled(id: String, _lvl: int) -> void:
 	var is_relevant: bool = false
-	
-	if primary_upgrade and primary_upgrade.id == id:
-		is_relevant = true
+	if primary_upgrade and primary_upgrade.id == id: is_relevant = true
 	else:
 		for upg in contributing_upgrades:
 			if upg and upg.id == id:
 				is_relevant = true
 				break
-	
-	if is_relevant:
-		_recalculate_upgrades()
+	if is_relevant: _recalculate_upgrades()

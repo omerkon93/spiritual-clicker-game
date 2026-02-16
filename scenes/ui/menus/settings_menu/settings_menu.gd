@@ -1,4 +1,5 @@
 extends Control
+class_name SettingsMenu
 
 # --- SIGNALS ---
 signal close_requested
@@ -25,9 +26,9 @@ var _bus_sfx: int
 # Data Management Buttons
 @onready var back_btn: Button = %BackButton
 @onready var reset_btn: Button = %ResetButton
-@onready var save_btn: Button = %SaveButton           # "Save As..."
+@onready var save_btn: Button = %SaveButton            # "Save As..."
 @onready var quick_save_btn: Button = %QuickSaveButton # "Quick Save"
-@onready var load_btn: Button = %LoadButton           # Optional "Load Last"
+@onready var load_btn: Button = %LoadButton            # "Load / Switch Slot"
 
 # --- SUB-MENUS ---
 # Ensure you added the SaveSelectionMenu scene as a child of this node!
@@ -64,7 +65,13 @@ func _ready() -> void:
 		load_btn.pressed.connect(func(): 
 			if save_selection_menu: save_selection_menu.open(false)
 			)
-	# 4. Initialize
+			
+	# 4. Global Signal Connections (NEW)
+	# Listen for when a game is loaded so we can refresh the world
+	if SaveManager.has_signal("game_loaded"):
+		SaveManager.game_loaded.connect(_on_game_loaded)
+	
+	# 5. Initialize
 	hide()
 
 # ==============================================================================
@@ -132,6 +139,19 @@ func _update_label(label: Label, value: float) -> void:
 # ==============================================================================
 # 4. ACTION CALLBACKS
 # ==============================================================================
+func _on_game_loaded() -> void:
+	print("🔄 SettingsMenu: Game Loaded signal received. Reloading scene...")
+	# 1. Close this menu
+	close()
+	
+	# 2. Unpause the game (if the menu paused it)
+	get_tree().paused = false
+	
+	# 3. Reload the current scene
+	# This forces all nodes (Player, Chests, etc.) to run _ready() again
+	# and fetch the fresh data from the Singletons (ProgressionManager, etc.)
+	get_tree().reload_current_scene()
+
 func _on_quick_save_pressed() -> void:
 	# 1. Perform Save
 	SaveManager.save_game()

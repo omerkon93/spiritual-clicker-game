@@ -45,6 +45,22 @@ func try_purchase_item(item: GameItem) -> bool:
 	# 3. Process Payment
 	CurrencyManager.spend_currency(item.cost_currency, cost)
 	
+	# --- LOGGING START ---
+	# We differentiate between "Researching" a tech and "Buying" a tool for flavor
+	var log_verb = "Purchased"
+	if item.item_type == GameItem.ItemType.TECHNOLOGY:
+		log_verb = "Researched"
+	
+	SignalBus.message_logged.emit("%s: %s" % [log_verb, item.display_name], Color.CYAN)
+	# --- LOGGING END ---
+	
+	# --- NEW: UNLOCK STORY FLAG ---
+	# We do this here so it works for Tools AND Consumables.
+	if item.story_flag_reward:
+		ProgressionManager.set_flag(item.story_flag_reward, true)
+		print("🔓 ItemManager: Unlocked Story Flag -> ", item.story_flag_reward.id)
+	# ------------------------------
+	
 	# 4. Handle Consumable/Action Triggers
 	if item.on_purchase_action:
 		_execute_action_rewards(item.on_purchase_action)

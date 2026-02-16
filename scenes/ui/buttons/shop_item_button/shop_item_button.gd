@@ -13,6 +13,9 @@ class_name ShopItemButton
 var color_affordable: Color = Color.WHITE
 var color_expensive: Color = Color(1, 0.4, 0.4) 
 
+# --- COMPONENT REFERENCES ---
+@onready var notification_indicator_component: NotificationIndicatorComponent = $NotificationIndicatorComponent
+
 func _ready() -> void:
 	pressed.connect(_on_pressed)
 	
@@ -41,6 +44,7 @@ func _process(_delta: float) -> void:
 	if disabled or upgrade_resource == null:
 		return
 
+	# Affordability logic runs every frame (compatible with blinking)
 	var cost = ItemManager.get_current_cost(upgrade_resource)
 	var can_afford = CurrencyManager.has_enough_currency(upgrade_resource.cost_currency, cost)
 	
@@ -51,6 +55,10 @@ func _process(_delta: float) -> void:
 
 func _on_pressed() -> void:
 	if not upgrade_resource: return
+	
+	# --- NEW: DELEGATE SEEN LOGIC ---
+	if notification_indicator_component:
+		notification_indicator_component.mark_as_seen()
 	
 	ItemManager.try_purchase_item(upgrade_resource)
 	
@@ -84,3 +92,8 @@ func _update_display() -> void:
 	if not upgrade_resource: return
 	if upgrade_resource.icon:
 		icon = upgrade_resource.icon
+	
+	# --- NEW: CONFIGURE NOTIFICATION ---
+	if notification_indicator_component:
+		# We pass 'self' so the SHOP BUTTON blinks
+		notification_indicator_component.configure(upgrade_resource.id, self)

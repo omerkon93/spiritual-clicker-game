@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://dnql0wnfnqy0d"]
 
-[ext_resource type="Script" uid="uid://cg4tvvr3xcavd" path="res://scenes/test/test_world.gd" id="1_mhjrp"]
+[ext_resource type="Script" uid="uid://cg4tvvr3xcavd" path="res://scenes/main/test/test_world.gd" id="1_mhjrp"]
 [ext_resource type="PackedScene" uid="uid://brw4tnt3187u7" path="res://core/components/floating_text_component/floating_text_component.tscn" id="2_4j6oq"]
 [ext_resource type="PackedScene" uid="uid://cqe0o1s22480x" path="res://scenes/ui/labels/resource_display/resource_display.tscn" id="3_0xc2k"]
 [ext_resource type="Script" uid="uid://cmjd7pxovwsxn" path="res://core/resources/currency_definition.gd" id="4_4j6oq"]
 [ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="5_vdk5t"]
-[ext_resource type="PackedScene" uid="uid://diw24lvqdympd" path="res://scenes/ui/menus/actions_menu/actions_menu.tscn" id="6_4fu3m"]
 [ext_resource type="PackedScene" uid="uid://bi6vn7ujskl0w" path="res://scenes/ui/labels/time_display/time_display.tscn" id="6_fddy8"]
 [ext_resource type="PackedScene" uid="uid://bxo11gelgnitj" path="res://scenes/ui/menus/settings_menu/settings_menu.tscn" id="7_d54ay"]
 [ext_resource type="PackedScene" uid="uid://bcr0r8vbpqed6" path="res://scenes/ui/buttons/settings_button/settings_button.tscn" id="7_l7hgw"]
-[ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/menus/shop_menu/shop_menu.tscn" id="8_mopo4"]
+[ext_resource type="PackedScene" uid="uid://chhrvwnrgoavo" path="res://scenes/ui/labels/chat_log/chat_log.tscn" id="8_ocsj7"]
+[ext_resource type="PackedScene" uid="uid://dwyyyo58piqom" path="res://scenes/ui/menus/combined_menu/combined_menu.tscn" id="9_g5dh2"]
 
 [sub_resource type="Gradient" id="Gradient_4cp3g"]
 colors = PackedColorArray(0, 0, 0, 1, 1, 1, 0, 1)
@@ -79,9 +79,11 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/HUD/Panel" unique_id=486811361]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 175.0
+grow_horizontal = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -123,32 +125,15 @@ resource_def = SubResource("Resource_l46gi")
 [node name="TimeDisplay" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=1284411020 instance=ExtResource("6_fddy8")]
 layout_mode = 2
 
+[node name="ChatLog" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=46349787 instance=ExtResource("8_ocsj7")]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="SettingsButton" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=679154949 node_paths=PackedStringArray("settings_menu") instance=ExtResource("7_l7hgw")]
 layout_mode = 2
 settings_menu = NodePath("../../../../../Settings")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=2099914842]
-anchors_preset = -1
-anchor_top = 0.3
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="TabContainer" type="TabContainer" parent="UI/MarginContainer" unique_id=1306956362]
-unique_name_in_owner = true
-layout_mode = 2
-current_tab = 0
-
-[node name="Actions" parent="UI/MarginContainer/TabContainer" unique_id=772517719 instance=ExtResource("6_4fu3m")]
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="Shop" parent="UI/MarginContainer/TabContainer" unique_id=598056843 instance=ExtResource("8_mopo4")]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 1
+[node name="CombinedMenu" parent="UI" unique_id=1927334450 instance=ExtResource("9_g5dh2")]
 
 [node name="Settings" parent="UI" unique_id=721209956 instance=ExtResource("7_d54ay")]
 visible = false

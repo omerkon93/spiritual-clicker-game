@@ -1,33 +1,45 @@
 extends Resource
 class_name Milestone
 
-enum UnlockCondition {
-	CURRENCY_THRESHOLD,
-	VITAL_THRESHOLD,
-	UPGRADE_LEVEL,
-	TIME_PLAYED, # Future proofing
-	TOTAL_CLICKS # Future proofing
-}
-
 @export_group("Reward")
-@export var target_flag: StoryFlag # The flag to set to TRUE when unlocked
+## The flag to set to TRUE when this milestone is met.
+@export var target_flag: StoryFlag 
+
+## Text shown in the UI popup.
 @export var notification_text: String = "Milestone Reached!"
 
-@export_group("Condition")
-@export var condition_type: UnlockCondition = UnlockCondition.CURRENCY_THRESHOLD
-@export var is_less_than: bool = false
+# --- REQUIREMENTS (All filled fields must be met) ---
 
-@export_group("Currency Checks")
-# For Currency Checks
-@export var target_currency: CurrencyDefinition.CurrencyType = CurrencyDefinition.CurrencyType.MONEY
+@export_group("Currency Requirements")
+@export var required_currency: CurrencyDefinition.CurrencyType = CurrencyDefinition.CurrencyType.MONEY
 @export var currency_amount: float = 0.0
 
-@export_group("Vital Checks")
-# For Currency Checks
-@export var target_vital: VitalDefinition.VitalType = VitalDefinition.VitalType.NONE
+## If true, requirement is met when currency is LESS than amount.
+## [br]Useful for "Bankruptcy" or "Spend it all" milestones.
+@export var currency_is_less_than: bool = false
+
+@export_group("Vital Requirements")
+@export var required_vital: VitalDefinition.VitalType = VitalDefinition.VitalType.NONE
 @export var vital_amount: float = 0.0
 
-@export_group("Upgrade Checks")
-# For Upgrade Checks
-@export var target_upgrade_id: String = ""
-@export var upgrade_level: int = 0
+## If true, requirement is met when vital is LESS than amount.
+## [br]Useful for "Low Health" or "Starvation" events.
+@export var vital_is_less_than: bool = false
+
+@export_group("Time Requirements")
+## The day. Set to -1 to ignore.
+@export var min_day: int = -1
+## The hour (0-23).
+@export var min_hour: int = 0
+
+## If true, requirement is met BEFORE this time (Deadline).
+## [br]If false, requirement is met AFTER this time (Wait).
+@export var time_is_deadline: bool = false
+
+@export_group("Upgrade Requirements")
+@export var required_upgrade_id: String = ""
+@export var required_upgrade_level: int = 1
+
+## If true, requirement is met if upgrade is LOWER than this level.
+## [br]Useful for "No Upgrades" challenges.
+@export var upgrade_is_less_than: bool = false

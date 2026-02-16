@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ci5gf3i2xpxe5" path="res://core/components/reward_component/reward_component.tscn" id="4_0hr7k"]
 [ext_resource type="PackedScene" uid="uid://bisxuota8wv3p" path="res://core/components/message_component/message_component.tscn" id="5_e4x4h"]
 [ext_resource type="PackedScene" uid="uid://7sibx1jnc6bo" path="res://core/components/streak_component/streak_component.tscn" id="6_q48mf"]
+[ext_resource type="PackedScene" uid="uid://bttvheqo3yfwq" path="res://core/components/notification_indicator_component/notification_indicator_component.tscn" id="7_sxbij"]
 
 [sub_resource type="FontVariation" id="FontVariation_aa0hu"]
 
@@ -93,3 +94,7 @@ target_control = NodePath("../..")
 [node name="StreakComponent" parent="Components" unique_id=1249277162 node_paths=PackedStringArray("cost_component", "reward_component") instance=ExtResource("6_q48mf")]
 cost_component = NodePath("../CostComponent")
 reward_component = NodePath("../RewardComponent")
+
+[node name="NotificationIndicatorComponent" parent="Components" unique_id=191205824 node_paths=PackedStringArray("blink_target") instance=ExtResource("7_sxbij")]
+unique_name_in_owner = true
+blink_target = NodePath("../..")

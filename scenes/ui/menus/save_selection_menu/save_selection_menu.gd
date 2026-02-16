@@ -47,6 +47,7 @@ func _update_ui_mode():
 		btn.refresh_state(1 if is_save_mode else 0)
 
 func _on_slot_pressed(btn: Button):
+	# Make sure your button script has a 'slot_id' variable!
 	var slot_id = btn.slot_id 
 	
 	if is_save_mode:
@@ -55,15 +56,16 @@ func _on_slot_pressed(btn: Button):
 		SaveManager.save_game()
 		
 		# Refresh UI to show the new timestamp
-		_update_ui_mode() 
+		_update_ui_mode()
 		
 	else:
-		# --- LOAD / NEW GAME LOGIC ---
+		# --- LOAD LOGIC ---
 		if SaveManager.save_file_exists(slot_id):
-			SaveManager.load_game(slot_id)
+			# CHANGE 1: Pass 'false' here to stop SettingsMenu from reloading the scene
+			SaveManager.load_game(slot_id, false)
 		else:
+			# Start New Game
 			SaveManager.start_new_game(slot_id)
-		
-		# --- MISSING PIECE WAS HERE! ---
-		# We need to actually switch to the game scene now
+
+		# CHANGE 2: Manually switch to the game scene
 		get_tree().change_scene_to_file(GAME_SCENE_PATH)
