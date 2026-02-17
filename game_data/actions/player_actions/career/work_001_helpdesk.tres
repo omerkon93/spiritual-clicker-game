@@ -1,6 +1,8 @@
 [gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://kodpwj23gnmu"]
 
 [ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/resources/action_data.gd" id="1_mfubx"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/game_item.gd" id="1_pxdf2"]
+[ext_resource type="Resource" uid="uid://bxwytuk6rjklp" path="res://game_data/items/upgrades/item_test_power.tres" id="2_wmw50"]
 
 [resource]
 script = ExtResource("1_mfubx")
@@ -10,6 +12,7 @@ description = "\"Have you tried turning it off and on again?\" You spend your da
 With no skills and zero certification this is the best you got."
 time_cost_minutes = 120
 base_duration = 0.5
+contributing_items = Array[ExtResource("1_pxdf2")]([ExtResource("2_wmw50")])
 vital_costs = Dictionary[int, float]({
 101: 15.0
 })

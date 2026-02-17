@@ -46,10 +46,15 @@ enum ActionCategory {
 ## Multiplier for how long the progress bar takes in real-time.
 @export var base_duration: float = 1.0 
 
+# --- REQUIREMENTS & UPGRADES ---
 @export_category("Requirements")
 
 ## Optional: A specific story flag required to unlock this action.
 @export var required_story_flag: StoryFlag
+
+@export_group("Upgrades")
+## List of items (Hardware, Certs) that modify this action's stats.
+@export var contributing_items: Array[GameItem] = []
 
 # --- EVENTS ---
 @export_category("Events")
@@ -82,3 +87,47 @@ enum ActionCategory {
 ## Custom error messages when specific requirements are not met.
 ## [br]Format: { VitalDefinition.VitalType.ENERGY: "You are too tired!" }
 @export var failure_messages: Dictionary = {}
+
+
+# ==============================================================================
+# RUNTIME VALUES (Calculated)
+# ==============================================================================
+var effective_cooldown: float = 0.0
+var effective_time_cost: float = 0.0
+var extra_power_bonus: float = 0.0
+
+func recalculate_stats() -> void:
+	# 1. Reset to Base
+	effective_cooldown = base_duration
+	effective_time_cost = float(time_cost_minutes)
+	extra_power_bonus = 0.0
+	
+	var reduction_time_cooldown: float = 0.0
+	var reduction_time_cost_mod: float = 1.0 
+	
+	# 2. Iterate linked items
+	for item: GameItem in contributing_items:
+		if item == null: continue
+		
+		var lvl: int = ProgressionManager.get_upgrade_level(item.id)
+		if lvl <= 0: continue
+			
+		var effect: float = item.power_per_level * lvl
+		
+		# 3. Apply Effects using GameItem.StatType
+		match int(item.target_stat):
+			StatDefinition.StatType.CLICK_POWER:
+				extra_power_bonus += effect
+				
+			StatDefinition.StatType.CLICK_COOLDOWN:
+				reduction_time_cooldown += effect
+				
+			StatDefinition.StatType.STUDY_EFFICIENCY:
+				reduction_time_cost_mod -= effect
+				
+			StatDefinition.StatType.AUTOMATION_EFFICIENCY:
+				extra_power_bonus += effect
+
+	# 4. Final Math
+	effective_cooldown = max(0.1, base_duration - reduction_time_cooldown)
+	effective_time_cost = float(time_cost_minutes) * max(0.1, reduction_time_cost_mod)

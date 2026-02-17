@@ -43,7 +43,6 @@ func _load_dir_recursive(path: String) -> void:
 				# Only load valid Godot resource files
 				if file_name.ends_with(".tres") or file_name.ends_with(".res"):
 					var full_path = path + "/" + file_name
-					print("🔍 Found file: ", full_path)
 					var resource = load(full_path)
 					
 					# Ensure the file is actually an ActionData resource

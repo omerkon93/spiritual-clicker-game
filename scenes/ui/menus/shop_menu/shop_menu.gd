@@ -4,7 +4,9 @@ class_name ShopMenu
 @warning_ignore("unused_signal")
 signal panel_closed
 
-# --- CONFIGURATION ---
+# ==============================================================================
+# CONFIGURATION
+# ==============================================================================
 @export var shop_button_scene: PackedScene
 
 @export_category("Grids")
@@ -14,152 +16,121 @@ signal panel_closed
 
 @export_group("Settings")
 @export var show_locked: bool = true
-@export var show_purchased: bool = true 
+@export var show_purchased: bool = false 
 
 const NEW_INDICATOR: String = " (!)"
 
+# ==============================================================================
+# LIFECYCLE
+# ==============================================================================
 func _ready() -> void:
-	# Heavy Updates (Rebuild list)
+	# 1. Connect Signals (Data Changes)
+	# Rebuild whenever levels, flags, or money changes
 	ProgressionManager.upgrade_leveled_up.connect(func(_id, _l): _rebuild_ui())
 	ProgressionManager.flag_changed.connect(func(_id, _v): _rebuild_ui())
 	CurrencyManager.currency_changed.connect(func(_t, _a): _rebuild_ui())
 	
-	# Light Update (Just tabs)
-	ProgressionManager.item_seen.connect(func(_id): _update_tab_titles())
+	# 2. Connect Visibility Signal
+	# Ensure the shop is fresh whenever the player opens it
+	visibility_changed.connect(func(): if visible: _rebuild_ui())
 	
-	if visible: _rebuild_ui()
+	# 3. Force Initial Build
+	# Populates the lists immediately on game start, preventing empty grids
+	_rebuild_ui()
 
-func _on_visibility_changed() -> void:
-	if visible: _rebuild_ui()
-
-# --- 1. HEAVY LIFTING ---
+# ==============================================================================
+# UI BUILDING
+# ==============================================================================
 func _rebuild_ui() -> void:
 	if not shop_button_scene: return
 	
+	# Clear old buttons
 	_clear_container(tools_grid)
 	_clear_container(technology_grid)
 	_clear_container(consumable_grid)
 	
+	# Sort items into their respective grids
 	for item in ItemManager.available_items:
-		var target: Container = tools_grid
-		match item.item_type:
-			GameItem.ItemType.TECHNOLOGY: target = technology_grid
-			GameItem.ItemType.CONSUMABLE: target = consumable_grid
+		var target_grid: Container = null
 		
-		_try_add_item_button(item, target)
+		match item.item_type:
+			GameItem.ItemType.TOOL: 
+				target_grid = tools_grid
+			GameItem.ItemType.TECHNOLOGY: 
+				target_grid = technology_grid
+			GameItem.ItemType.CONSUMABLE: 
+				target_grid = consumable_grid
+		
+		if target_grid:
+			_try_add_item_button(item, target_grid)
 
 	_update_tab_titles()
 
-# --- 2. LIGHTWEIGHT ---
-func _update_tab_titles() -> void:
-	# Check Tools
-	var s_tools = _scan_category(GameItem.ItemType.TOOL)
-	_apply_tab_state(tools_grid, s_tools.has_items, s_tools.has_new)
-	
-	# Check Tech
-	var s_tech = _scan_category(GameItem.ItemType.TECHNOLOGY)
-	_apply_tab_state(technology_grid, s_tech.has_items, s_tech.has_new)
-	
-	# Check Consumable
-	var s_cons = _scan_category(GameItem.ItemType.CONSUMABLE)
-	_apply_tab_state(consumable_grid, s_cons.has_items, s_cons.has_new)
-
-# --- LOGIC ---
 func _try_add_item_button(item: GameItem, container: Container) -> void:
-	# Filter Logic
-	if item.required_story_flag and not ProgressionManager.get_flag(item.required_story_flag): return
+	# 1. Story Flag Check
+	if item.required_story_flag and not ProgressionManager.get_flag(item.required_story_flag):
+		return
 	
+	# 2. Unlock & Level Check
 	var is_unlocked = _check_requirements(item)
-	var lvl = ProgressionManager.get_upgrade_level(item.id)
-	var is_maxed = (item.max_level != -1 and lvl >= item.max_level)
+	var current_lvl = ProgressionManager.get_upgrade_level(item.id)
+	var is_maxed = (item.max_level != -1 and current_lvl >= item.max_level)
 	
-	if is_unlocked and not is_maxed and item.item_type == GameItem.ItemType.TOOL:
-		if _is_superseded(item): return
-
+	# 3. Filter Visibility
 	if not is_unlocked and not show_locked: return
 	if is_maxed and not show_purchased: return
 
-	# Instantiate
-	if container:
-		var btn = shop_button_scene.instantiate()
-		container.add_child(btn)
-		btn.upgrade_resource = item
-		
-		if not is_unlocked:
-			btn.disabled = true
-			btn.modulate = Color(0.5, 0.5, 0.5, 0.5)
-			btn.tooltip_text = "Requirements not met"
-		elif is_maxed:
-			btn.disabled = true
-			btn.modulate = Color(0.5, 1.0, 0.5, 1.0)
-			btn.tooltip_text = "Max Level Reached"
+	# 4. Instantiate & Configure
+	var btn = shop_button_scene.instantiate()
+	container.add_child(btn)
+	btn.upgrade_resource = item # This triggers the setter in ShopItemButton
+	
+	# 5. Set Visual State
+	if not is_unlocked:
+		btn.disabled = true
+		btn.modulate = Color(0.5, 0.5, 0.5, 0.5) # Dimmed
+		var req_name = item.required_item.display_name if item.required_item else "Unknown"
+		btn.tooltip_text = "Requires: %s" % req_name
+	elif is_maxed:
+		btn.disabled = true
+		btn.modulate = Color(0.5, 1.0, 0.5, 1.0) # Greenish tint
+		btn.tooltip_text = "Max Level Reached"
 
-func _scan_category(type: int) -> Dictionary:
-	var has_items = false
-	var has_new = false
-	
-	for item in ItemManager.available_items:
-		if item.item_type != type and (type != GameItem.ItemType.TOOL or item.item_type != -1): 
-			# Simple matching: if not exact match, and not catching default tools, skip
-			if item.item_type != type: continue
-			
-		# Repeat Filter Logic purely for counting
-		if item.required_story_flag and not ProgressionManager.get_flag(item.required_story_flag): continue
-		
-		var is_unlocked = _check_requirements(item)
-		var lvl = ProgressionManager.get_upgrade_level(item.id)
-		var is_maxed = (item.max_level != -1 and lvl >= item.max_level)
-		
-		if is_unlocked and not is_maxed and item.item_type == GameItem.ItemType.TOOL:
-			if _is_superseded(item): continue
-		if not is_unlocked and not show_locked: continue
-		if is_maxed and not show_purchased: continue
-		
-		# Valid Item Found
-		has_items = true
-		if ProgressionManager.is_item_new(item.id):
-			has_new = true
-			
-	return { "has_items": has_items, "has_new": has_new }
-	
-func _apply_tab_state(grid: Control, show_tab: bool, show_indicator: bool) -> void:
+# ==============================================================================
+# TAB MANAGEMENT
+# ==============================================================================
+func _update_tab_titles() -> void:
+	# Check if grids have children to decide if tabs should be shown
+	_apply_tab_state(tools_grid, tools_grid.get_child_count() > 0)
+	_apply_tab_state(technology_grid, technology_grid.get_child_count() > 0)
+	_apply_tab_state(consumable_grid, consumable_grid.get_child_count() > 0)
+
+func _apply_tab_state(grid: Control, has_items: bool) -> void:
 	if not grid: return
 	
-	# Start climbing from the grid
-	var current_node = grid
-	var parent_node = current_node.get_parent()
-	
-	while parent_node:
-		if parent_node is TabContainer:
-			var container = parent_node as TabContainer
-			
-			# FIX: 'current_node' is the node we just stepped up from.
-			# It is guaranteed to be the direct child of the TabContainer.
-			var idx = container.get_tab_idx_from_control(current_node)
-			
-			if idx != -1:
-				# 1. Hide/Show
-				container.set_tab_hidden(idx, not show_tab)
-				
-				# 2. Title Logic
-				var title = container.get_tab_title(idx).replace(NEW_INDICATOR, "")
-				if show_indicator: title += NEW_INDICATOR
-				container.set_tab_title(idx, title)
-			
-			return # Found and handled
+	# Traverse up to find the TabContainer
+	var parent = grid.get_parent()
+	while parent and not (parent is TabContainer):
+		parent = parent.get_parent()
 		
-		# Climb up one level
-		current_node = parent_node
-		parent_node = current_node.get_parent()
-		
-		# Stop if we hit the script root or run out of parents
-		if parent_node == self or parent_node == null: 
-			return
+	if parent is TabContainer:
+		# Find the direct child of the TabContainer that holds this grid
+		var tab_page = grid
+		while tab_page.get_parent() != parent:
+			tab_page = tab_page.get_parent()
+			
+		var idx = parent.get_tab_idx_from_control(tab_page)
+		if idx != -1:
+			parent.set_tab_hidden(idx, not has_items)
 
-# Helpers
-func _clear_container(c): if c: for child in c.get_children(): child.queue_free()
-func _check_requirements(i): return not (i.required_item and ProgressionManager.get_upgrade_level(i.required_item.id) < 1)
-func _is_superseded(item):
-	for o in ItemManager.available_items:
-		if o.required_item and o.required_item.id == item.id and _check_requirements(o): return true
-	return false
+# ==============================================================================
+# HELPERS
+# ==============================================================================
+func _clear_container(c: Container) -> void:
+	if c:
+		for child in c.get_children():
+			child.queue_free()
+
+func _check_requirements(i: GameItem) -> bool:
+	if i.required_item == null: return true
+	return ProgressionManager.get_upgrade_level(i.required_item.id) >= 1

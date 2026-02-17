@@ -65,25 +65,21 @@ func _ready() -> void:
 # 3. INTERACTION
 # ==============================================================================
 func _on_clicked() -> void:
-	if timer and not timer.is_stopped(): 
-		return
+	if timer and not timer.is_stopped(): return
 
-	# --- NEW: DELEGATE "SEEN" LOGIC ---
 	if notification_indicator_component:
 		notification_indicator_component.mark_as_seen()
 
-	# 1. CHECK AFFORDABILITY
 	if cost_component and not cost_component.check_affordability():
 		if animation_component: animation_component.play_shake()
 		return
 
-	# 2. EXECUTE
 	if cost_component: cost_component.pay_all()
 	
 	if action_data:
-		TimeManager.advance_time(action_data.time_cost_minutes)
+		# USE THE EFFECTIVE TIME (The one reduced by servers, etc)
+		TimeManager.advance_time(int(action_data.effective_time_cost))
 	
-	# 3. REWARDS & VISUALS
 	var feedback = []
 	if reward_component:
 		feedback = reward_component.deliver_rewards()
@@ -92,11 +88,9 @@ func _on_clicked() -> void:
 		animation_component.visualize_feedback(feedback)
 		animation_component.play_bounce()
 
-	# 4. GAME STATE UPDATE
 	SignalBus.action_triggered.emit(action_data)
 
 	if timer: timer.start(current_cooldown)
-
 
 # ==============================================================================
 # 4. SETUP HELPERS
@@ -111,21 +105,20 @@ func _validate_and_connect_components() -> void:
 func _load_data_into_components() -> void:
 	if not action_data: return
 	
-	base_cooldown = action_data.base_duration
-	current_cooldown = base_cooldown
-	if timer: timer.wait_time = current_cooldown
-
+	# 1. Update the Resource math
+	action_data.recalculate_stats()
+	
+	# 2. Update the Components
+	if reward_component:
+		reward_component.configure(action_data)
+		reward_component.recalculate_finals(action_data.extra_power_bonus)
+	
+	if cost_component:
+		cost_component.configure(action_data)
+		
+	# 3. CRITICAL: Refresh the Visuals
 	_update_ui()
-
-	# --- NEW: CONFIGURE NOTIFICATION ---
-	if notification_indicator_component:
-		# We pass 'self' as the target so the BUTTON blinks, not just the indicator
-		notification_indicator_component.configure(action_data.id, self)
-
-	if cost_component: cost_component.configure(action_data)
-	if reward_component: reward_component.configure(action_data)
-	if message_component: message_component.failure_messages = action_data.failure_messages.duplicate()
-
+	
 # ==============================================================================
 # 5. UI UPDATES
 # ==============================================================================
@@ -141,71 +134,89 @@ func _generate_stats_text() -> void:
 	
 	var text_lines: Array[String] = []
 	
-	# COSTS
-	for type_key in action_data.currency_costs:
-		var amount = action_data.currency_costs[type_key]
-		if amount <= 0: continue
-		var type = type_key as int 
+	# ==========================================================================
+	# 1. COSTS (Currency & Vitals)
+	# ==========================================================================
+	var currency_costs = action_data.currency_costs
+	var vital_costs = action_data.vital_costs
+	
+	if cost_component:
+		currency_costs = cost_component.final_currency_costs
+		vital_costs = cost_component.final_vital_costs
+
+	# Add Currency Costs (e.g., -$10)
+	for type in currency_costs:
+		var amount = currency_costs[type]
 		var def = CurrencyManager.get_definition(type)
-		if def: text_lines.append("[color=salmon]-%s%s[/color]" % [def.prefix, amount])
+		if def and amount > 0:
+			text_lines.append("[color=salmon]-%s%s[/color]" % [def.prefix, amount])
 
-	for type_key in action_data.vital_costs:
-		var amount = action_data.vital_costs[type_key]
-		if amount <= 0: continue
-		var type = type_key as int 
+	# Add Vital Costs (e.g., -15 Energy)
+	for type in vital_costs:
+		var amount = vital_costs[type]
 		var def = VitalManager.get_definition(type)
-		if def: text_lines.append("[color=salmon]-%s %s[/color]" % [amount, def.display_name])
+		if def and amount > 0:
+			text_lines.append("[color=salmon]-%s %s[/color]" % [int(amount), def.display_name])
 
-	# REWARDS
-	for type_key in action_data.currency_gains:
-		var amount = action_data.currency_gains[type_key]
-		if amount <= 0: continue
-		var type = type_key as int
+	# ==========================================================================
+	# 2. REWARDS (Currency & Vitals)
+	# ==========================================================================
+	var currency_gains = action_data.currency_gains
+	var vital_gains = action_data.vital_gains
+	
+	if reward_component:
+		currency_gains = reward_component.final_currency_gains
+		vital_gains = reward_component.final_vital_gains
+
+	for type in currency_gains:
+		var amount = currency_gains[type]
 		var def = CurrencyManager.get_definition(type)
-		if def: text_lines.append("[color=light_green]+%s%s[/color]" % [def.prefix, amount])
+		if def and amount > 0:
+			var is_whole = is_equal_approx(amount, roundf(amount))
+			var amount_str = str(int(amount)) if is_whole else "%.1f" % amount
+			
+			text_lines.append("[color=light_green]+%s%s[/color]" % [def.prefix, amount_str])
 
-	for type_key in action_data.vital_gains:
-		var amount = action_data.vital_gains[type_key]
-		if amount <= 0: continue
-		var type = type_key as int
+	for type in vital_gains:
+		var amount = vital_gains[type]
 		var def = VitalManager.get_definition(type)
-		if def: text_lines.append("[color=cyan]+%s %s[/color]" % [amount, def.display_name])
+		if def and amount > 0:
+			text_lines.append("[color=cyan]+%s %s[/color]" % [int(amount), def.display_name])
 
+	# ==========================================================================
+	# 3. TIME COST (Effective calculated time)
+	# ==========================================================================
+	if action_data.effective_time_cost > 0:
+		text_lines.append("[color=gray]Time: %d min[/color]" % int(action_data.effective_time_cost))
+
+	# Apply all lines to the label
 	stats_label.text = "[center]%s[/center]" % "\n".join(text_lines)
 
 # ==============================================================================
 # 7. UPGRADE LOGIC
 # ==============================================================================
 func _recalculate_upgrades() -> void:
-	var total_extra_power: float = 0.0
-	var reduction_time: float = 0.0
-	
-	var all_upgrades: Array[GameItem] = contributing_upgrades.duplicate()
-	if primary_upgrade:
-		all_upgrades.append(primary_upgrade)
-	
-	for upg: GameItem in all_upgrades:
-		if upg == null: continue
-		var lvl: int = ProgressionManager.get_upgrade_level(upg.id)
-		
-		if lvl > 0:
-			var effect: float = upg.power_per_level * lvl
-			match int(upg.target_stat):
-				StatDefinition.StatType.CLICK_POWER: total_extra_power += effect
-				StatDefinition.StatType.CLICK_COOLDOWN: reduction_time += effect
-	
-	if reward_component and reward_component.has_method("recalculate_finals"):
-		reward_component.recalculate_finals(total_extra_power)
-	
-	current_cooldown = max(0.1, base_cooldown - reduction_time)
-	if timer: timer.wait_time = current_cooldown
+	_load_data_into_components()
 
 func _on_upgrade_leveled(id: String, _lvl: int) -> void:
 	var is_relevant: bool = false
-	if primary_upgrade and primary_upgrade.id == id: is_relevant = true
+	
+	# Check if the upgrade that just leveled up is one this button cares about
+	if primary_upgrade and primary_upgrade.id == id:
+		is_relevant = true
 	else:
 		for upg in contributing_upgrades:
 			if upg and upg.id == id:
 				is_relevant = true
 				break
-	if is_relevant: _recalculate_upgrades()
+				
+	# New: Also check the contributing_items inside action_data
+	if not is_relevant and action_data:
+		for item in action_data.contributing_items:
+			if item and item.id == id:
+				is_relevant = true
+				break
+	
+	if is_relevant:
+		# This is the call that force-refreshes the labels and rewards!
+		_load_data_into_components()

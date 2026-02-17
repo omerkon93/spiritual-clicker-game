@@ -18,6 +18,6 @@ script = ExtResource("2_v26vd")
 id = "shop_item_cheap_pizza"
 display_name = "Cheap Pizza"
 description = "pizzaaaa"
-on_purchase_action = SubResource("Resource_j3s4b")
 item_type = 2
+on_purchase_action = SubResource("Resource_j3s4b")
 metadata/_custom_type_script = "uid://ibattlbh7e1t"

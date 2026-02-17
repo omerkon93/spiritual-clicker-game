@@ -9,7 +9,10 @@
 [ext_resource type="PackedScene" uid="uid://bxo11gelgnitj" path="res://scenes/ui/menus/settings_menu/settings_menu.tscn" id="7_d54ay"]
 [ext_resource type="PackedScene" uid="uid://bcr0r8vbpqed6" path="res://scenes/ui/buttons/settings_button/settings_button.tscn" id="7_l7hgw"]
 [ext_resource type="PackedScene" uid="uid://chhrvwnrgoavo" path="res://scenes/ui/labels/chat_log/chat_log.tscn" id="8_ocsj7"]
-[ext_resource type="PackedScene" uid="uid://dwyyyo58piqom" path="res://scenes/ui/menus/combined_menu/combined_menu.tscn" id="9_g5dh2"]
+[ext_resource type="Script" uid="uid://bbfwomm3k5l4v" path="res://scenes/ui/menus/combined_menu/combined_menu.gd" id="9_c22xf"]
+[ext_resource type="PackedScene" uid="uid://diw24lvqdympd" path="res://scenes/ui/menus/actions_menu/actions_menu.tscn" id="10_rprny"]
+[ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/menus/shop_menu/shop_menu.tscn" id="11_s238a"]
+[ext_resource type="PackedScene" uid="uid://bttvheqo3yfwq" path="res://core/components/notification_indicator_component/notification_indicator_component.tscn" id="12_n1l8j"]
 
 [sub_resource type="Gradient" id="Gradient_4cp3g"]
 colors = PackedColorArray(0, 0, 0, 1, 1, 1, 0, 1)
@@ -133,7 +136,48 @@ size_flags_horizontal = 3
 layout_mode = 2
 settings_menu = NodePath("../../../../../Settings")
 
-[node name="CombinedMenu" parent="UI" unique_id=1927334450 instance=ExtResource("9_g5dh2")]
+[node name="CombinedMenu" type="Control" parent="UI" unique_id=1927334450]
+layout_mode = 3
+anchor_top = 0.3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_c22xf")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/CombinedMenu" unique_id=828593261]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="UI/CombinedMenu/MarginContainer" unique_id=2065250152]
+unique_name_in_owner = true
+layout_mode = 2
+current_tab = 0
+
+[node name="Actions" parent="UI/CombinedMenu/MarginContainer/TabContainer" unique_id=772517719 instance=ExtResource("10_rprny")]
+unique_name_in_owner = true
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Shop" parent="UI/CombinedMenu/MarginContainer/TabContainer" unique_id=598056843 instance=ExtResource("11_s238a")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+show_purchased = true
+metadata/_tab_index = 1
+
+[node name="NotificationIndicatorComponent" parent="UI/CombinedMenu" unique_id=191205824 instance=ExtResource("12_n1l8j")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="Settings" parent="UI" unique_id=721209956 instance=ExtResource("7_d54ay")]
 visible = false
