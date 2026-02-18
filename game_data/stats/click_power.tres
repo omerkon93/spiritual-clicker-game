@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="StatDefinition" load_steps=2 format=3 uid="uid://biqulvubb8al8"]
+[gd_resource type="Resource" script_class="StatDefinition" format=3 uid="uid://biqulvubb8al8"]
 
-[ext_resource type="Script" uid="uid://d10ci54nkut38" path="res://core/resources/stat_definition.gd" id="1_t1lb4"]
+[ext_resource type="Script" uid="uid://d10ci54nkut38" path="res://core/definitions/stats/stat_definition.gd" id="1_t1lb4"]
 
 [resource]
 script = ExtResource("1_t1lb4")

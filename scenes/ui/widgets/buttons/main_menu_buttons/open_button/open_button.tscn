@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://p67sh883luna"]
+
+[ext_resource type="Script" uid="uid://biwkrmv6ka1mc" path="res://scenes/ui/widgets/buttons/main_menu_buttons/open_button/open_button.gd" id="1_welnr"]
+
+[node name="OpenButton" type="Button" unique_id=1441828222]
+text = "Settings"
+script = ExtResource("1_welnr")

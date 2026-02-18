@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="VitalDefinition" format=3 uid="uid://cr4gfrls3tnnl"]
 
-[ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/resources/vitals_definition.gd" id="1_xoqmm"]
+[ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/definitions/stats/vitals_definition.gd" id="1_xoqmm"]
 
 [sub_resource type="Gradient" id="Gradient_d1i5p"]
 colors = PackedColorArray(0, 0, 0, 1, 1, 1, 0, 1)

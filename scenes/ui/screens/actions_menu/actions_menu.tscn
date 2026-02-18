@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://diw24lvqdympd"]
+
+[ext_resource type="Script" uid="uid://cydeug6k8hqt4" path="res://scenes/ui/screens/actions_menu/actions_menu.gd" id="1_8pol2"]
+[ext_resource type="PackedScene" uid="uid://idg5ajfqohrb" path="res://scenes/ui/widgets/buttons/action_button/action_button.tscn" id="2_0lbaa"]
+
+[node name="ActionsMenu" type="Control" unique_id=772517719 node_paths=PackedStringArray("career_grid", "survival_grid", "spiritual_grid")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8pol2")
+action_button_scene = ExtResource("2_0lbaa")
+career_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Career/CareerScroll/CareerGrid")
+survival_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Survival/SurvivalScroll/SurvivalGrid")
+spiritual_grid = NodePath("MarginContainer/VBoxContainer/TabContainer/Spiritual/SpiritualScroll/SpiritualGrid")
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="." unique_id=662819966]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1926752794]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=521383933]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1099022160]
+layout_mode = 2
+text = "Actions"
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer" unique_id=496651912]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Career" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer" unique_id=788875845]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 0
+
+[node name="CareerScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Career" unique_id=719891427]
+layout_mode = 2
+
+[node name="CareerGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Career/CareerScroll" unique_id=1776912608]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="Survival" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer" unique_id=143010617]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 1
+
+[node name="SurvivalScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Survival" unique_id=2069156364]
+layout_mode = 2
+
+[node name="SurvivalGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Survival/SurvivalScroll" unique_id=1057169241]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="Spiritual" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer" unique_id=3417778]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 2
+
+[node name="SpiritualScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Spiritual" unique_id=1289642]
+layout_mode = 2
+
+[node name="SpiritualGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Spiritual/SpiritualScroll" unique_id=35541590]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="CloseButton" type="Button" parent="." unique_id=291954224]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"

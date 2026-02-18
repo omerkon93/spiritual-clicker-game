@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="DialogueSlide" format=3 uid="uid://bwxckiiu5u7h3"]
 
 [ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="2_hngvj"]
-[ext_resource type="Script" uid="uid://bcsexecu62rxe" path="res://core/resources/dialogue_slide.gd" id="3_ngkkn"]
+[ext_resource type="Script" uid="uid://bcsexecu62rxe" path="res://core/definitions/story/dialogue/dialogue_slide.gd" id="3_ngkkn"]
 [ext_resource type="Resource" uid="uid://bqj07n6p2aw2x" path="res://game_data/dialogue/dialogue_triggers/trigger_welcome_gift.tres" id="3_t4135"]
 
 [resource]

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bunabml36p03k"]
+
+[ext_resource type="Script" uid="uid://bi70vv5gf5l4m" path="res://scenes/ui/widgets/buttons/save_slot_button/save_slot_button.gd" id="1_w75gu"]
+
+[node name="SaveSlotButton" type="Button" unique_id=2138406969]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_w75gu")

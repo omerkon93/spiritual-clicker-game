@@ -28,8 +28,9 @@ func recalculate_finals(extra_currency_power: float) -> void:
 	final_vital_gains = base_vital_gains.duplicate()
 	final_currency_gains = base_currency_gains.duplicate()
 	
-	# 3. Apply Upgrades (Add Flat Power)
-	if current_extra_power > 0:
+	# 3. Apply Upgrades (Add OR Subtract Power)
+	# FIX: Changed '> 0' to '!= 0' to allow penalties/reductions
+	if current_extra_power != 0:
 		# Use CurrencyDefinition instead of GameEnums
 		if final_currency_gains.has(CurrencyDefinition.CurrencyType.MONEY):
 			final_currency_gains[CurrencyDefinition.CurrencyType.MONEY] += current_extra_power
@@ -37,11 +38,14 @@ func recalculate_finals(extra_currency_power: float) -> void:
 			var first_key = final_currency_gains.keys()[0]
 			final_currency_gains[first_key] += current_extra_power
 	
+	# SAFETY: Ensure we don't give negative money (unless you want debt!)
+	for key in final_currency_gains:
+		final_currency_gains[key] = max(0, final_currency_gains[key])
+
 	# 4. Apply Streak Multipliers
 	for type: int in final_currency_gains:
 		var mult: float = active_multipliers.get(type, 1.0)
 		final_currency_gains[type] = final_currency_gains[type] * mult
-
 # --- ACTION ---
 func deliver_rewards() -> Array[Dictionary]:
 	var events: Array[Dictionary] = []

@@ -1,16 +1,22 @@
 [gd_resource type="Resource" script_class="GameItem" format=3 uid="uid://bnvr0weqfl0tw"]
 
-[ext_resource type="Resource" uid="uid://vtr603fuofyn" path="res://game_data/game_progression/story_flags/unlock_learning.tres" id="1_aj0ds"]
-[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/resources/game_item.gd" id="1_s5ti6"]
+[ext_resource type="Script" uid="uid://dwinsrmiv78l8" path="res://core/definitions/items/requirements/cost_requirement.gd" id="1_aj0ds"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/definitions/items/game_item.gd" id="1_s5ti6"]
 [ext_resource type="Resource" uid="uid://crc77flqrix3p" path="res://game_data/game_progression/story_flags/flag_cert_comptia_aplus.tres" id="3_xf3wb"]
+
+[sub_resource type="Resource" id="Resource_xf3wb"]
+script = ExtResource("1_aj0ds")
+currency = 1
+amount = 400
+metadata/_custom_type_script = "uid://dwinsrmiv78l8"
 
 [resource]
 script = ExtResource("1_s5ti6")
 id = "cert_comptia_aplus"
 display_name = "CompTIA A+ Certification"
 description = "The industry standard entry cert."
-item_type = 1
-base_cost = 400.0
-required_story_flag = ExtResource("1_aj0ds")
+item_type = 2
+requirements = Array[Resource]([SubResource("Resource_xf3wb")])
+research_duration_minutes = 600
 story_flag_reward = ExtResource("3_xf3wb")
 metadata/_custom_type_script = "uid://ibattlbh7e1t"

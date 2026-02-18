@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cqgpdqnssfa6"]
+
+[ext_resource type="Script" uid="uid://dtbwqjbe4mnbe" path="res://scenes/ui/screens/shop_menu/research_panel.gd" id="1_4ui6c"]
+
+[node name="ResearchPanel" type="PanelContainer" unique_id=186584840]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4ui6c")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=117337509]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TechTitleLabel" type="Label" parent="VBoxContainer" unique_id=1842175401]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer" unique_id=238212159]
+layout_mode = 2
+
+[node name="TimeRemainingLabel" type="Label" parent="VBoxContainer" unique_id=181894092]
+layout_mode = 2

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="Milestone" format=3 uid="uid://r01b4temfpav"]
 
-[ext_resource type="Script" uid="uid://b7uf1g2gx6qdg" path="res://core/resources/milestone.gd" id="1_outdf"]
+[ext_resource type="Script" uid="uid://b7uf1g2gx6qdg" path="res://core/definitions/story/milestone.gd" id="1_outdf"]
 [ext_resource type="Resource" uid="uid://bd6cui2bjv8w3" path="res://game_data/game_progression/story_flags/unlock_survival.tres" id="2_pglm2"]
 
 [resource]

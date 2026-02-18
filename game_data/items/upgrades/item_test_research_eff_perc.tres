@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="GameItem" format=3 uid="uid://y6s310xnlu7b"]
+
+[ext_resource type="Resource" uid="uid://b5qhqq0bajyf2" path="res://game_data/items/effects/test_research_eff_perc.tres" id="1_c3vmm"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/definitions/items/game_item.gd" id="1_uipot"]
+
+[resource]
+script = ExtResource("1_uipot")
+item_type = 1
+effects = Array[Resource]([ExtResource("1_c3vmm")])
+metadata/_custom_type_script = "uid://ibattlbh7e1t"

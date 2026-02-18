@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://cqjm2iv5ibos"]
+
+[ext_resource type="Script" uid="uid://c07o6o608i8td" path="res://scenes/ui/widgets/buttons/currency_button/currency_button.gd" id="1_ei5tu"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/definitions/items/game_item.gd" id="4_ei5tu"]
+[ext_resource type="Resource" path="res://game_data/items/upgrades/upgrade_work_power.tres" id="5_peuum"]
+[ext_resource type="Resource" path="res://game_data/items/upgrades/upgrade_work_speed.tres" id="6_sqpfg"]
+[ext_resource type="Texture2D" uid="uid://p0j5q5hi4cep" path="res://icon.svg" id="7_peuum"]
+
+[node name="CurrencyButton" type="Button" node_paths=PackedStringArray("progress_bar")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ei5tu")
+progress_bar = NodePath("CooldownBar")
+contributing_upgrades = Array[ExtResource("4_ei5tu")]([ExtResource("5_peuum"), ExtResource("6_sqpfg")])
+
+[node name="CooldownBar" type="TextureProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+fill_mode = 5
+nine_patch_stretch = true
+texture_progress = ExtResource("7_peuum")
+tint_progress = Color(0, 0, 0, 0.6431373)
+
+[node name="CooldownTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
