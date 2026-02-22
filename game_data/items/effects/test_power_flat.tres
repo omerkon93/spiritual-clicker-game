@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="StatEffect" format=3 uid="uid://cvlgan3hoa4in"]
-
-[ext_resource type="Script" uid="uid://cm754ldqgunog" path="res://core/definitions/items/effects/stat_effect.gd" id="1_7pivs"]
-
-[resource]
-script = ExtResource("1_7pivs")
-stat = 201
-amount = 10.0
-metadata/_custom_type_script = "uid://cm754ldqgunog"

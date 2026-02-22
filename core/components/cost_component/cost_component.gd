@@ -11,6 +11,7 @@ var final_vital_costs: Dictionary = {}
 var final_currency_costs: Dictionary = {}
 
 var active_penalties: Dictionary = {}
+var current_action: ActionData
 
 # --- BURNOUT SETTINGS ---
 @export var burnout_vitals: Array[VitalDefinition.VitalType] = [
@@ -21,6 +22,7 @@ var active_penalties: Dictionary = {}
 
 # --- SETUP ---
 func configure(data: ActionData) -> void:
+	current_action = data # Save the reference
 	base_vital_costs = data.vital_costs.duplicate()
 	base_currency_costs = data.currency_costs.duplicate()
 	recalculate_finals()
@@ -34,6 +36,12 @@ func recalculate_finals() -> void:
 	final_vital_costs = base_vital_costs.duplicate()
 	final_currency_costs = base_currency_costs.duplicate()
 	
+	# Apply the ActionData's local discount to the base vital costs first!
+	var multiplier = current_action.energy_cost_multiplier if current_action else 1.0
+	for type in final_vital_costs.keys():
+		final_vital_costs[type] *= multiplier
+	
+	# Then apply any active penalties
 	for type: int in active_penalties:
 		var penalty: float = active_penalties[type]
 		if final_vital_costs.has(type):

@@ -3,7 +3,6 @@ extends Node
 signal time_updated(day: int, hour: int, minute: int)
 signal day_started(day: int)
 signal night_started(day: int)
-# NEW: Signal to tell ResearchManager how much time passed
 signal time_advanced(minutes: int) 
 
 # Constants

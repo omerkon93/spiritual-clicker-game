@@ -83,13 +83,24 @@ func _check_all_milestones() -> void:
 # ==============================================================================
 # EVALUATION LOGIC
 # ==============================================================================
+# ==============================================================================
+# EVALUATION LOGIC
+# ==============================================================================
 func _evaluate_milestone(m: Milestone) -> void:
 	if m.target_flag == null: return
+	
+	# Skip if already unlocked
 	if get_flag(m.target_flag): return 
 	
+	# --- NEW: THE SAFETY CATCH ---
+	# If the milestone has NO valid requirements, abort. Do not auto-unlock.
+	if m.currency_amount <= 0 and m.vital_amount <= 0 and m.min_day == -1 and m.required_upgrade_id == "":
+		return
+
 	# --- A. Currency Check ---
 	if m.currency_amount > 0:
-		var current = CurrencyManager.get_currency(m.required_currency)
+		# Use get_currency_amount to match your CurrencyManager API
+		var current = CurrencyManager.get_currency_amount(m.required_currency)
 		if m.currency_is_less_than:
 			if current >= m.currency_amount: return
 		else:
@@ -121,6 +132,7 @@ func _evaluate_milestone(m: Milestone) -> void:
 		else:
 			if current < m.required_upgrade_level: return
 
+	# If it survives all checks above, it means valid requirements were met!
 	unlock_milestone(m.target_flag, m.notification_text)
 
 func unlock_milestone(flag_or_id, display_text: String) -> void:

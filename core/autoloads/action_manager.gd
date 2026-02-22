@@ -70,3 +70,45 @@ func get_action_by_id(id: String) -> ActionData:
 		if action.id == id:
 			return action
 	return null
+
+# ==============================================================================
+# 4. ACTION EXECUTION & MATH
+# ==============================================================================
+func try_perform_action(action: ActionData) -> bool:
+	# 1. GET EFFICIENCY DISCOUNT (Calculated locally by ActionData!)
+	var cost_multiplier = action.energy_cost_multiplier
+
+	# 2. VALIDATION (Can we afford it?)
+	for vit_type in action.vital_costs:
+		var final_cost = action.vital_costs[vit_type] * cost_multiplier
+		if not VitalManager.has_enough(vit_type, final_cost):
+			return false
+			
+	for cur_type in action.currency_costs:
+		var amount = action.currency_costs[cur_type]
+		if not CurrencyManager.has_enough_currency(cur_type, amount):
+			return false
+
+	# 3. CONSUME COSTS
+	for vit_type in action.vital_costs:
+		var final_cost = action.vital_costs[vit_type] * cost_multiplier
+		VitalManager.consume(vit_type, final_cost)
+		
+	for cur_type in action.currency_costs:
+		var amount = action.currency_costs[cur_type]
+		CurrencyManager.spend_currency(cur_type, amount)
+
+	# 4. APPLY REWARDS (Gains)
+	for vit_type in action.vital_gains:
+		VitalManager.restore(vit_type, action.vital_gains[vit_type])
+		
+	for cur_type in action.currency_gains:
+		CurrencyManager.add_currency(cur_type, action.currency_gains[cur_type])
+		
+	# 5. TIME COSTS
+	if "effective_time_cost" in action and action.effective_time_cost > 0:
+		var time_mgr = get_tree().root.get_node_or_null("TimeManager")
+		if time_mgr and time_mgr.has_method("add_minutes"):
+			time_mgr.add_minutes(action.effective_time_cost)
+
+	return true

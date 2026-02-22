@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/definitions/stats/vitals_definition.gd" id="1_4cp3g"]
 
 [sub_resource type="Gradient" id="Gradient_u1tk0"]
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 1, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0.38986957, 0.9383864, 1)
 
 [resource]
 script = ExtResource("1_4cp3g")
 type = 101
 display_name = "Energy"
-display_color = Color(0, 0, 1, 1)
+display_color = Color(0, 0.3882353, 0.9372549, 1)
 gradient = SubResource("Gradient_u1tk0")
 metadata/_custom_type_script = "uid://derwj2ijevwkr"

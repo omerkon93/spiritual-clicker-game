@@ -1,4 +1,4 @@
-extends Button
+extends MarginContainer
 class_name ActionButton
 
 # ==============================================================================
@@ -32,12 +32,14 @@ class_name ActionButton
 # --- DEPENDENCIES ---
 @onready var timer: Timer = $CooldownTimer
 
-# --- VISUAL REFERENCES ---
+# --- NEW TREE REFERENCES ---
+# Get the invisible/background button to handle clicks
+@onready var interact_button: Button = $Button 
+
+# We use unique name (%) because it might be deeply nested, or standard ($) if direct child
 @onready var title_label: Label = %TitleLabel
 @onready var stats_label: RichTextLabel = %StatsLabel 
 @onready var icon_rect: TextureRect = %IconRect
-
-# We use unique name (%) because it might be deeply nested, or standard ($) if direct child
 @onready var notification_indicator_component: NotificationIndicatorComponent = %NotificationIndicatorComponent
 
 var current_cooldown: float = 1.0
@@ -46,7 +48,9 @@ var current_cooldown: float = 1.0
 # 2. LIFECYCLE
 # ==============================================================================
 func _ready() -> void:
-	pressed.connect(_on_clicked)
+	# Connect to the actual button's signal
+	if interact_button:
+		interact_button.pressed.connect(_on_clicked)
 	
 	# Connect to ProgressionManager for level updates
 	ProgressionManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
@@ -59,7 +63,6 @@ func _ready() -> void:
 	
 	if animation_component and icon_rect:
 		animation_component.target_control = icon_rect
-
 
 # ==============================================================================
 # 3. INTERACTION
@@ -135,7 +138,7 @@ func _generate_stats_text() -> void:
 	var text_lines: Array[String] = []
 	
 	# ==========================================================================
-	# 1. COSTS (Currency & Vitals)
+	# 1. COSTS (Currency & Vitals) -> Uses .format_loss()
 	# ==========================================================================
 	var currency_costs = action_data.currency_costs
 	var vital_costs = action_data.vital_costs
@@ -144,22 +147,22 @@ func _generate_stats_text() -> void:
 		currency_costs = cost_component.final_currency_costs
 		vital_costs = cost_component.final_vital_costs
 
-	# Add Currency Costs (e.g., -$10)
+	# Add Currency Costs
 	for type in currency_costs:
 		var amount = currency_costs[type]
 		var def = CurrencyManager.get_definition(type)
 		if def and amount > 0:
-			text_lines.append("[color=salmon]-%s%s[/color]" % [def.prefix, amount])
+			text_lines.append(def.format_loss(amount)) 
 
-	# Add Vital Costs (e.g., -15 Energy)
+	# Add Vital Costs
 	for type in vital_costs:
 		var amount = vital_costs[type]
 		var def = VitalManager.get_definition(type)
 		if def and amount > 0:
-			text_lines.append("[color=salmon]-%s %s[/color]" % [int(amount), def.display_name])
+			text_lines.append(def.format_loss(amount))
 
 	# ==========================================================================
-	# 2. REWARDS (Currency & Vitals)
+	# 2. REWARDS (Currency & Vitals) -> Uses .format_gain()
 	# ==========================================================================
 	var currency_gains = action_data.currency_gains
 	var vital_gains = action_data.vital_gains
@@ -168,20 +171,19 @@ func _generate_stats_text() -> void:
 		currency_gains = reward_component.final_currency_gains
 		vital_gains = reward_component.final_vital_gains
 
+	# Add Currency Rewards
 	for type in currency_gains:
 		var amount = currency_gains[type]
 		var def = CurrencyManager.get_definition(type)
 		if def and amount > 0:
-			var is_whole = is_equal_approx(amount, roundf(amount))
-			var amount_str = str(int(amount)) if is_whole else "%.1f" % amount
-			
-			text_lines.append("[color=light_green]+%s%s[/color]" % [def.prefix, amount_str])
+			text_lines.append(def.format_gain(amount)) 
 
+	# Add Vital Rewards
 	for type in vital_gains:
 		var amount = vital_gains[type]
 		var def = VitalManager.get_definition(type)
 		if def and amount > 0:
-			text_lines.append("[color=cyan]+%s %s[/color]" % [int(amount), def.display_name])
+			text_lines.append(def.format_gain(amount)) 
 
 	# ==========================================================================
 	# 3. TIME COST (Effective calculated time)
@@ -192,6 +194,7 @@ func _generate_stats_text() -> void:
 	# Apply all lines to the label
 	stats_label.text = "[center]%s[/center]" % "\n".join(text_lines)
 
+
 # ==============================================================================
 # 7. UPGRADE LOGIC
 # ==============================================================================
@@ -201,7 +204,7 @@ func _recalculate_upgrades() -> void:
 func _on_upgrade_leveled(id: String, _lvl: int) -> void:
 	var is_relevant: bool = false
 	
-	# Check if the upgrade that just leveled up is one this button cares about
+	# 1. Check local button overrides (if you still use these manually)
 	if primary_upgrade and primary_upgrade.id == id:
 		is_relevant = true
 	else:
@@ -210,12 +213,11 @@ func _on_upgrade_leveled(id: String, _lvl: int) -> void:
 				is_relevant = true
 				break
 				
-	# New: Also check the contributing_items inside action_data
+	# 2. THE NEW SYSTEM: Check if the upgrade targets this action
 	if not is_relevant and action_data:
-		for item in action_data.contributing_items:
-			if item and item.id == id:
-				is_relevant = true
-				break
+		var upgraded_item = ItemManager.find_item_by_id(id)
+		if upgraded_item != null and upgraded_item.target_action == action_data:
+			is_relevant = true
 	
 	if is_relevant:
 		# This is the call that force-refreshes the labels and rewards!

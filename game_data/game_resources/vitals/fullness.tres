@@ -9,6 +9,7 @@ colors = PackedColorArray(0, 0, 0, 1, 1, 1, 0, 1)
 script = ExtResource("1_xoqmm")
 type = 102
 display_name = "Fullness"
+text_icon = "🍔"
 display_color = Color(1, 1, 0, 1)
 gradient = SubResource("Gradient_d1i5p")
 metadata/_custom_type_script = "uid://derwj2ijevwkr"

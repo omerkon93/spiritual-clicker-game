@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://onv2rqhpafe5"]
+
+[ext_resource type="Script" uid="uid://ngy8n5fs2fhl" path="res://scenes/ui/screens/dashboard_panel/dashboard_panel.gd" id="1_1ny11"]
+
+[node name="DashboardPanel" type="PanelContainer" unique_id=41419043]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1ny11")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1057703009]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1268939865]
+layout_mode = 2
+
+[node name="ResearchSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1492170267]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TechTitleLabel" type="Label" parent="MarginContainer/VBoxContainer/ResearchSection" unique_id=927172537]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/ResearchSection" unique_id=936203058]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TimeRemainingLabel" type="Label" parent="MarginContainer/VBoxContainer/ResearchSection" unique_id=2081399921]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=880766104]
+layout_mode = 2
+
+[node name="BillsSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=802923916]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/BillsSection" unique_id=922780025]
+layout_mode = 2
+text = "Upcoming Bills"
+
+[node name="BillList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/BillsSection" unique_id=931208443]
+unique_name_in_owner = true
+layout_mode = 2

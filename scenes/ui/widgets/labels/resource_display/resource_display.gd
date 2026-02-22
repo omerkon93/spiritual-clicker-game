@@ -21,13 +21,9 @@ func _ready() -> void:
 		return
 
 	# --- CRITICAL FIX: DISCONNECT FROM SHARED STYLE ---
-	# Instead of getting the existing (shared) style, we make a NEW one.
 	var unique_style = StyleBoxFlat.new()
-	
-	# Apply this NEW, UNIQUE style to this specific node
 	progress_bar.add_theme_stylebox_override("fill", unique_style)
 	
-	# When you set the texture/logic later, it uses 'unique_style' automatically
 	if resource_def is VitalDefinition:
 		_setup_vital(resource_def)
 	elif resource_def is CurrencyDefinition:
@@ -38,8 +34,11 @@ func _setup_currency(def: CurrencyDefinition) -> void:
 	_id = def.type
 	
 	# Visuals
-	icon_rect.texture = def.icon
-	progress_bar.visible = false # Money usually doesn't need a bar
+	if def.icon: icon_rect.texture = def.icon
+	progress_bar.visible = false 
+	
+	# Apply the resource's custom color to the text!
+	value_label.add_theme_color_override("font_color", def.display_color)
 	
 	# Connect to Bank
 	CurrencyManager.currency_changed.connect(_on_currency_changed)
@@ -53,8 +52,11 @@ func _setup_vital(def: VitalDefinition) -> void:
 	_id = def.type
 	
 	# Visuals
-	icon_rect.texture = def.icon
+	if def.icon: icon_rect.texture = def.icon
 	progress_bar.visible = true
+	
+	# Apply the resource's custom color to the text!
+	value_label.add_theme_color_override("font_color", def.display_color)
 	
 	# Connect to Vitals
 	VitalManager.vital_changed.connect(_on_vital_changed)
@@ -85,7 +87,7 @@ func _update_display(current: float, max_val: float, animate: bool = true) -> vo
 		if _is_vital and max_val > 0:
 			var percent = (current / max_val) * 100.0
 			tween.parallel().tween_property(progress_bar, "value", percent, 0.5)
-			_update_gradient_color(percent) # Update color based on fullness
+			_update_gradient_color(percent) 
 	else:
 		_set_displayed_value(current)
 		if _is_vital and max_val > 0:
@@ -97,26 +99,20 @@ func _set_displayed_value(val: float) -> void:
 	_displayed_value = val
 	
 	if _is_vital:
-		# Format: "Energy: 50/100"
+		var def: VitalDefinition = resource_def
 		var max_v = VitalManager.get_max(_id)
-		value_label.text = "%s: %d/%d" % [resource_def.display_name, int(val), int(max_v)]
+		# NEW Format: "⚡ Energy: 50/100"
+		value_label.text = "%s %s: %d/%d" % [def.text_icon, def.display_name, int(val), int(max_v)]
 	else:
-		# Format: "Gold: $500"
-		value_label.text = "%s: $%d" % [resource_def.display_name, int(val)]
-
+		var def: CurrencyDefinition = resource_def
+		# Format: "$ Money: 500" or "Money: $500" depending on how you want it
+		value_label.text = "%s %s: %d" % [def.text_icon, def.display_name, int(val)]
 func _update_gradient_color(percent: float) -> void:
 	if not (resource_def is VitalDefinition) or not resource_def.gradient:
 		return
 
-	# 1. Get the color from the Gradient Resource
-	# (Make sure your .tres file uses "Gradient", not "GradientTexture1D" for cleaner code)
-	# If you stuck with Texture, use: resource_def.gradient.gradient.sample(percent / 100.0)
 	var color = resource_def.gradient.sample(percent / 100.0)
-	
-	# 2. Grab the UNIQUE style we created in _ready()
-	# "get_theme_stylebox" prioritizes the override we just set!
 	var style = progress_bar.get_theme_stylebox("fill")
 	
-	# 3. Apply Color
 	if style is StyleBoxFlat:
 		style.bg_color = color

@@ -1,7 +1,9 @@
-extends Button
+extends MarginContainer
 class_name ShopItemButton
 
-# The Setter ensures UI updates whenever data changes
+# ==============================================================================
+# 1. DATA & CONFIG
+# ==============================================================================
 @export var upgrade_resource: GameItem :
 	set(value):
 		upgrade_resource = value
@@ -9,175 +11,179 @@ class_name ShopItemButton
 			_update_label()
 			_update_display()
 
-# Visual colors
 var color_affordable: Color = Color.WHITE
 var color_expensive: Color = Color(1, 0.4, 0.4, 1.0)
 var color_owned: Color = Color(0.5, 1.0, 0.5, 1.0) 
 
-@onready var notification_indicator_component: NotificationIndicatorComponent = $NotificationIndicatorComponent
+# --- NODES ---
+@onready var interact_button: Button = $Button 
+@onready var icon_rect: TextureRect = %IconRect
+@onready var title_label: Label = %TitleLabel
+@onready var stats_label: RichTextLabel = %StatsLabel
 
+# NEW: Safely get the Notification Component if it exists in the scene
+@onready var notification_indicator: NotificationIndicatorComponent = %NotificationIndicatorComponent
+
+# ==============================================================================
+# 2. LIFECYCLE
+# ==============================================================================
 func _ready() -> void:
-	pressed.connect(_on_pressed)
+	if interact_button:
+		interact_button.pressed.connect(_on_pressed)
+	
+	# Global State Sync
 	ProgressionManager.upgrade_leveled_up.connect(_on_level_changed)
 	CurrencyManager.currency_changed.connect(_on_currency_changed)
 	
-	custom_minimum_size = Vector2(240, 80) # Taller for more text
-	size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# Research Manager Sync
+	ResearchManager.research_started.connect(func(_id, _dur): _update_label())
+	ResearchManager.research_finished.connect(func(_id): _update_label())
 	
-	if upgrade_resource:
-		_update_label()
-		_update_display()
-	else:
-		text = "Loading..."
+	_update_label()
+	_update_display()
 
+# ==============================================================================
+# 3. INTERACTION & LOGIC
+# ==============================================================================
 func _on_pressed() -> void:
 	if not upgrade_resource: return
-	if notification_indicator_component: notification_indicator_component.mark_as_seen()
+	
+	# NEW: Tell the indicator we've seen this item so it stops blinking
+	if notification_indicator:
+		notification_indicator.mark_as_seen()
 	
 	if ItemManager.try_purchase_item(upgrade_resource):
 		var tween = create_tween()
+		tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(self, "scale", Vector2(0.95, 0.95), 0.05)
-		tween.tween_property(self, "scale", Vector2.ONE, 0.05)
+		tween.tween_property(self, "scale", Vector2.ONE, 0.1)
 		_update_label()
-
-func _on_level_changed(changed_id: String, _new_lvl: int) -> void:
-	if upgrade_resource and upgrade_resource.id == changed_id:
-		_update_label()
-		_update_display()
-
-func _on_currency_changed(_type: int, _new_amount: float) -> void:
-	_update_label()
 
 func _update_label() -> void:
-	if upgrade_resource == null: 
-		text = "Loading..."
-		return
+	if not upgrade_resource or not is_node_ready(): return
+	var res = upgrade_resource
 	
-	# 1. OWNERSHIP
-	var current_lvl = ProgressionManager.get_upgrade_level(upgrade_resource.id)
-	if upgrade_resource.item_type != GameItem.ItemType.CONSUMABLE and current_lvl >= 1:
-		text = "%s\n(Owned)" % upgrade_resource.display_name
-		modulate = color_owned
-		disabled = true
-		return
+	var level = ProgressionManager.get_upgrade_level(res.id)
+	var is_tech = res.item_type == GameItem.ItemType.TECHNOLOGY
+	var researching = is_tech and ResearchManager.is_researching(res.id)
+
+	# --- A. STATE: OWNED OR RESEARCHING ---
+	if res.item_type != GameItem.ItemType.CONSUMABLE:
+		if level >= 1:
+			title_label.text = res.display_name
+			stats_label.text = "[center](Owned)[/center]"
+			interact_button.disabled = true
+			modulate = color_owned
+			_configure_notification(res.id) # Check notification
+			return
 		
-	# 2. COSTS
-	var cost_strings = []
-	var can_afford_all = true
-	for req in upgrade_resource.requirements:
-		if req.has_method("is_met") and not req.is_met(): can_afford_all = false
-		if req.has_method("get_cost_text"): cost_strings.append(req.get_cost_text())
-	
-	var cost_text = "Free"
-	if cost_strings.size() > 0: cost_text = " + ".join(cost_strings)
-	
-	# 3. EFFECTS TEXT (New!)
-	var effects_text = _get_effects_text()
+		if researching:
+			title_label.text = res.display_name
+			stats_label.text = "[center][color=cyan](Researching...)[/color][/center]"
+			interact_button.disabled = true
+			modulate = Color(0.7, 0.7, 1.0, 0.8)
+			_configure_notification(res.id) # Check notification
+			return
 
-	# 4. FINAL DISPLAY
-	# If there are no effects (e.g. flavor item), just show name and cost
-	if effects_text == "":
-		text = "%s\n%s" % [upgrade_resource.display_name, cost_text]
-	else:
-		text = "%s\n%s\n%s" % [upgrade_resource.display_name, effects_text, cost_text]
+	# --- B. STATE: AVAILABLE FOR PURCHASE ---
+	interact_button.disabled = false
+	title_label.text = res.display_name
 	
-	modulate = color_affordable if can_afford_all else color_expensive
+	var cost_strings: Array[String] = []
+	var can_afford = true
+	
+	# 1. Process Currencies Dictionary [Resource -> int]
+	for cur_def: CurrencyDefinition in res.currency_cost:
+		var amount = res.currency_cost[cur_def]
+		if CurrencyManager.get_currency_amount(cur_def.type) < amount: 
+			can_afford = false
+		cost_strings.append(cur_def.format_loss(amount))
 
-func _update_display() -> void:
-	if not upgrade_resource: return
-	if upgrade_resource.icon: icon = upgrade_resource.icon
-	if notification_indicator_component:
-		notification_indicator_component.configure(upgrade_resource.id, self)
+	# 2. Process Vitals Dictionary [Resource -> int]
+	for vit_def: VitalDefinition in res.vital_cost:
+		var amount = res.vital_cost[vit_def]
+		if VitalManager.get_current(vit_def.type) < amount: 
+			can_afford = false
+		cost_strings.append(vit_def.format_loss(amount))
+	
+	var cost_text = "Cost: Free" if cost_strings.is_empty() else " + ".join(cost_strings)
+	
+	# Combine effects logic and costs
+	stats_label.text = "[center]%s\n%s[/center]" % [_get_effects_text(), cost_text]
+	modulate = color_affordable if can_afford else color_expensive
 
-# --- EXPANDED HELPER ---
+	# NEW: Trigger the notification pulse check at the end of updating
+	_configure_notification(res.id)
+
+
+# ==============================================================================
+# 4. HELPERS
+# ==============================================================================
+func _configure_notification(item_id: String) -> void:
+	if notification_indicator:
+		# Pass the interact_button as the target to make the main button pulse
+		notification_indicator.configure(item_id, interact_button)
+
+func _on_level_changed(_id, _lvl): _update_label()
+func _on_currency_changed(_t, _a): _update_label()
+func _update_display(): if upgrade_resource and icon_rect: icon_rect.texture = upgrade_resource.icon
+
 func _get_effects_text() -> String:
 	var parts = []
+	var res = upgrade_resource
 	
-	# -------------------------------------------------------------
-	# 1. RESEARCH TIME (New Feature)
-	# -------------------------------------------------------------
-	if upgrade_resource.item_type == GameItem.ItemType.TECHNOLOGY:
-		var base_time = upgrade_resource.research_duration_minutes
-		
-		# Get the player's current speed multiplier
-		# Ensure ResearchManager.get_global_research_speed() is public (no underscore)
+	# 1. Tech Research Time
+	if res.item_type == GameItem.ItemType.TECHNOLOGY:
+		var base_time = res.research_duration_minutes
 		var speed = ResearchManager.get_global_research_speed()
-		
-		# Calculate effective time (Work / Speed)
 		var effective_time = int(base_time / speed)
-		
-		# Format time nicely (e.g., "1h 30m" or just "45m")
-		var time_str = ""
-		var hours = floor(effective_time / 60.0)
-		var mins = int(effective_time) % 60
-		
-		if hours > 0:
+		var time_str = "%dm" % effective_time
+		if effective_time >= 60:
+			var hours = int(effective_time / 60.0)
+			var mins = effective_time % 60
 			time_str = "%dh %dm" % [hours, mins]
-		else:
-			time_str = "%dm" % mins
-			
-		parts.append("Research Time: %s" % time_str)
-
-	# -------------------------------------------------------------
-	# 2. STAT EFFECTS (Existing Logic)
-	# -------------------------------------------------------------
-	for effect in upgrade_resource.effects:
-		if "stat" in effect and "amount" in effect:
+		parts.append("[color=cyan]Research Time: %s[/color]" % time_str)
+		
+	# 2. Permanent Stat Effects
+	for effect in res.effects:
+		if effect != null and "stat" in effect and "amount" in effect:
 			var amount = effect.amount
-			# Safe Key Lookup
 			var stat_key = StatDefinition.StatType.find_key(effect.stat)
 			var stat_name = stat_key.capitalize() if stat_key else "Stat"
+			var sign_str = "+" if amount >= 0 else ""
 			
 			if "is_percentage" in effect and effect.is_percentage:
-				# 0.1 -> "+10%"
-				var permil = int(amount * 100)
-				var sign_str = "+" if permil >= 0 else ""
-				parts.append("%s%d%% %s" % [sign_str, permil, stat_name])
+				parts.append("[color=light_green]%s%d%% %s[/color]" % [sign_str, int(amount * 100), stat_name])
 			else:
-				# 10 -> "+10"
-				var sign_str = "+" if amount >= 0 else ""
 				var val_str = str(int(amount)) if is_equal_approx(amount, round(amount)) else "%.1f" % amount
-				parts.append("%s%s %s" % [sign_str, val_str, stat_name])
+				parts.append("[color=light_green]%s%s %s[/color]" % [sign_str, val_str, stat_name])
+	# 3. Feature Unlocks (Now looping through the ARRAY)
+	for flag in res.story_flags_reward:
+		if flag:
+			var label = flag.display_name if flag.display_name != "" else flag.id.capitalize().replace("_", " ")
+			parts.append("[color=violet]Unlocks: %s[/color]" % label)
 
-	# -------------------------------------------------------------
-	# 3. STORY FLAGS (Technology / Unlocks)
-	# -------------------------------------------------------------
-	if upgrade_resource.story_flag_reward:
-		var flag = upgrade_resource.story_flag_reward
-		var label = "New Feature"
+	# 4. Immediate Action Rewards (Gains)
+	if res.on_purchase_action:
+		var action = res.on_purchase_action
+		if action.effective_time_cost > 0:
+			parts.append("[color=gray]🕒 Takes: %d min[/color]" % int(action.effective_time_cost))
 		
-		# Try to find a human-readable name
-		if "display_name" in flag and flag.display_name != "":
-			label = flag.display_name
-		elif "id" in flag and flag.id != "":
-			label = flag.id.capitalize().replace("_", " ")
-			
-		parts.append("Unlocks: %s" % label)
-
-	# -------------------------------------------------------------
-	# 4. ACTION REWARDS (Consumables)
-	# -------------------------------------------------------------
-	if upgrade_resource.on_purchase_action:
-		var action = upgrade_resource.on_purchase_action
-		
-		# A. Vitals (e.g. Restores Energy)
 		for type in action.vital_gains:
 			var amount = action.vital_gains[type]
 			if amount > 0:
-				var v_key = VitalDefinition.VitalType.find_key(type)
-				var v_name = v_key.capitalize() if v_key else "Vital"
-				parts.append("Restores %d %s" % [int(amount), v_name])
+				var def = VitalManager.get_definition(type)
+				if def: parts.append(def.format_gain(amount))
 				
-		# B. Currency (e.g. Gives Money)
 		for type in action.currency_gains:
 			var amount = action.currency_gains[type]
 			if amount > 0:
-				if type == CurrencyDefinition.CurrencyType.MONEY:
-					parts.append("Gives $%d" % int(amount))
-				else:
-					var c_key = CurrencyDefinition.CurrencyType.find_key(type)
-					var c_name = c_key.capitalize() if c_key else "Currency"
-					parts.append("Gives %d %s" % [int(amount), c_name])
+				var def = CurrencyManager.get_definition(type)
+				if def: parts.append(def.format_gain(amount))
+
+	# 5. Subscriptions
+	if res.subscription_to_start:
+		var sub = res.subscription_to_start
+		parts.append("[color=orange]Starts: %s ($%d / %d days)[/color]" % [sub.display_name, sub.cost_amount, sub.interval_days])
 
 	return "\n".join(parts)

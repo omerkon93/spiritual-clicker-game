@@ -2,10 +2,12 @@ class_name StatDefinition extends Resource
 
 enum StatType {
 	NONE= 200,
-	## Basic Money/Vital gain boost
+	## Actions gain more Money/Vital
 	ACTION_POWER,
-	## Faster actions time efficiency
-	ACTION_EFFICIENCY,
+	## Actions cost less time
+	ACTION_TIME_EFFICIENCY,
+	## Actions cost less energy
+	ACTION_ENERGY_EFFICIENCY,
 	## Faster research speed
 	RESEARCH_SPEED,
 	## Boosts scripting efficiency

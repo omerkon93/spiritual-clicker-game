@@ -47,10 +47,9 @@ text = "Shop"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 2
+current_tab = 0
 
 [node name="Consumable" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer" unique_id=788875845]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -63,6 +62,7 @@ layout_mode = 2
 
 [node name="ConsumableGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Consumable/Consumable" unique_id=1776912608]
 layout_mode = 2
+columns = 2
 
 [node name="Upgrades" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer" unique_id=143010617]
 visible = false
@@ -78,8 +78,11 @@ layout_mode = 2
 
 [node name="UpgradesGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Upgrades/Upgrades" unique_id=1057169241]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Technology" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer" unique_id=3417778]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -92,6 +95,8 @@ layout_mode = 2
 
 [node name="TechnologyGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Technology/Technology" unique_id=35541590]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="CloseButton" type="Button" parent="." unique_id=291954224]
 unique_name_in_owner = true

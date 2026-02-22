@@ -9,6 +9,7 @@ colors = PackedColorArray(0, 0, 0, 1, 0.48235294, 0, 1, 1)
 script = ExtResource("1_1mf8y")
 type = 103
 display_name = "Focus"
+text_icon = "🧠"
 display_color = Color(0.48235294, 0, 1, 1)
 gradient = SubResource("Gradient_yya2c")
 metadata/_custom_type_script = "uid://derwj2ijevwkr"

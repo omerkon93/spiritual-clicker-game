@@ -3,55 +3,15 @@
 [ext_resource type="Script" uid="uid://cg4tvvr3xcavd" path="res://scenes/main/test/test_world.gd" id="1_mhjrp"]
 [ext_resource type="PackedScene" uid="uid://brw4tnt3187u7" path="res://core/components/floating_text_component/floating_text_component.tscn" id="2_4j6oq"]
 [ext_resource type="PackedScene" uid="uid://cqe0o1s22480x" path="res://scenes/ui/widgets/labels/resource_display/resource_display.tscn" id="3_0xc2k"]
-[ext_resource type="Script" uid="uid://cmjd7pxovwsxn" path="res://core/definitions/economy/currency_definition.gd" id="4_4j6oq"]
-[ext_resource type="Script" uid="uid://derwj2ijevwkr" path="res://core/definitions/stats/vitals_definition.gd" id="5_vdk5t"]
+[ext_resource type="Resource" uid="uid://cr4gfrls3tnnl" path="res://game_data/game_resources/vitals/fullness.tres" id="4_t0pql"]
+[ext_resource type="Resource" uid="uid://da0f2jq336o1" path="res://game_data/game_resources/vitals/focus.tres" id="5_c22xf"]
 [ext_resource type="PackedScene" uid="uid://bi6vn7ujskl0w" path="res://scenes/ui/widgets/labels/time_display/time_display.tscn" id="6_fddy8"]
+[ext_resource type="Resource" uid="uid://y3ehljvnfi6r" path="res://game_data/game_resources/currencies/money.tres" id="6_rprny"]
 [ext_resource type="PackedScene" uid="uid://bxo11gelgnitj" path="res://scenes/ui/screens/settings_menu/settings_menu.tscn" id="7_d54ay"]
 [ext_resource type="PackedScene" uid="uid://bcr0r8vbpqed6" path="res://scenes/ui/widgets/buttons/settings_button/settings_button.tscn" id="7_l7hgw"]
+[ext_resource type="Resource" uid="uid://dqm22xe6kirin" path="res://game_data/game_resources/currencies/spirit.tres" id="7_s238a"]
 [ext_resource type="PackedScene" uid="uid://chhrvwnrgoavo" path="res://scenes/ui/widgets/labels/chat_log/chat_log.tscn" id="8_ocsj7"]
 [ext_resource type="PackedScene" uid="uid://dwyyyo58piqom" path="res://scenes/ui/screens/combined_menu/combined_menu.tscn" id="9_g5dh2"]
-
-[sub_resource type="Gradient" id="Gradient_4cp3g"]
-colors = PackedColorArray(0, 0, 0, 1, 1, 1, 0, 1)
-
-[sub_resource type="Resource" id="Resource_f82ok"]
-script = ExtResource("5_vdk5t")
-type = 101
-display_name = "Energy"
-gradient = SubResource("Gradient_4cp3g")
-metadata/_custom_type_script = "uid://derwj2ijevwkr"
-
-[sub_resource type="Gradient" id="Gradient_2w7do"]
-colors = PackedColorArray(0, 0, 0, 1, 0, 1, 0, 1)
-
-[sub_resource type="Resource" id="Resource_kpecj"]
-script = ExtResource("5_vdk5t")
-type = 102
-display_name = "Fullness"
-gradient = SubResource("Gradient_2w7do")
-metadata/_custom_type_script = "uid://derwj2ijevwkr"
-
-[sub_resource type="Gradient" id="Gradient_4j6oq"]
-colors = PackedColorArray(0, 0, 0, 1, 0.6392157, 0, 1, 1)
-
-[sub_resource type="Resource" id="Resource_a3kcf"]
-script = ExtResource("5_vdk5t")
-type = 103
-display_name = "Focus"
-gradient = SubResource("Gradient_4j6oq")
-metadata/_custom_type_script = "uid://derwj2ijevwkr"
-
-[sub_resource type="Resource" id="Resource_82yio"]
-script = ExtResource("4_4j6oq")
-type = 1
-display_name = "Money"
-metadata/_custom_type_script = "uid://cmjd7pxovwsxn"
-
-[sub_resource type="Resource" id="Resource_l46gi"]
-script = ExtResource("4_4j6oq")
-type = 2
-display_name = "Spirit"
-metadata/_custom_type_script = "uid://cmjd7pxovwsxn"
 
 [node name="TestWorld" type="Node2D" unique_id=1004633402]
 script = ExtResource("1_mhjrp")
@@ -100,15 +60,14 @@ theme_override_constants/separation = 10
 
 [node name="Energy" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=762132846 instance=ExtResource("3_0xc2k")]
 layout_mode = 2
-resource_def = SubResource("Resource_f82ok")
 
 [node name="Fullness" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=268868763 instance=ExtResource("3_0xc2k")]
 layout_mode = 2
-resource_def = SubResource("Resource_kpecj")
+resource_def = ExtResource("4_t0pql")
 
 [node name="Focus" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=178671366 instance=ExtResource("3_0xc2k")]
 layout_mode = 2
-resource_def = SubResource("Resource_a3kcf")
+resource_def = ExtResource("5_c22xf")
 
 [node name="CurrencyBoxContainer" type="VBoxContainer" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=956887607]
 layout_mode = 2
@@ -116,11 +75,11 @@ theme_override_constants/separation = 10
 
 [node name="Money" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=708812145 instance=ExtResource("3_0xc2k")]
 layout_mode = 2
-resource_def = SubResource("Resource_82yio")
+resource_def = ExtResource("6_rprny")
 
 [node name="Spirit" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=1986776042 instance=ExtResource("3_0xc2k")]
 layout_mode = 2
-resource_def = SubResource("Resource_l46gi")
+resource_def = ExtResource("7_s238a")
 
 [node name="TimeDisplay" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=1284411020 instance=ExtResource("6_fddy8")]
 layout_mode = 2

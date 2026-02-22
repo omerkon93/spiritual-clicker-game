@@ -2,6 +2,7 @@
 
 [ext_resource type="Resource" uid="uid://blrt60gxi5yeg" path="res://game_data/game_progression/story_flags/flag_cert_comptia_netplus.tres" id="1_c245f"]
 [ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/definitions/actions/action_data.gd" id="1_ohrcc"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/definitions/items/game_item.gd" id="1_wpisd"]
 
 [resource]
 script = ExtResource("1_ohrcc")
@@ -10,6 +11,7 @@ display_name = "Junior Systems Administrator"
 description = "Managing Active Directory, resetting 'forgotten' passwords for the 100th time, and praying the backup server doesn't fail. The stress is rising."
 is_unlocked_by_default = false
 time_cost_minutes = 180
+base_duration = 0.1
 required_story_flag = ExtResource("1_c245f")
 vital_costs = Dictionary[int, float]({
 101: 30.0

@@ -6,5 +6,6 @@
 script = ExtResource("1_vgl6b")
 type = 2
 display_name = "Spirit"
+text_icon = "✨"
 prefix = "✨"
 metadata/_custom_type_script = "uid://cmjd7pxovwsxn"

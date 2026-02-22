@@ -7,6 +7,7 @@
 script = ExtResource("2_x2pku")
 id = "debug_action"
 display_name = "Debug Work"
+base_duration = 0.1
 vital_gains = Dictionary[int, float]({
 101: 30.0,
 102: 30.0,

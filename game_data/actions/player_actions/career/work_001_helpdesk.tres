@@ -1,20 +1,17 @@
-[gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://kodpwj23gnmu"]
+[gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://cwc0t0g303r5u"]
 
 [ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/definitions/actions/action_data.gd" id="1_mfubx"]
-[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/definitions/items/game_item.gd" id="1_pxdf2"]
-[ext_resource type="Resource" uid="uid://bxwytuk6rjklp" path="res://game_data/items/upgrades/item_test_power_flat.tres" id="2_wmw50"]
-[ext_resource type="Resource" uid="uid://duujrdsaq5exj" path="res://game_data/items/upgrades/item_test_power_perc.tres" id="3_wmw50"]
-[ext_resource type="Resource" uid="uid://28qu52buweom" path="res://game_data/items/upgrades/item_test_time_perc.tres" id="4_8ijsf"]
 
 [resource]
 script = ExtResource("1_mfubx")
 id = "work_001_helpdesk"
 display_name = "Junior Helpdesk"
-description = "\"Have you tried turning it off and on again?\" You spend your day resettting passwords for people who think the 'Any' key is a physical button.
+description = "Have you tried turning it off and on again?\" 
+
+You spend your day resettting passwords for people who think the 'Any' key is a physical button.
 With no skills and zero certification this is the best you got."
-time_cost_minutes = 120
-base_duration = 0.5
-contributing_items = Array[ExtResource("1_pxdf2")]([ExtResource("2_wmw50"), ExtResource("3_wmw50"), ExtResource("4_8ijsf")])
+time_cost_minutes = 480
+base_duration = 0.1
 vital_costs = Dictionary[int, float]({
 101: 15.0
 })

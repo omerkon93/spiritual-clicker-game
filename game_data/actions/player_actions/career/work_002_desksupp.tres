@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://ijurinj102js"]
 
 [ext_resource type="Resource" uid="uid://crc77flqrix3p" path="res://game_data/game_progression/story_flags/flag_cert_comptia_aplus.tres" id="1_b6nn5"]
+[ext_resource type="Script" uid="uid://ibattlbh7e1t" path="res://core/definitions/items/game_item.gd" id="1_wggap"]
 [ext_resource type="Script" uid="uid://cl7fnpxvwmebh" path="res://core/definitions/actions/action_data.gd" id="2_wggap"]
 
 [resource]
@@ -10,6 +11,7 @@ display_name = "Desktop Support"
 description = "Swapping RAM, imaging laptops, and fighting the office printer. It’s a dirty job, but someone has to do it."
 is_unlocked_by_default = false
 time_cost_minutes = 120
+base_duration = 0.1
 required_story_flag = ExtResource("1_b6nn5")
 vital_costs = Dictionary[int, float]({
 101: 20.0
