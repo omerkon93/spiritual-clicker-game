@@ -37,20 +37,9 @@ func _set_tab_notification(tab_node: Control, is_new: bool) -> void:
 	tab_container.set_tab_title(idx, title)
 
 # --- CLEARING LOGIC ---
-func _on_tab_changed(tab_idx: int) -> void:
-	var current_tab = tab_container.get_tab_control(tab_idx)
-	
-	if current_tab == actions_tab_node:
-		for action in ActionManager.all_actions:
-			if ProgressionManager.is_item_new(action.id):
-				ProgressionManager.mark_item_as_seen(action.id)
-				
-	elif current_tab == shop_tab_node:
-		for item in ItemManager.available_items:
-			if ProgressionManager.is_item_new(item.id):
-				ProgressionManager.mark_item_as_seen(item.id)
-	
-	_update_tabs()
+func _on_tab_changed(_tab_idx: int) -> void:
+	# Do nothing! Let the individual buttons handle their own clearing.
+	pass
 
 # --- DATA CHECKERS ---
 func _has_new_content_in_actions() -> bool:
@@ -62,43 +51,35 @@ func _has_new_content_in_actions() -> bool:
 
 func _has_new_content_in_shop() -> bool:
 	for item in ItemManager.available_items:
-		# FIXED: Only check items we haven't seen yet
-		if not ProgressionManager.is_item_new(item.id):
-			continue
-			
-		if ProgressionManager.get_upgrade_level(item.id) >= 1:
-			continue
-			
-		# FIXED: Use the correct variable name (story_flags_unlock)
-		var is_unlocked = true
-		if "story_flags_unlock" in item:
-			for flag in item.story_flags_unlock:
-				if flag and not ProgressionManager.get_flag(flag.id):
-					is_unlocked = false
-					break
-		
-		if not is_unlocked: continue
-			
-		var can_afford = true
-		
-		# FIXED: Use currency_requirements dictionary
-		if "currency_requirements" in item:
-			for cur_def: CurrencyDefinition in item.currency_requirements:
-				var amount = item.currency_requirements[cur_def]
-				if not CurrencyManager.has_enough_currency(cur_def.type, amount):
-					can_afford = false
-					break
-		
-		if not can_afford: continue
-		
-		# FIXED: Use vital_requirements dictionary
-		if "vital_requirements" in item:
-			for vit_def: VitalDefinition in item.vital_requirements:
-				var amount = item.vital_requirements[vit_def]
-				if not VitalManager.has_enough(vit_def.type, amount):
-					can_afford = false
-					break
-				
-		if can_afford: return true
-			
+		if ProgressionManager.is_item_new(item.id) and _is_shop_item_unlocked(item):
+			return true
 	return false
+
+# --- HELPER: SHOP UNLOCK LOGIC ---
+func _is_shop_item_unlocked(item) -> bool:
+	# Already bought
+	if ProgressionManager.get_upgrade_level(item.id) >= 1:
+		return false
+		
+	# Story Flag Check
+	if "story_flags_unlock" in item:
+		for flag in item.story_flags_unlock:
+			if flag and not ProgressionManager.get_flag(flag.id):
+				return false
+	
+	# Currency Check
+	if "currency_requirements" in item:
+		for cur_def: CurrencyDefinition in item.currency_requirements:
+			var amount = item.currency_requirements[cur_def]
+			if not CurrencyManager.has_enough_currency(cur_def.type, amount):
+				return false
+				
+	# Vital Check
+	if "vital_requirements" in item:
+		for vit_def: VitalDefinition in item.vital_requirements:
+			var amount = item.vital_requirements[vit_def]
+			if not VitalManager.has_enough(vit_def.type, amount):
+				return false
+				
+	# If it survives all checks, it is currently unlocked and visible to the player!
+	return true

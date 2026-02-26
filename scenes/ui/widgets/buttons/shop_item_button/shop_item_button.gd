@@ -15,14 +15,17 @@ var color_affordable: Color = Color.WHITE
 var color_expensive: Color = Color(1, 0.4, 0.4, 1.0)
 var color_owned: Color = Color(0.5, 1.0, 0.5, 1.0) 
 
+#Safely get the Notification Component if it exists in the scene
+@export var notification_indicator: NotificationIndicatorComponent
+
 # --- NODES ---
 @onready var interact_button: Button = $Button 
 @onready var icon_rect: TextureRect = %IconRect
 @onready var title_label: Label = %TitleLabel
 @onready var stats_label: RichTextLabel = %StatsLabel
 
-# NEW: Safely get the Notification Component if it exists in the scene
-@onready var notification_indicator: NotificationIndicatorComponent = %NotificationIndicatorComponent
+
+
 
 # ==============================================================================
 # 2. LIFECYCLE
@@ -48,10 +51,11 @@ func _ready() -> void:
 func _on_pressed() -> void:
 	if not upgrade_resource: return
 	
-	# NEW: Tell the indicator we've seen this item so it stops blinking
+	# 1. CLEAR THE BADGE FIRST!
 	if notification_indicator:
 		notification_indicator.mark_as_seen()
 	
+	# 2. Try to purchase. 
 	if ItemManager.try_purchase_item(upgrade_resource):
 		var tween = create_tween()
 		tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -121,9 +125,8 @@ func _update_label() -> void:
 # ==============================================================================
 func _configure_notification(item_id: String) -> void:
 	if notification_indicator:
-		# Pass the interact_button as the target to make the main button pulse
-		notification_indicator.configure(item_id, interact_button)
-
+		notification_indicator.configure(item_id, self)
+	
 func _on_level_changed(_id, _lvl): _update_label()
 func _on_currency_changed(_t, _a): _update_label()
 func _update_display(): if upgrade_resource and icon_rect: icon_rect.texture = upgrade_resource.icon

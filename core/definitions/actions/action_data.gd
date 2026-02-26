@@ -13,6 +13,7 @@ enum ActionCategory { CAREER, SURVIVAL, SPIRITUAL, OTHER }
 
 # --- SETTINGS ---
 @export_category("Settings")
+@export_group("Unlock Settins")
 @export var is_unlocked_by_default: bool = true 
 @export var is_visible_in_menu: bool = true
 

@@ -7,7 +7,5 @@ class_name DialogueSlide
 @export var portrait: Texture2D
 
 @export_group("Choices")
-# KEY = Button Text
-# VALUE = Resource (Accepts DialogueTrigger OR DialogueSequence)
-# We must use 'Resource' here to allow different types!
-@export var options: Dictionary[String, Resource] = {}
+# CHANGED: We now use an Array of our new custom resources
+@export var options: Array[DialogueOption] = []

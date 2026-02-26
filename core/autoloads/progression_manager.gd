@@ -24,7 +24,12 @@ var seen_items: Dictionary = {}
 # ==============================================================================
 func _ready() -> void:
 	_load_milestones()
-	call_deferred("_connect_signals")
+	_connect_signals()
+
+func reset() -> void:
+	upgrade_levels.clear()
+	story_flags.clear()
+	seen_items.clear()
 
 func _connect_signals() -> void:
 	if CurrencyManager:
@@ -80,9 +85,6 @@ func _check_all_milestones() -> void:
 	for m in all_milestones:
 		_evaluate_milestone(m)
 
-# ==============================================================================
-# EVALUATION LOGIC
-# ==============================================================================
 # ==============================================================================
 # EVALUATION LOGIC
 # ==============================================================================
@@ -196,13 +198,14 @@ func get_save_data() -> Dictionary:
 	return {
 		"upgrades": upgrade_levels.duplicate(),
 		"flags": story_flags.duplicate(),
-		"seen_items": seen_items.duplicate() # <--- Added
+		"seen_items": seen_items.duplicate(),
+		"quests": QuestManager.get_save_data()
 	}
 
 func load_save_data(data: Dictionary) -> void:
-	if data.has("upgrades"): upgrade_levels = data["upgrades"]
-	if data.has("flags"): story_flags = data["flags"]
-	if data.has("seen_items"): seen_items = data["seen_items"] # <--- Added
+	upgrade_levels = data.get("upgrades", {})
+	story_flags = data.get("flags", {})
+	seen_items = data.get("seen_items", {})
 	
 	# Restore state signals
 	for id in upgrade_levels: 

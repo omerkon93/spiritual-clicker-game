@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://idg5ajfqohrb"]
 
 [ext_resource type="Script" uid="uid://bfhdr6pllvdob" path="res://scenes/ui/widgets/buttons/action_button/action_button.gd" id="1_eh05r"]
-[ext_resource type="Resource" uid="uid://kodpwj23gnmu" path="res://game_data/actions/player_actions/career/work_001_helpdesk.tres" id="2_77re4"]
+[ext_resource type="Resource" uid="uid://cwc0t0g303r5u" path="res://game_data/actions/player_actions/career/work_001_helpdesk.tres" id="2_77re4"]
 [ext_resource type="PackedScene" uid="uid://b3t87otrm8e5y" path="res://core/components/animation_component/animation_component.tscn" id="2_aa0hu"]
 [ext_resource type="PackedScene" uid="uid://rpsmp7qml63x" path="res://core/components/cost_component/cost_component.tscn" id="3_hlq6p"]
 [ext_resource type="PackedScene" uid="uid://ci5gf3i2xpxe5" path="res://core/components/reward_component/reward_component.tscn" id="4_0hr7k"]
@@ -13,7 +13,7 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aa0hu"]
 
-[node name="ActionButton" type="MarginContainer" unique_id=433002123 node_paths=PackedStringArray("cost_component", "reward_component", "message_component", "streak_component", "animation_component")]
+[node name="ActionButton" type="MarginContainer" unique_id=433002123 node_paths=PackedStringArray("cost_component", "reward_component", "message_component", "streak_component", "animation_component", "notification_indicator_component")]
 custom_minimum_size = Vector2(600, 120)
 anchors_preset = 8
 anchor_left = 0.5
@@ -35,7 +35,9 @@ reward_component = NodePath("Components/RewardComponent")
 message_component = NodePath("Components/MessageComponent")
 streak_component = NodePath("Components/StreakComponent")
 animation_component = NodePath("Components/AnimationComponent")
+notification_indicator_component = NodePath("NotificationIndicatorComponent")
 base_cooldown = 0.1
+metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=725191919]
 layout_mode = 2
@@ -100,10 +102,10 @@ one_shot = true
 cost_component = NodePath("../CostComponent")
 reward_component = NodePath("../RewardComponent")
 
-[node name="NotificationIndicatorComponent" parent="Components" unique_id=191205824 node_paths=PackedStringArray("blink_target") instance=ExtResource("7_sxbij")]
-unique_name_in_owner = true
-blink_target = NodePath("../..")
-
 [node name="Button" type="Button" parent="." unique_id=346195248]
 modulate = Color(1, 1, 1, 0.5254902)
+layout_mode = 2
+
+[node name="NotificationIndicatorComponent" parent="." unique_id=191205824 instance=ExtResource("7_sxbij")]
+unique_name_in_owner = true
 layout_mode = 2

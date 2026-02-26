@@ -8,7 +8,7 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4vki"]
 
-[node name="ShopItemButton" type="MarginContainer" unique_id=452865651]
+[node name="ShopItemButton" type="MarginContainer" unique_id=452865651 node_paths=PackedStringArray("notification_indicator")]
 custom_minimum_size = Vector2(300, 120)
 anchors_preset = 14
 anchor_top = 0.5
@@ -22,6 +22,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("1_tii4b")
 upgrade_resource = ExtResource("2_o4vki")
+notification_indicator = NodePath("NotificationIndicatorComponent")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1673436092]
 layout_mode = 2
@@ -73,14 +74,10 @@ scroll_following = true
 
 [node name="Components" type="Node" parent="." unique_id=2069580815]
 
-[node name="NotificationIndicatorComponent" parent="Components" unique_id=191205824 node_paths=PackedStringArray("blink_target") instance=ExtResource("2_6ttyu")]
-unique_name_in_owner = true
-offset_left = 3.0
-offset_top = -9.0
-offset_right = 3.0
-offset_bottom = -9.0
-blink_target = NodePath("../..")
-
 [node name="Button" type="Button" parent="." unique_id=686131690]
 modulate = Color(1, 1, 1, 0.50980395)
+layout_mode = 2
+
+[node name="NotificationIndicatorComponent" parent="." unique_id=191205824 instance=ExtResource("2_6ttyu")]
+unique_name_in_owner = true
 layout_mode = 2

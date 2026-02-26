@@ -64,6 +64,10 @@ func _update_tab_titles() -> void:
 	_apply_tab_state(survival_grid, status_survival.has_items, status_survival.has_new)
 	_apply_tab_state(spiritual_grid, status_spiritual.has_items, status_spiritual.has_new)
 
+	# --- NEW: Bubble the notification up to the Main Menu Tab! ---
+	var any_new_actions = status_career.has_new or status_survival.has_new or status_spiritual.has_new
+	_apply_tab_state(self, true, any_new_actions)
+
 # --- HELPERS ---
 func _get_category_status(cat: int) -> Dictionary:
 	var has_items = false

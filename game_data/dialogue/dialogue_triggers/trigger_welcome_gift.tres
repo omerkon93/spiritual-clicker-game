@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="DialogueTrigger" format=3 uid="uid://bqj07n6p2aw2x"]
-
-[ext_resource type="Script" uid="uid://dk6t6u2yxjte5" path="res://core/definitions/story/dialogue/dialogue_trigger.gd" id="1_uk3sd"]
-
-[resource]
-script = ExtResource("1_uk3sd")
-signal_id = "give_intro_gift"
-metadata/_custom_type_script = "uid://dk6t6u2yxjte5"

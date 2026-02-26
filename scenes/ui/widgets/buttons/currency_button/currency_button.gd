@@ -88,7 +88,7 @@ func _recalculate_stats():
 				StatDefinition.StatType.ACTION_POWER:
 					added_power += total_effect
 				
-				StatDefinition.StatType.ACTION_EFFICIENCY:
+				StatDefinition.StatType.ACTION_TIME_EFFICIENCY:
 					removed_time += total_effect
 	
 	# Logic: If we have upgrades, use them. Otherwise default to 1.

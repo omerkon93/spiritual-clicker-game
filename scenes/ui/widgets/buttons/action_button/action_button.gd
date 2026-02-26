@@ -20,6 +20,7 @@ class_name ActionButton
 @export var message_component: MessageComponent
 @export var streak_component: StreakComponent
 @export var animation_component: AnimationComponent
+@export var notification_indicator_component: NotificationIndicatorComponent
 
 # --- SETTINGS ---
 @export_category("Settings")
@@ -40,7 +41,7 @@ class_name ActionButton
 @onready var title_label: Label = %TitleLabel
 @onready var stats_label: RichTextLabel = %StatsLabel 
 @onready var icon_rect: TextureRect = %IconRect
-@onready var notification_indicator_component: NotificationIndicatorComponent = %NotificationIndicatorComponent
+
 
 var current_cooldown: float = 1.0
 
@@ -50,7 +51,7 @@ var current_cooldown: float = 1.0
 func _ready() -> void:
 	# Connect to the actual button's signal
 	if interact_button:
-		interact_button.pressed.connect(_on_clicked)
+		interact_button.pressed.connect(_on_pressed)
 	
 	# Connect to ProgressionManager for level updates
 	ProgressionManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
@@ -67,20 +68,34 @@ func _ready() -> void:
 # ==============================================================================
 # 3. INTERACTION
 # ==============================================================================
-func _on_clicked() -> void:
+func _on_pressed() -> void:
 	if timer and not timer.is_stopped(): return
 
+	# 1. CLEAR THE BADGE FIRST!
 	if notification_indicator_component:
 		notification_indicator_component.mark_as_seen()
 
+	# 2. CHECK AFFORDABILITY 
 	if cost_component and not cost_component.check_affordability():
 		if animation_component: animation_component.play_shake()
 		return
 
+	# 3. INTERCEPT FOR DYNAMIC RANDOM TICKET
+	var random_ticket = DialogueManager.get_random_ticket_for(action_data)
+	
+	if random_ticket != null:
+		# Pay the entry cost (e.g., it costs 5 Focus to read a ticket)
+		if cost_component: cost_component.pay_all()
+		if timer: timer.start(current_cooldown)
+		
+		# Launch the UI
+		DialogueManager.start_dialogue(random_ticket)
+		return # ABORT! The dialogue choices handle the rewards.
+
+	# 4. STANDARD EXECUTION (If the pool is empty, just act like a normal button)
 	if cost_component: cost_component.pay_all()
 	
 	if action_data:
-		# USE THE EFFECTIVE TIME (The one reduced by servers, etc)
 		TimeManager.advance_time(int(action_data.effective_time_cost))
 	
 	var feedback = []
@@ -118,6 +133,10 @@ func _load_data_into_components() -> void:
 	
 	if cost_component:
 		cost_component.configure(action_data)
+		
+	# --- Configure the notification so it knows its ID and can pulse! ---
+	if notification_indicator_component:
+		notification_indicator_component.configure(action_data.id, self)
 		
 	# 3. CRITICAL: Refresh the Visuals
 	_update_ui()

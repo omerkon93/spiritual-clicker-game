@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://diw24lvqdympd" path="res://scenes/ui/screens/actions_menu/actions_menu.tscn" id="1_edv8t"]
 [ext_resource type="Script" uid="uid://bbfwomm3k5l4v" path="res://scenes/ui/screens/combined_menu/combined_menu.gd" id="1_n7u7p"]
 [ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/screens/shop_menu/shop_menu.tscn" id="2_n7u7p"]
-[ext_resource type="PackedScene" uid="uid://bttvheqo3yfwq" path="res://core/components/notification_indicator_component/notification_indicator_component.tscn" id="4_3l5h7"]
 [ext_resource type="PackedScene" uid="uid://onv2rqhpafe5" path="res://scenes/ui/screens/dashboard_panel/dashboard_panel.tscn" id="5_he5gf"]
 
 [node name="CombinedMenu" type="Control" unique_id=1927334450]
@@ -15,15 +14,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_n7u7p")
 metadata/_edit_use_anchors_ = true
-
-[node name="NotificationIndicatorComponent" parent="." unique_id=191205824 node_paths=PackedStringArray("blink_target") instance=ExtResource("4_3l5h7")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
-blink_target = NodePath("..")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=846988502]
 layout_mode = 1

@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="DialogueTrigger" format=3 uid="uid://becu50f8kn2tu"]
-
-[ext_resource type="Script" uid="uid://dk6t6u2yxjte5" path="res://core/definitions/story/dialogue/dialogue_trigger.gd" id="1_ssi3i"]
-
-[resource]
-script = ExtResource("1_ssi3i")
-signal_id = "open_shop"
-metadata/_custom_type_script = "uid://dk6t6u2yxjte5"

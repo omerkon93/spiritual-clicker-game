@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dl5bau0ngudy7"]
+
+[ext_resource type="Script" uid="uid://oc4emrjodugn" path="res://scenes/ui/screens/dashboard_panel/sections/bills_section_ui.gd" id="1_qc3bl"]
+
+[node name="BillsSectionUI" type="VBoxContainer" unique_id=292039700]
+script = ExtResource("1_qc3bl")
+
+[node name="Label" type="Label" parent="." unique_id=1852141396]
+layout_mode = 2
+text = "Upcoming Bills"
+
+[node name="BillList" type="VBoxContainer" parent="." unique_id=1005508259]
+layout_mode = 2

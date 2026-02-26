@@ -106,6 +106,13 @@ func start_new_game(slot_id: int) -> void:
 	if save_file_exists(slot_id):
 		delete_save(slot_id)
 		
+	# --- Wipe the ProgressionManager memory for the new game ---
+	if ProgressionManager.has_method("reset"):
+		ProgressionManager.reset()
+		
+	if QuestManager.has_method("reset"):
+		QuestManager.reset()
+		
 	# Start the auto-save timer
 	_timer.start()
 
