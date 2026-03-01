@@ -5,8 +5,10 @@ signal research_started(item_id: String, duration: int)
 signal research_progressed(item_id: String, remaining: int)
 signal research_finished(item_id: String)
 
-# Stores active research: { "tech_id": { "remaining": 60, "total": 60 } }
+# Stores active research data
 var active_research: Dictionary = {}
+# NEW: Tracks the strict order of research (First in, First out)
+var research_queue: Array[String] = []
 
 func _ready() -> void:
 	if TimeManager:
@@ -27,8 +29,11 @@ func start_research(item: GameItem) -> void:
 		"total": item.research_duration_minutes
 	}
 	
+	# NEW: Add it to the back of the line
+	research_queue.append(item.id) 
+	
 	research_started.emit(item.id, item.research_duration_minutes)
-	print("🔬 Research Started: %s" % item.display_name)
+	print("🔬 Research Queued: %s" % item.display_name)
 
 func get_progress(item_id: String) -> float:
 	if not active_research.has(item_id): return 0.0
@@ -49,29 +54,38 @@ func get_global_research_speed() -> float:
 # --- INTERNAL LOGIC ---
 
 func _on_time_advanced(passed_minutes: int) -> void:
-	if active_research.is_empty(): return
+	if research_queue.is_empty(): return
 	
 	var speed_mult = get_global_research_speed()
-	var completed_ids = []
+	var effective_progress = int(passed_minutes * speed_mult)
 	
-	# We use keys() to avoid "dictionary changed during size" errors
-	for id in active_research.keys():
-		var data = active_research[id]
-		var effective_progress = int(passed_minutes * speed_mult)
+	# Process the queue as long as we have progress to spend and items in line
+	while effective_progress > 0 and not research_queue.is_empty():
+		# Only look at the first item in line
+		var current_id = research_queue[0]
+		var data = active_research[current_id]
 		
-		data.remaining -= effective_progress
-		research_progressed.emit(id, data.remaining)
-		
-		if data.remaining <= 0:
-			completed_ids.append(id)
+		if effective_progress >= data.remaining:
+			# We have enough time to finish this research completely!
+			effective_progress -= data.remaining
+			data.remaining = 0
+			research_progressed.emit(current_id, 0)
 			
-	for id in completed_ids:
-		_complete_research(id)
+			_complete_research(current_id)
+		else:
+			# Not enough time to finish, just apply the progress and stop
+			data.remaining -= effective_progress
+			effective_progress = 0 # This breaks the while loop
+			research_progressed.emit(current_id, data.remaining)
 
 func _complete_research(id: String) -> void:
 	active_research.erase(id)
+	
+	# NEW: Remove it from the line!
+	research_queue.erase(id) 
+	
 	var item = ItemManager.find_item_by_id(id)
 	if item:
 		ItemManager.apply_level_up(item)
 		SignalBus.message_logged.emit("Research Complete: %s" % item.display_name, Color.GREEN)
-		research_finished.emit(id) # Notify UI to update
+		research_finished.emit(id)

@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://idg5ajfqohrb"]
+
+[ext_resource type="Script" uid="uid://bfhdr6pllvdob" path="res://scenes/ui/screens/combined_menu/actions_menu/action_button/action_button.gd" id="1_eh05r"]
+[ext_resource type="Resource" uid="uid://cwc0t0g303r5u" path="res://game_data/actions/player_actions/career/work_001_helpdesk.tres" id="2_77re4"]
+[ext_resource type="PackedScene" uid="uid://b3t87otrm8e5y" path="res://core/components/animation_component/animation_component.tscn" id="2_aa0hu"]
+[ext_resource type="PackedScene" uid="uid://rpsmp7qml63x" path="res://core/components/cost_component/cost_component.tscn" id="3_hlq6p"]
+[ext_resource type="PackedScene" uid="uid://ci5gf3i2xpxe5" path="res://core/components/reward_component/reward_component.tscn" id="4_0hr7k"]
+[ext_resource type="PackedScene" uid="uid://bisxuota8wv3p" path="res://core/components/message_component/message_component.tscn" id="5_e4x4h"]
+[ext_resource type="PackedScene" uid="uid://7sibx1jnc6bo" path="res://core/components/streak_component/streak_component.tscn" id="6_q48mf"]
+[ext_resource type="PackedScene" uid="uid://bttvheqo3yfwq" path="res://core/components/notification_indicator_component/notification_indicator_component.tscn" id="7_sxbij"]
+
+[sub_resource type="FontVariation" id="FontVariation_aa0hu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aa0hu"]
+
+[node name="ActionButton" type="MarginContainer" unique_id=433002123 node_paths=PackedStringArray("cost_component", "reward_component", "message_component", "streak_component", "animation_component", "notification_indicator_component")]
+custom_minimum_size = Vector2(600, 120)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -60.0
+offset_right = 300.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_eh05r")
+action_data = ExtResource("2_77re4")
+cost_component = NodePath("Components/CostComponent")
+reward_component = NodePath("Components/RewardComponent")
+message_component = NodePath("Components/MessageComponent")
+streak_component = NodePath("Components/StreakComponent")
+animation_component = NodePath("Components/AnimationComponent")
+notification_indicator_component = NodePath("NotificationIndicatorComponent")
+base_cooldown = 0.1
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=725191919]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=173021424]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=156917409]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="IconRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=2002767569]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 3
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=518402674]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_fonts/font = SubResource("FontVariation_aa0hu")
+text = "Title"
+autowrap_mode = 2
+
+[node name="StatsLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1729003270]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 11
+theme_override_styles/focus = SubResource("StyleBoxFlat_aa0hu")
+bbcode_enabled = true
+fit_content = true
+scroll_following = true
+
+[node name="CooldownTimer" type="Timer" parent="." unique_id=204163779]
+wait_time = 2.0
+one_shot = true
+
+[node name="Components" type="Node" parent="." unique_id=1448515258]
+
+[node name="AnimationComponent" parent="Components" unique_id=1179300170 instance=ExtResource("2_aa0hu")]
+
+[node name="CostComponent" parent="Components" unique_id=1617079401 instance=ExtResource("3_hlq6p")]
+
+[node name="RewardComponent" parent="Components" unique_id=1145428241 instance=ExtResource("4_0hr7k")]
+
+[node name="MessageComponent" parent="Components" unique_id=1824163825 instance=ExtResource("5_e4x4h")]
+
+[node name="StreakComponent" parent="Components" unique_id=1249277162 node_paths=PackedStringArray("cost_component", "reward_component") instance=ExtResource("6_q48mf")]
+cost_component = NodePath("../CostComponent")
+reward_component = NodePath("../RewardComponent")
+
+[node name="Button" type="Button" parent="." unique_id=346195248]
+modulate = Color(1, 1, 1, 0.5254902)
+layout_mode = 2
+
+[node name="NotificationIndicatorComponent" parent="." unique_id=191205824 instance=ExtResource("7_sxbij")]
+unique_name_in_owner = true
+layout_mode = 2

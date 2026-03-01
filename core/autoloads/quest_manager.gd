@@ -55,11 +55,21 @@ func _load_quests() -> void:
 func _on_flag_changed(flag_id: String, value: bool) -> void:
 	if not value: return
 	
+	# 1. Check if this flag unlocks any NEW quests
 	for quest in all_quests:
-		# Check if the resource exists, then check its ID
 		if quest.required_story_flag and quest.required_story_flag.id == flag_id:
 			_activate_quest(quest)
-
+			
+	# 2. NEW: Check if this flag completes an objective for ACTIVE quests
+	var current_active_keys = active_quests.keys()
+	for quest_id in current_active_keys:
+		var quest = _get_quest_data(quest_id)
+		
+		if quest and quest.target_story_flag and quest.target_story_flag.id == flag_id:
+			# Update progress to max so any UI listeners show 100% completion
+			active_quests[quest_id] = quest.required_amount
+			quest_progress_updated.emit(quest_id, quest.required_amount, quest.required_amount)
+			_complete_quest(quest)
 func _on_action_triggered(action_data: ActionData) -> void:
 	if not action_data: return
 	
@@ -79,6 +89,13 @@ func _activate_quest(quest: QuestData) -> void:
 	active_quests[quest.id] = 0
 	quest_activated.emit(quest)
 	print("📜 New Quest Activated: ", quest.title)
+	
+	# NEW: Check if the objective story flag is ALREADY true upon activation
+	if quest.target_story_flag and ProgressionManager.get_flag(quest.target_story_flag.id):
+		# Immediately complete it
+		active_quests[quest.id] = quest.required_amount
+		quest_progress_updated.emit(quest.id, quest.required_amount, quest.required_amount)
+		_complete_quest(quest)
 
 func _increment_quest_progress(quest: QuestData) -> void:
 	var current = active_quests[quest.id]

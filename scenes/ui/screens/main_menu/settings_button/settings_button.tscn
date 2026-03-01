@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bcr0r8vbpqed6"]
+
+[ext_resource type="Script" uid="uid://t2tdpr0t6n76" path="res://scenes/ui/screens/main_menu/settings_button/settings_button.gd" id="1_wltor"]
+
+[node name="SettingsButton" type="Button" unique_id=679154949]
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "⚙"
+script = ExtResource("1_wltor")

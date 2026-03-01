@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://dwyyyo58piqom"]
 
-[ext_resource type="PackedScene" uid="uid://diw24lvqdympd" path="res://scenes/ui/screens/actions_menu/actions_menu.tscn" id="1_edv8t"]
+[ext_resource type="PackedScene" uid="uid://diw24lvqdympd" path="res://scenes/ui/screens/combined_menu/actions_menu/actions_menu.tscn" id="1_edv8t"]
 [ext_resource type="Script" uid="uid://bbfwomm3k5l4v" path="res://scenes/ui/screens/combined_menu/combined_menu.gd" id="1_n7u7p"]
-[ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/screens/shop_menu/shop_menu.tscn" id="2_n7u7p"]
-[ext_resource type="PackedScene" uid="uid://onv2rqhpafe5" path="res://scenes/ui/screens/dashboard_panel/dashboard_panel.tscn" id="5_he5gf"]
+[ext_resource type="PackedScene" uid="uid://bymtdvkh5wiit" path="res://scenes/ui/screens/combined_menu/shop_menu/shop_menu.tscn" id="2_n7u7p"]
+[ext_resource type="PackedScene" uid="uid://onv2rqhpafe5" path="res://scenes/ui/screens/combined_menu/dashboard_panel/dashboard_panel.tscn" id="5_he5gf"]
 
 [node name="CombinedMenu" type="Control" unique_id=1927334450]
 layout_mode = 3

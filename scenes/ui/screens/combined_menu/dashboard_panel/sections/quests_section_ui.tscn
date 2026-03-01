@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dbxp2tgigvw2i"]
+
+[ext_resource type="Script" uid="uid://dh840c4r82nj0" path="res://scenes/ui/screens/combined_menu/dashboard_panel/sections/quests_section_ui.gd" id="1_2u0ko"]
+[ext_resource type="PackedScene" uid="uid://b1tuc03bg4ec6" path="res://scenes/ui/screens/combined_menu/dashboard_panel/sections/items/quest_item_ui.tscn" id="2_bwtok"]
+
+[node name="QuestsSectionUI" type="VBoxContainer" unique_id=1438552532]
+script = ExtResource("1_2u0ko")
+quest_item_scene = ExtResource("2_bwtok")
+
+[node name="ActiveObjectives" type="Label" parent="." unique_id=1016158916]
+layout_mode = 2
+text = "Active Quests:"
+
+[node name="QuestList" type="VBoxContainer" parent="." unique_id=1376015021]
+layout_mode = 2

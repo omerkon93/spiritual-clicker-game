@@ -12,6 +12,8 @@ class_name QuestData
 @export var prerequisite_quest: QuestData
 
 @export_category("Objectives")
+## What flag does the player needs to unlock?
+@export var target_story_flag: StoryFlag
 ## What action does the player need to click? (e.g., "work_001_helpdesk")
 @export var target_action: ActionData
 ## How many times do they need to do it?
