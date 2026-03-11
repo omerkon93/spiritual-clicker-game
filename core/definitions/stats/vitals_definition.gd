@@ -14,6 +14,7 @@ enum VitalType {
 @export var icon: Texture2D
 @export var text_icon: String = "⚡"
 @export var display_color: Color = Color.WHITE
+@export var description: String = ""
 
 # Stats specific to Vitals
 @export var default_max_value: float = 100.0

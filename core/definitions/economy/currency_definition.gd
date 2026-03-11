@@ -14,23 +14,24 @@ enum CurrencyType {
 @export var initial_amount: float = 0.0
 @export var max_amount: float = 999999.0
 @export var prefix: String = ""
+@export var description: String = ""
 
 # --- FORMATTING HELPERS ---
 
 ## Used for the Shop (e.g., "[color=#FFD700]$50[/color]")
 func format_cost(amount: float) -> String:
 	var hex = display_color.to_html(false)
-	return "[color=#%s]%s%s[/color]" % [hex, text_icon, _format_num(amount)]
+	return "[color=#%s]%s %s[/color]" % [hex, _format_num(amount), text_icon]
 
 ## Used for Action Button Costs (e.g., "[color=#FFD700]-$50[/color]")
 func format_loss(amount: float) -> String:
 	var hex = display_color.to_html(false)
-	return "[color=#%s]-%s%s[/color]" % [hex, text_icon, _format_num(amount)]
+	return "[color=#%s]-%s %s[/color]" % [hex, _format_num(amount), text_icon]
 
 ## Used for Rewards (e.g., "[color=#FFD700]+$50[/color]")
 func format_gain(amount: float) -> String:
 	var hex = display_color.to_html(false)
-	return "[color=#%s]+%s%s[/color]" % [hex, text_icon, _format_num(amount)]
+	return "[color=#%s]+%s %s[/color]" % [hex, _format_num(amount), text_icon]
 
 func _format_num(amount: float) -> String:
 	var is_whole = is_equal_approx(amount, roundf(amount))

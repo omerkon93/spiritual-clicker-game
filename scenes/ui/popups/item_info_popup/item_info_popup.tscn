@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d0t8s1r88d46i"]
 
-[ext_resource type="Script" uid="uid://damuvskst4g5i" path="res://scenes/ui/widgets/item_info_popup/item_info_popup.gd" id="1_n3hp2"]
+[ext_resource type="Script" uid="uid://damuvskst4g5i" path="res://scenes/ui/popups/item_info_popup/item_info_popup.gd" id="1_n3hp2"]
 
 [node name="ItemInfoPopup" type="AcceptDialog" unique_id=1696877258]
 oversampling_override = 1.0

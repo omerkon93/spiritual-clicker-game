@@ -2,16 +2,11 @@
 
 [ext_resource type="Script" uid="uid://cg4tvvr3xcavd" path="res://scenes/main/test/test_world.gd" id="1_mhjrp"]
 [ext_resource type="PackedScene" uid="uid://brw4tnt3187u7" path="res://core/components/floating_text_component/floating_text_component.tscn" id="2_4j6oq"]
-[ext_resource type="PackedScene" uid="uid://cqe0o1s22480x" path="res://scenes/ui/widgets/resource_display/resource_display.tscn" id="3_0xc2k"]
-[ext_resource type="Resource" uid="uid://cr4gfrls3tnnl" path="res://game_data/game_resources/vitals/fullness.tres" id="4_t0pql"]
-[ext_resource type="Resource" uid="uid://da0f2jq336o1" path="res://game_data/game_resources/vitals/focus.tres" id="5_c22xf"]
-[ext_resource type="PackedScene" uid="uid://bi6vn7ujskl0w" path="res://scenes/ui/widgets/time_display/time_display.tscn" id="6_fddy8"]
-[ext_resource type="Resource" uid="uid://y3ehljvnfi6r" path="res://game_data/game_resources/currencies/money.tres" id="6_rprny"]
+[ext_resource type="PackedScene" uid="uid://dos7ukivhojbo" path="res://scenes/ui/screens/hud_menu/hud.tscn" id="3_7erfn"]
 [ext_resource type="PackedScene" uid="uid://bxo11gelgnitj" path="res://scenes/ui/screens/settings_menu/settings_menu.tscn" id="7_d54ay"]
-[ext_resource type="PackedScene" uid="uid://bcr0r8vbpqed6" path="res://scenes/ui/screens/main_menu/settings_button/settings_button.tscn" id="7_l7hgw"]
-[ext_resource type="Resource" uid="uid://dqm22xe6kirin" path="res://game_data/game_resources/currencies/spirit.tres" id="7_s238a"]
-[ext_resource type="PackedScene" uid="uid://chhrvwnrgoavo" path="res://scenes/ui/widgets/chat_log/chat_log.tscn" id="8_ocsj7"]
 [ext_resource type="PackedScene" uid="uid://dwyyyo58piqom" path="res://scenes/ui/screens/combined_menu/combined_menu.tscn" id="9_g5dh2"]
+[ext_resource type="PackedScene" uid="uid://ceyxvo0p4ysyx" path="res://scenes/ui/popups/study_action_popup/study_action_popup.tscn" id="13_c22xf"]
+[ext_resource type="PackedScene" uid="uid://d0t8s1r88d46i" path="res://scenes/ui/popups/item_info_popup/item_info_popup.tscn" id="14_rprny"]
 
 [node name="TestWorld" type="Node2D" unique_id=1004633402]
 script = ExtResource("1_mhjrp")
@@ -22,77 +17,15 @@ script = ExtResource("1_mhjrp")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1925021350]
 
-[node name="HUD" type="Control" parent="UI" unique_id=1584648114]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Panel" type="Panel" parent="UI/HUD" unique_id=177599683]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/HUD/Panel" unique_id=486811361]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 175.0
-grow_horizontal = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/HUD/Panel/MarginContainer" unique_id=1533625624]
-layout_mode = 2
-theme_override_constants/separation = 50
-metadata/_edit_use_anchors_ = true
-
-[node name="VitalsBoxContainer" type="VBoxContainer" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=217987100]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Energy" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=762132846 instance=ExtResource("3_0xc2k")]
-layout_mode = 2
-
-[node name="Fullness" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=268868763 instance=ExtResource("3_0xc2k")]
-layout_mode = 2
-resource_def = ExtResource("4_t0pql")
-
-[node name="Focus" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=178671366 instance=ExtResource("3_0xc2k")]
-layout_mode = 2
-resource_def = ExtResource("5_c22xf")
-
-[node name="CurrencyBoxContainer" type="VBoxContainer" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=956887607]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Money" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=708812145 instance=ExtResource("3_0xc2k")]
-layout_mode = 2
-resource_def = ExtResource("6_rprny")
-
-[node name="Spirit" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=1986776042 instance=ExtResource("3_0xc2k")]
-layout_mode = 2
-resource_def = ExtResource("7_s238a")
-
-[node name="TimeDisplay" parent="UI/HUD/Panel/MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=1284411020 instance=ExtResource("6_fddy8")]
-layout_mode = 2
-
-[node name="ChatLog" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=46349787 instance=ExtResource("8_ocsj7")]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SettingsButton" parent="UI/HUD/Panel/MarginContainer/HBoxContainer" unique_id=679154949 node_paths=PackedStringArray("settings_menu") instance=ExtResource("7_l7hgw")]
-layout_mode = 2
-settings_menu = NodePath("../../../../../Settings")
+[node name="HUD" parent="UI" unique_id=1602306978 instance=ExtResource("3_7erfn")]
 
 [node name="CombinedMenu" parent="UI" unique_id=1927334450 instance=ExtResource("9_g5dh2")]
 
 [node name="Settings" parent="UI" unique_id=721209956 instance=ExtResource("7_d54ay")]
 visible = false
+
+[node name="Popups" type="CanvasLayer" parent="." unique_id=474500330]
+
+[node name="StudyActionPopup" parent="Popups" unique_id=453795095 instance=ExtResource("13_c22xf")]
+
+[node name="ItemInfoPopup" parent="Popups" unique_id=1696877258 instance=ExtResource("14_rprny")]

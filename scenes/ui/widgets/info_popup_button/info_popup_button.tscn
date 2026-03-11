@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dsjxbnco6r66i"]
 
-[ext_resource type="Script" uid="uid://dg6swhe0wu8ko" path="res://scenes/ui/widgets/item_info_popup/item_info_button.gd" id="1_mqpnf"]
+[ext_resource type="Script" uid="uid://dg6swhe0wu8ko" path="res://scenes/ui/widgets/info_popup_button/info_popup_button.gd" id="1_mqpnf"]
 
 [node name="ItemInfoButton" type="Button" unique_id=1148206182]
 text = "?"

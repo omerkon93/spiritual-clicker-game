@@ -15,3 +15,6 @@ signal dialogue_action(action_id: String)
 
 @warning_ignore("unused_signal")
 signal show_info_requested(title: String, description: String)
+
+@warning_ignore("unused_signal")
+signal study_dialog_requested(action_button: Node, action_data: ActionData)

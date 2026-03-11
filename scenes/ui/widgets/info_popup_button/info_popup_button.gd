@@ -6,12 +6,18 @@ var info_desc: String = ""
 
 func _ready() -> void:
 	pressed.connect(_on_pressed)
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	focus_mode = Control.FOCUS_NONE
 
 # Any UI can call this to set up the button
 func setup(t: String, d: String) -> void:
 	info_title = t
 	info_desc = d
 	visible = info_desc != ""
+	
+	# --- THE DEVELOPER WARNING ---
+	if info_desc == "":
+		push_warning("ItemInfoButton hidden: '%s' has no description text!" % info_title)
 
 func _on_pressed() -> void:
 	SignalBus.show_info_requested.emit(info_title, info_desc)

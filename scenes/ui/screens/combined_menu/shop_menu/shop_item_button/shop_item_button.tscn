@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b88g2xp6ppl2t" path="res://scenes/ui/screens/combined_menu/shop_menu/shop_item_button/shop_item_button.gd" id="1_tii4b"]
 [ext_resource type="PackedScene" uid="uid://bttvheqo3yfwq" path="res://core/components/notification_indicator_component/notification_indicator_component.tscn" id="2_6ttyu"]
 [ext_resource type="Resource" uid="uid://bnvr0weqfl0tw" path="res://game_data/items/knowledge/cert_comptia_aplus.tres" id="2_o4vki"]
+[ext_resource type="PackedScene" uid="uid://dsjxbnco6r66i" path="res://scenes/ui/widgets/info_popup_button/info_popup_button.tscn" id="3_25sff"]
 
 [sub_resource type="FontVariation" id="FontVariation_uyq1s"]
 
@@ -81,3 +82,9 @@ layout_mode = 2
 [node name="NotificationIndicatorComponent" parent="." unique_id=191205824 instance=ExtResource("2_6ttyu")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="ItemInfoButton" parent="." unique_id=1148206182 instance=ExtResource("3_25sff")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4

@@ -29,16 +29,14 @@ class_name ActionButton
 
 # --- Interactive UI ---
 @onready var interact_button: Button = $Button 
-@onready var time_spinbox: SpinBox = %TimeSpinBox
+@onready var item_info_button: ItemInfoButton = %ItemInfoButton
 
 # --- Visual UI ---
 @onready var title_label: Label = %TitleLabel
 @onready var stats_label: RichTextLabel = %StatsLabel 
 @onready var icon_rect: TextureRect = %IconRect
 
-# --- Popups ---
-@onready var study_dialog: ConfirmationDialog = $StudyDialog
-@onready var dialog_stats_label: RichTextLabel = %DialogStatsLabel
+
 
 # ==============================================================================
 # 2. LIFECYCLE
@@ -47,11 +45,7 @@ func _ready() -> void:
 	if interact_button:
 		interact_button.pressed.connect(_on_pressed)
 		
-	if study_dialog:
-		study_dialog.confirmed.connect(_on_study_dialog_confirmed)
-		
-	if time_spinbox:
-		time_spinbox.value_changed.connect(_on_time_spinbox_changed)
+	# DELETED the old spinbox and dialog signal connections here
 		
 	ProgressionManager.upgrade_leveled_up.connect(_on_upgrade_leveled)
 	_validate_and_connect_components()
@@ -67,7 +61,6 @@ func _ready() -> void:
 # 3. INTERACTION
 # ==============================================================================
 func _on_pressed() -> void:
-	# 0. Make sure action_data actually exists before doing anything!
 	if not action_data: 
 		printerr("ActionButton pressed, but no action_data is assigned!")
 		return
@@ -75,16 +68,13 @@ func _on_pressed() -> void:
 	if action_data.use_cooldown and timer and not timer.is_stopped(): 
 		return
 
-	# 1. CLEAR THE BADGE FIRST!
 	if notification_indicator_component:
 		notification_indicator_component.mark_as_seen()
 
-	# 2. CHECK AFFORDABILITY 
 	if cost_component and not cost_component.check_affordability():
 		if animation_component: animation_component.play_shake()
 		return
 
-	# 3. INTERCEPT FOR DYNAMIC RANDOM TICKET
 	var random_ticket = DialogueManager.get_random_ticket_for(action_data)
 	if random_ticket != null:
 		if cost_component: cost_component.pay_all()
@@ -94,30 +84,11 @@ func _on_pressed() -> void:
 		return 
 
 	# 4. PROMPT OR EXECUTE
-	if action_data.is_study_action and study_dialog and time_spinbox:
-		time_spinbox.value = max(1, roundi(float(action_data.effective_time_cost) / 60.0))
-		_on_time_spinbox_changed(time_spinbox.value)
-		
-		study_dialog.popup_centered()
+	if action_data.is_study_action:
+		# Tell the global popup to open and pass 'self' (this specific button) to it!
+		SignalBus.study_dialog_requested.emit(self)
 	else:
 		_execute_standard_action()
-
-# --- Triggered when the user clicks 'OK' on the popup ---
-func _on_study_dialog_confirmed() -> void:
-	if time_spinbox:
-		# CONVERT HOURS TO MINUTES: Multiply their input by 60 before executing!
-		var requested_minutes = int(time_spinbox.value * 60)
-		_execute_study_action(requested_minutes)
-
-# --- Updates the dialog text dynamically whenever the time changes! ---
-func _on_time_spinbox_changed(new_time_hours: float) -> void:
-	if not dialog_stats_label: return
-	
-	# Since 1 hour = 1 chunk (60 mins), the chunks are just the hours requested!
-	var requested_chunks: int = ceili(new_time_hours)
-	
-	# Pass 'true' so the text generator knows we are looking at the dialog box
-	dialog_stats_label.text = _generate_stats_text(requested_chunks, true)
 
 # --- FOR NORMAL BUTTONS ---
 func _execute_standard_action() -> void:
@@ -138,39 +109,29 @@ func _execute_standard_action() -> void:
 			timer.start(action_data.effective_cooldown)
 
 # --- FOR STUDY BUTTONS ONLY (Chunking Logic) ---
+# NOTE: The global popup will call this function directly and pass in the requested_minutes!
 func _execute_study_action(requested_minutes: int) -> void:
-	# 1. Figure out how many 60-minute chunks this takes.
 	var requested_chunks: int = ceili(float(requested_minutes) / 60.0)
-	
 	var total_time_spent: int = 0
 	var chunks_executed: int = 0
 	var total_feedback: Array[Dictionary] = []
 	
-	# 2. Loop through each chunk and try to pay for it
 	for i in range(requested_chunks):
-		
-		# Check if the player can afford this specific chunk
 		if cost_component and not cost_component.check_affordability():
-			# If we are completely broke on the very first try, abort!
 			if chunks_executed == 0:
 				if animation_component: animation_component.play_shake()
 				return
 				
-			# Just use the SignalBus directly!
 			if SignalBus: 
 				SignalBus.message_logged.emit("Study cut short: Insufficient resources.", Color.ORANGE)
-				
 			break
 			
-		# Pay for the chunk
 		if cost_component: 
 			cost_component.pay_all()
 			
 		chunks_executed += 1
 		
-		# Calculate the time to add for this chunk
 		var time_for_this_chunk = 60
-		# If this is the final chunk, it might be a partial hour
 		if i == requested_chunks - 1:
 			var remainder = requested_minutes % 60
 			if remainder > 0:
@@ -178,11 +139,9 @@ func _execute_study_action(requested_minutes: int) -> void:
 				
 		total_time_spent += time_for_this_chunk
 		
-		# Deliver rewards for this chunk
 		if reward_component:
 			total_feedback.append_array(reward_component.deliver_rewards())
 
-	# 3. Apply the final accumulated totals!
 	if total_time_spent > 0:
 		TimeManager.advance_time(total_time_spent)
 		ResearchManager.manual_study(total_time_spent)
@@ -221,13 +180,13 @@ func _update_ui() -> void:
 	if not action_data: return
 	if title_label: title_label.text = action_data.display_name
 	if icon_rect: icon_rect.texture = action_data.icon
-	if action_data.description != "": tooltip_text = action_data.description
+	
+	if item_info_button:
+		item_info_button.setup(action_data.display_name, action_data.description)
 	
 	if stats_label:
-		# Pass 'false' because this is the main button, not the dialog
 		stats_label.text = _generate_stats_text(1, false)
 
-# --- UPGRADED: Now accepts a multiplier and returns the text! ---
 func _generate_stats_text(multiplier: int = 1, is_dialog: bool = false) -> String:
 	if not action_data: return ""
 	var text_lines: Array[String] = []
@@ -259,11 +218,14 @@ func _generate_stats_text(multiplier: int = 1, is_dialog: bool = false) -> Strin
 		if def and amount > 0: text_lines.append(def.format_gain(amount)) 
 
 	if action_data.effective_time_cost > 0:
+		var time_icon = "🕒"
 		if is_dialog:
-			text_lines.append("[color=gray]Time: %d hr[/color]" % int(time_spinbox.value))
+			# For the popup/dialog
+			text_lines.append("[color=silver]%d hr %s[/color]" % [multiplier, time_icon])
 		else:
+			# For the main button list
 			var formatted_time = TimeManager.format_duration_in_hours(roundi(action_data.effective_time_cost * multiplier))
-			text_lines.append("[color=gray]Time: %s[/color]" % formatted_time)
+			text_lines.append("[color=silver]%s %s[/color]" % [formatted_time, time_icon])
 
 	return "[center]%s[/center]" % "\n".join(text_lines)
 
@@ -279,6 +241,5 @@ func _on_upgrade_leveled(id: String, _lvl: int) -> void:
 		
 	var upgraded_item = ItemManager.find_item_by_id(id)
 	
-	# If the item that just leveled up is targeting THIS action, update the UI!
 	if upgraded_item != null and upgraded_item.target_action == action_data:
 		_load_data_into_components()

@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://dos7ukivhojbo"]
+
+[ext_resource type="PackedScene" uid="uid://cqe0o1s22480x" path="res://scenes/ui/widgets/resource_display/resource_display.tscn" id="1_edj1p"]
+[ext_resource type="Resource" uid="uid://cr4gfrls3tnnl" path="res://game_data/game_resources/vitals/fullness.tres" id="2_t3f84"]
+[ext_resource type="Resource" uid="uid://da0f2jq336o1" path="res://game_data/game_resources/vitals/focus.tres" id="3_w5r6f"]
+[ext_resource type="Resource" uid="uid://y3ehljvnfi6r" path="res://game_data/game_resources/currencies/money.tres" id="4_j2dec"]
+[ext_resource type="Resource" uid="uid://dqm22xe6kirin" path="res://game_data/game_resources/currencies/spirit.tres" id="5_y1r2s"]
+[ext_resource type="PackedScene" uid="uid://bi6vn7ujskl0w" path="res://scenes/ui/widgets/time_display/time_display.tscn" id="6_yn8iy"]
+[ext_resource type="PackedScene" uid="uid://chhrvwnrgoavo" path="res://scenes/ui/widgets/chat_log/chat_log.tscn" id="7_8cidd"]
+[ext_resource type="PackedScene" uid="uid://bcr0r8vbpqed6" path="res://scenes/ui/screens/main_menu/settings_button/settings_button.tscn" id="8_8bf18"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_edj1p"]
+bg_color = Color(0.16409835, 0.16409835, 0.16409835, 0.90000004)
+
+[node name="HUD" type="PanelContainer" unique_id=652665641]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 65.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_edj1p")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1273881585]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=646617780]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="VitalsBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=154607995]
+layout_mode = 2
+
+[node name="Energy" parent="MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=708812145 instance=ExtResource("1_edj1p")]
+layout_mode = 2
+
+[node name="Fullness" parent="MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=2031907487 instance=ExtResource("1_edj1p")]
+layout_mode = 2
+resource_def = ExtResource("2_t3f84")
+
+[node name="Focus" parent="MarginContainer/HBoxContainer/VitalsBoxContainer" unique_id=641390737 instance=ExtResource("1_edj1p")]
+layout_mode = 2
+resource_def = ExtResource("3_w5r6f")
+
+[node name="Spacer1" type="Control" parent="MarginContainer/HBoxContainer" unique_id=377554166]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimeDisplay" parent="MarginContainer/HBoxContainer" unique_id=1284411020 instance=ExtResource("6_yn8iy")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Spacer2" type="Control" parent="MarginContainer/HBoxContainer" unique_id=517496176]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CurrencyBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=857699710]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Money" parent="MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=1046806299 instance=ExtResource("1_edj1p")]
+layout_mode = 2
+resource_def = ExtResource("4_j2dec")
+
+[node name="Spirit" parent="MarginContainer/HBoxContainer/CurrencyBoxContainer" unique_id=1532991888 instance=ExtResource("1_edj1p")]
+layout_mode = 2
+resource_def = ExtResource("5_y1r2s")
+
+[node name="SettingsButton" parent="MarginContainer/HBoxContainer" unique_id=679154949 instance=ExtResource("8_8bf18")]
+layout_mode = 2
+
+[node name="ChatLog" parent="." unique_id=812597784 instance=ExtResource("7_8cidd")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3

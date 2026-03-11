@@ -23,9 +23,7 @@ var color_owned: Color = Color(0.5, 1.0, 0.5, 1.0)
 @onready var icon_rect: TextureRect = %IconRect
 @onready var title_label: Label = %TitleLabel
 @onready var stats_label: RichTextLabel = %StatsLabel
-
-
-
+@onready var item_info_button: ItemInfoButton = %ItemInfoButton
 
 # ==============================================================================
 # 2. LIFECYCLE
@@ -65,6 +63,9 @@ func _on_pressed() -> void:
 
 func _update_label() -> void:
 	if not upgrade_resource or not is_node_ready(): return
+	if item_info_button:
+		item_info_button.setup(upgrade_resource.display_name, upgrade_resource.description)
+		
 	var res = upgrade_resource
 	
 	var level = ProgressionManager.get_upgrade_level(res.id)

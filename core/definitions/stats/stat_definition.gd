@@ -18,3 +18,4 @@ enum StatType {
 @export var stat_type: StatType = StatType.NONE
 @export var display_name: String = "Stat Name"
 @export var base_value: float = 1.0
+@export var description: String = ""

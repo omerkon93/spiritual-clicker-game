@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://b1tuc03bg4ec6"]
 
 [ext_resource type="Script" uid="uid://bfpchxh35y0gr" path="res://scenes/ui/screens/combined_menu/dashboard_panel/sections/items/quest_item_ui.gd" id="1_wgbur"]
-[ext_resource type="PackedScene" uid="uid://dsjxbnco6r66i" path="res://scenes/ui/widgets/item_info_popup/item_info_button.tscn" id="2_cggte"]
-[ext_resource type="PackedScene" uid="uid://d0t8s1r88d46i" path="res://scenes/ui/widgets/item_info_popup/item_info_popup.tscn" id="3_tpicd"]
+[ext_resource type="PackedScene" uid="uid://dsjxbnco6r66i" path="res://scenes/ui/widgets/info_popup_button/info_popup_button.tscn" id="2_cggte"]
 
 [node name="QuestItemUI" type="PanelContainer" unique_id=479369799]
 custom_minimum_size = Vector2(100, 60)
@@ -40,6 +39,3 @@ text = "prog label"
 [node name="ItemInfoButton" parent="VBoxContainer" unique_id=1148206182 instance=ExtResource("2_cggte")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ItemInfoPopup" parent="." unique_id=1696877258 instance=ExtResource("3_tpicd")]
-visible = false
