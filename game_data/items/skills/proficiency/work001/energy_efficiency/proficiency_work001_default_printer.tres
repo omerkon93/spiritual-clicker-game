@@ -18,10 +18,12 @@ metadata/_custom_type_script = "uid://cm754ldqgunog"
 [resource]
 script = ExtResource("2_g30mi")
 id = "proficiency_work001_default_printer"
-display_name = "The Printer Whisperer"
-description = "Action: Set Default Printer. 
+display_name = "Set Default Printer"
+description = "The Printer Whisperer
 
-They sent it to the printer in the other building again. \"Set as Default\" is the secret spell that stops 50% of printing-related panic."
+They sent it to the printer in the other building again. 
+\"Set as Default\" is the secret spell that
+stops 50% of printing-related panic."
 item_type = 2
 target_action = ExtResource("5_akac1")
 story_flags_requirement = Array[ExtResource("3_akac1")]([ExtResource("5_nrya8")])

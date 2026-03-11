@@ -18,10 +18,12 @@ metadata/_custom_type_script = "uid://cm754ldqgunog"
 [resource]
 script = ExtResource("2_tjnhd")
 id = "proficiency_work001_power_on"
-display_name = "Is your refrigerator running?"
-description = "Action: Press start on the computer or monitor.
+display_name = "Press on button"
+description = "Is your refrigerator running?
 
-Sometimes the simplest solution is the one everyone overlooks. Before checking the BIOS or the OS, make sure the \"On\" light is actually glowing."
+Sometimes the simplest solution is the one everyone overlooks. 
+Before checking the BIOS or the OS,
+make sure the \"On\" light is actually glowing."
 item_type = 2
 target_action = ExtResource("5_ytecy")
 story_flags_requirement = Array[ExtResource("3_ytecy")]([ExtResource("5_kkc6j")])

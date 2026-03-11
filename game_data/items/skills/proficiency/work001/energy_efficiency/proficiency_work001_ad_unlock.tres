@@ -18,10 +18,12 @@ metadata/_custom_type_script = "uid://cm754ldqgunog"
 [resource]
 script = ExtResource("2_c665m")
 id = "proficiency_work001_ad_unlock"
-display_name = "Password Angel"
-description = "Action: Account Unlock.
+display_name = "AD Account Unlock"
+description = "Password Angel
 
-Users will forget their passwords after a long weekend. Being able to quickly navigate Active Directory to \"Unlock Account\" makes you a hero in under 30 seconds."
+Users will forget their passwords after a long weekend. 
+Being able to quickly navigate Active Directory 
+to \"Unlock Account\" makes you a hero in under 30 seconds."
 item_type = 2
 target_action = ExtResource("5_sm7e1")
 story_flags_requirement = Array[ExtResource("3_sm7e1")]([ExtResource("5_ue741")])

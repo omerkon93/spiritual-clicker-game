@@ -18,10 +18,13 @@ metadata/_custom_type_script = "uid://cm754ldqgunog"
 [resource]
 script = ExtResource("2_18hcn")
 id = "proficiency_work001_caps_lock_check"
-display_name = "NEED HELP"
-description = "Action: Toggle Caps Lock. 
+display_name = "Toggle Caps Lock"
+description = "NEED HELP, CAPS STUCKK
 
-The user is positive they are typing the right password. Check the keyboard lights. A single tap of the Caps Lock key saves a 10-minute \"account lockout\" conversation."
+The user is positive they are typing the right password. 
+Check the keyboard lights. 
+A single tap of the Caps Lock key 
+saves a 10-minute \"account lockout\" conversation."
 item_type = 2
 target_action = ExtResource("5_doyt8")
 story_flags_requirement = Array[ExtResource("3_doyt8")]([ExtResource("5_1nb6s")])

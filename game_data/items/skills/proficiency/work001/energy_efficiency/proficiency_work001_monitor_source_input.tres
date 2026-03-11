@@ -18,10 +18,13 @@ metadata/_custom_type_script = "uid://cm754ldqgunog"
 [resource]
 script = ExtResource("2_35ung")
 id = "proficiency_work001_monitor_input"
-display_name = "U Can't C Me!"
-description = "Action: Change Monitor Input. 
+display_name = "Change Monitor Source"
+description = " U Can't C Me!
 
-The PC is on, but the screen says \"No Signal.\" 9/10 times, the user (or a cat) bumped the \"Source\" button. Switching from HDMI 2 back to HDMI 1 fixes the \"broken\" computer instantly."
+The PC is on, but the screen says \"No Signal.\" 
+9/10 times, the user (or a cat) bumped the \"Source\" button. 
+Switching from HDMI 2 back to HDMI 1
+fixes the \"broken\" computer instantly."
 item_type = 2
 target_action = ExtResource("5_dp8k6")
 story_flags_requirement = Array[ExtResource("3_dp8k6")]([ExtResource("5_rh815")])

@@ -1,13 +1,12 @@
 extends PanelContainer
 class_name QuestItemUI
 
-# --- NODES ---
 @onready var title_label: Label = %TitleLabel
 @onready var desc_label: RichTextLabel = %DescLabel
 @onready var progress_bar: ProgressBar = %ProgressBar
 @onready var progress_label: Label = %ProgressLabel
+@onready var info_button: ItemInfoButton = %ItemInfoButton
 
-# --- STATE ---
 var quest_id: String = ""
 
 func setup(quest: QuestData) -> void:
@@ -15,7 +14,11 @@ func setup(quest: QuestData) -> void:
 	title_label.text = quest.title
 	desc_label.text = quest.description
 	
-	# THE FIX: Check if we actually have an objective amount!
+	# Pass the specific quest strings to the universal button!
+	if info_button:
+		info_button.setup(quest.title, quest.description)
+	
+	# Check if we actually have an objective amount!
 	if quest.required_amount <= 0:
 		# Hide the progress UI completely
 		progress_bar.visible = false

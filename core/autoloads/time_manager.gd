@@ -47,3 +47,14 @@ func get_time_string() -> String:
 		if current_hour > 12: display_hour -= 12
 	if display_hour == 0: display_hour = 12
 	return "%02d:%02d %s" % [display_hour, current_minute, period]
+
+# Converts raw minutes into a clean "Hours" display string.
+func format_duration_in_hours(total_minutes: int) -> String:
+	var hours = float(total_minutes) / 60.0
+	
+	# If it's a perfectly whole number of hours (e.g., 60 mins = 1.0 hr)
+	if fmod(hours, 1.0) == 0.0:
+		return "%d hr" % int(hours)
+	else:
+		# If there are leftover minutes, show 1 decimal place (e.g., 90 mins = 1.5 hr)
+		return "%.1f hr" % hours

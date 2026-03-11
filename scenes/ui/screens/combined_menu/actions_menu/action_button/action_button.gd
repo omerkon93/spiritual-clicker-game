@@ -95,7 +95,7 @@ func _on_pressed() -> void:
 
 	# 4. PROMPT OR EXECUTE
 	if action_data.is_study_action and study_dialog and time_spinbox:
-		time_spinbox.value = max(1, round(float(action_data.effective_time_cost) / 60.0))
+		time_spinbox.value = max(1, roundi(float(action_data.effective_time_cost) / 60.0))
 		_on_time_spinbox_changed(time_spinbox.value)
 		
 		study_dialog.popup_centered()
@@ -114,7 +114,7 @@ func _on_time_spinbox_changed(new_time_hours: float) -> void:
 	if not dialog_stats_label: return
 	
 	# Since 1 hour = 1 chunk (60 mins), the chunks are just the hours requested!
-	var requested_chunks: int = ceil(new_time_hours)
+	var requested_chunks: int = ceili(new_time_hours)
 	
 	# Pass 'true' so the text generator knows we are looking at the dialog box
 	dialog_stats_label.text = _generate_stats_text(requested_chunks, true)
@@ -140,7 +140,7 @@ func _execute_standard_action() -> void:
 # --- FOR STUDY BUTTONS ONLY (Chunking Logic) ---
 func _execute_study_action(requested_minutes: int) -> void:
 	# 1. Figure out how many 60-minute chunks this takes.
-	var requested_chunks: int = ceil(float(requested_minutes) / 60.0)
+	var requested_chunks: int = ceili(float(requested_minutes) / 60.0)
 	
 	var total_time_spent: int = 0
 	var chunks_executed: int = 0
@@ -155,9 +155,12 @@ func _execute_study_action(requested_minutes: int) -> void:
 			if chunks_executed == 0:
 				if animation_component: animation_component.play_shake()
 				return
-			# If we afforded some earlier chunks but can't afford this one, 
-			# we just break the loop and keep what we already paid for!
-			break 
+				
+			# Just use the SignalBus directly!
+			if SignalBus: 
+				SignalBus.message_logged.emit("Study cut short: Insufficient resources.", Color.ORANGE)
+				
+			break
 			
 		# Pay for the chunk
 		if cost_component: 
@@ -257,11 +260,10 @@ func _generate_stats_text(multiplier: int = 1, is_dialog: bool = false) -> Strin
 
 	if action_data.effective_time_cost > 0:
 		if is_dialog:
-			# Show HOURS in the popup dialog
 			text_lines.append("[color=gray]Time: %d hr[/color]" % int(time_spinbox.value))
 		else:
-			# Show base MINUTES on the normal button UI
-			text_lines.append("[color=gray]Time: %d min[/color]" % int(action_data.effective_time_cost))
+			var formatted_time = TimeManager.format_duration_in_hours(roundi(action_data.effective_time_cost * multiplier))
+			text_lines.append("[color=gray]Time: %s[/color]" % formatted_time)
 
 	return "[center]%s[/center]" % "\n".join(text_lines)
 

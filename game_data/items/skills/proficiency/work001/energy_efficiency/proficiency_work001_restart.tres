@@ -18,10 +18,14 @@ metadata/_custom_type_script = "uid://cm754ldqgunog"
 [resource]
 script = ExtResource("3_mfm63")
 id = "proficiency_work001_restart"
-display_name = "The Hail Mary Reboot"
-description = "Action: Restart the computer
+display_name = "Restart the computer"
+description = "The Hail Mary Reboot
 
-I don't know what's wrong, you don't know what's wrong, but if we hit restart and pray to the Silicon Gods, it’ll probably work. 80% of the time, it works every time."
+I don't know what's wrong,
+you don't know what's wrong, 
+but if we hit restart and pray
+ to the Silicon Gods, it’ll probably work.
+80% of the time, it works every time."
 item_type = 2
 target_action = ExtResource("5_3n2f4")
 story_flags_requirement = Array[ExtResource("4_lyfic")]([ExtResource("5_mfm63")])

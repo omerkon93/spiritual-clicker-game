@@ -9,7 +9,21 @@ quest_item_scene = ExtResource("2_bwtok")
 
 [node name="ActiveObjectives" type="Label" parent="." unique_id=1016158916]
 layout_mode = 2
-text = "Active Quests:"
+text = "Quests menu:"
 
-[node name="QuestList" type="VBoxContainer" parent="." unique_id=1376015021]
+[node name="EmptyStateLabel" type="Label" parent="." unique_id=443036020]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+text = "No active quests."
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=2139216905]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="QuestList" type="VBoxContainer" parent="ScrollContainer" unique_id=1243463260]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3

@@ -5,10 +5,11 @@ class_name QuestsSectionUI
 @export var quest_item_scene: PackedScene
 
 # --- NODES ---
-@onready var quest_list: VBoxContainer = $QuestList
+@onready var quest_list: VBoxContainer = %QuestList
+@onready var empty_state_label: Label = %EmptyStateLabel # <--- ADDED THIS
 
 func _ready() -> void:
-	hide() # Hidden by default if no active quests
+	# Removed hide() from here so the empty state text can be seen!
 	
 	QuestManager.quest_activated.connect(_on_quest_activated)
 	QuestManager.quest_progress_updated.connect(_on_quest_progress_updated)
@@ -21,7 +22,7 @@ func _ready() -> void:
 # ==============================================================================
 func _on_quest_activated(quest: QuestData) -> void:
 	_spawn_quest_item(quest)
-	show()
+	_check_empty_state() # Instantly hide the empty state label
 
 func _on_quest_progress_updated(q_id: String, current: int, required: int) -> void:
 	for child in quest_list.get_children():
@@ -38,25 +39,27 @@ func _on_quest_completed(quest: QuestData) -> void:
 			tween.tween_property(child, "modulate:a", 0.0, 0.3)
 			tween.tween_callback(child.queue_free)
 			
-			# NEW: Check if we should hide the UI *after* the animation finishes
+			# Check if we should show the empty state *after* the animation finishes
 			tween.tween_callback(_check_empty_state)
 			break
 
 func _check_empty_state() -> void:
-	# Only hide the container if the backend confirms there are no active quests
-	if QuestManager.active_quests.is_empty():
-		hide()
+	var is_empty = QuestManager.active_quests.is_empty()
+	
+	if is_empty:
+		# If there are no quests, show the text and hide the scroll box
+		empty_state_label.show()
+		quest_list.get_parent().hide()
+	else:
+		# If there ARE quests, hide the text and show the scroll box
+		empty_state_label.hide()
+		quest_list.get_parent().show()
 
 func _refresh_quests_ui() -> void:
 	for child in quest_list.get_children():
 		child.queue_free()
 		
 	var active = QuestManager.active_quests
-	if active.is_empty():
-		hide()
-		return
-		
-	show()
 	
 	for q_id in active.keys():
 		var quest_data = QuestManager._get_quest_data(q_id)
@@ -65,6 +68,9 @@ func _refresh_quests_ui() -> void:
 		if quest_data:
 			var item = _spawn_quest_item(quest_data)
 			item.update_progress(current_progress, quest_data.required_amount)
+			
+	# Update the UI once everything is spawned (or not spawned)
+	_check_empty_state()
 
 func _spawn_quest_item(quest: QuestData) -> QuestItemUI:
 	if not quest_item_scene or not quest_list: return null

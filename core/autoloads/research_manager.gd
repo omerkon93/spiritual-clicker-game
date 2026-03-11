@@ -83,7 +83,7 @@ func manual_study(minutes_added: int = 1) -> void:
 
 func _complete_research(id: String) -> void:
 	active_research.erase(id)
-	research_queue.erase(id) 
+	research_queue.pop_front()
 	
 	var item = ItemManager.find_item_by_id(id)
 	if item:

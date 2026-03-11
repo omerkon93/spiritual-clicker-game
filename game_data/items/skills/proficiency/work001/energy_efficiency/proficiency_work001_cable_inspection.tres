@@ -18,10 +18,13 @@ metadata/_custom_type_script = "uid://cm754ldqgunog"
 [resource]
 script = ExtResource("2_eo45m")
 id = "proficiency_work001_cable_check"
-display_name = "Layer 1 Specialist"
-description = "Action: Physical Inspection. 
+display_name = "Cable Inspection"
+description = "Layer 1 Specialist
 
-\"My monitor is black!\" Before checking drivers, check the plug. 10% of \"broken\" hardware is just a cable someone kicked under the desk."
+\"My monitor is black!\" Before checking
+ drivers, check the plug. 
+10% of \"broken\" hardware is just a
+cable someone kicked under the desk."
 item_type = 2
 target_action = ExtResource("5_0ui0a")
 story_flags_requirement = Array[ExtResource("3_0ui0a")]([ExtResource("5_h7vqr")])
